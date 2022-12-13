@@ -1,0 +1,44 @@
+{
+    "name": "anoronh4/forte",
+    "homePage": "https://github.com/anoronh4/forte",
+    "repos": {
+        "https://github.com/nf-core/modules.git": {
+            "modules": {
+                "nf-core": {
+                    "arriba": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "custom/dumpsoftwareversions": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "fastp": {
+                        "branch": "master",
+                        "git_sha": "1e49f31e93c56a3832833eef90a02d3cde5a3f7e"
+                    },
+                    "fastqc": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "multiqc": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "star/align": {
+                        "branch": "master",
+                        "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01"
+                    },
+                    "umitools/dedup": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "umitools/extract": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    }
+                }
+            }
+        }
+    }
+}
