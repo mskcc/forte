@@ -50,8 +50,8 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS       } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { PREPARE_REFERENCES                } from '../subworkflows/local/prepare_references'
-include { TRIM_ALIGN ; 
-          TRIM_ALIGN as TRIM_ALIGN_UMI      } from '../subworkflows/local/trim_align'
+include { TRIM_ALIGN ;
+        TRIM_ALIGN as TRIM_ALIGN_UMI      } from '../subworkflows/local/trim_align'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
 include { QC                                } from '../subworkflows/local/qc'
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
@@ -77,10 +77,10 @@ workflow FORTE {
         ch_input
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-    
+
     PREPARE_REFERENCES()
     ch_versions = ch_versions.mix(PREPARE_REFERENCES.out.ch_versions)
-    
+
     TRIM_ALIGN(
         INPUT_CHECK.out.reads.filter{meta, reads -> ! meta.has_umi},
         PREPARE_REFERENCES.out.star_index,
