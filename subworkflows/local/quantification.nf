@@ -6,7 +6,7 @@ workflow QUANTIFICATION {
     gtf
 
     main:
-    
+
     ch_versions = Channel.empty()
 
     HTSEQ_COUNT(bam,gtf)
