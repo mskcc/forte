@@ -6,15 +6,15 @@ include { PREPARE_RRNA                   } from '../../modules/local/prepare_rrn
 include { GUNZIP                         } from '../../modules/nf-core/gunzip/main'
 include { STARFUSION_DOWNLOAD            } from '../../modules/local/starfusion/download/main'
 
-workflow PREPARE_REFERENCES { 
-	
+workflow PREPARE_REFERENCES {
+
     main:
     ch_versions = Channel.empty()
 
     if (params.gtf.endsWith(".gz")){
         GUNZIP([[:],params.gtf])
         gtf = GUNZIP.out.gunzip.map{ it[1] }
-    } else { 
+    } else {
         gtf = params.gtf
     }
 
@@ -22,15 +22,15 @@ workflow PREPARE_REFERENCES {
 
     UCSC_GTFTOGENEPRED(Channel.of([[id:params.genome],params.gtf]))
     ch_versions = ch_versions.mix(UCSC_GTFTOGENEPRED.out.versions)
-    
+
     GATK4_CREATESEQUENCEDICTIONARY(params.fasta)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
 
     PREPARE_RRNA(params.gtf)
 
     GATK4_BEDTOINTERVALLIST(
-      PREPARE_RRNA.out.rRNA_bed.map{ bed -> [[id:params.genome],bed]},
-      GATK4_CREATESEQUENCEDICTIONARY.out.dict
+        PREPARE_RRNA.out.rRNA_bed.map{ bed -> [[id:params.genome],bed]},
+        GATK4_CREATESEQUENCEDICTIONARY.out.dict
     )
     ch_versions = ch_versions.mix(GATK4_BEDTOINTERVALLIST.out.versions)
 

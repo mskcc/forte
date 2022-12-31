@@ -2,14 +2,14 @@ include { PICARD_COLLECTRNASEQMETRICS } from '../../modules/nf-core/picard/colle
 include { PICARD_COLLECTHSMETRICS     } from '../../modules/nf-core/picard/collecthsmetrics/main'
 include { MULTIQC                     } from '../../modules/nf-core/multiqc/main'
 
-workflow QC { 
+workflow QC {
 
     take:
     bam
     refflat
     rrna_intervals
     fastp_json
-    
+
     main:
     fasta = params.fasta
     ch_versions = Channel.empty()
@@ -19,19 +19,19 @@ workflow QC {
         refflat.map{ it -> it[1]},
         fasta,
         rrna_intervals.map{ it -> it[1]}
-	)
+    )
     ch_versions = ch_versions.mix(PICARD_COLLECTRNASEQMETRICS.out.versions)
 
 
     /*
-    PICARD_COLLECTHSMETRICS( 
+    PICARD_COLLECTHSMETRICS(
         bam_ch.filter{ meta, bam ->
             meta.target != "none"
-	    },
-		fasta,
-		fai,
-		bait,
-		target
+        },
+        fasta,
+        fai,
+        bait,
+        target
     )
     */
 

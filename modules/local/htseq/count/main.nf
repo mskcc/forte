@@ -13,7 +13,7 @@ process HTSEQ_COUNT {
 
     output:
     tuple val(meta), path("*.htseq.count.txt"), emit: counts
-	path "versions.yml"                       , emit: versions
+    path "versions.yml"                       , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -29,13 +29,13 @@ process HTSEQ_COUNT {
         ${prefix}.htseq.count.txt
 
     sed -i '1{h;s/.*/'"${prefix}"'/;G}' ${prefix}.htseq.count.txt
-    
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         htseq: \$(htseq-count --version )
     END_VERSIONS
     """
-    
+
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
