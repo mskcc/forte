@@ -48,12 +48,14 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                            } from '../modules/nf-core/fastqc/main'
-include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS       } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { UMITOOLS_EXTRACT                  } from '../modules/nf-core/umitools/extract/main' 
-include { STAR_ALIGN as STAR_FOR_ARRIBA     } from '../modules/nf-core/star/align/main'
-include { STAR_ALIGN as STAR_FOR_STARFUSION } from '../modules/nf-core/star/align/main'
+include { PREPARE_REFERENCES                } from '../subworkflows/local/prepare_references'
+include { TRIM_ALIGN ; 
+          TRIM_ALIGN as TRIM_ALIGN_UMI      } from '../subworkflows/local/trim_align'
+include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
+include { QC                                } from '../subworkflows/local/qc'
+include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
+include { FUSION                            } from '../subworkflows/local/fusion'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -75,32 +77,50 @@ workflow FORTE {
         ch_input
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-
-    //
-    // MODULE: Run FastQC
-    //
-    FASTQC (
-        INPUT_CHECK.out.reads
+    
+    PREPARE_REFERENCES()
+    ch_versions = ch_versions.mix(PREPARE_REFERENCES.out.ch_versions)
+    
+    TRIM_ALIGN(
+        INPUT_CHECK.out.reads.filter{meta, reads -> ! meta.has_umi},
+        PREPARE_REFERENCES.out.star_index,
+        PREPARE_REFERENCES.out.gtf,
+        false
     )
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
-
-    UMITOOLS_EXTRACT ( 
-        INPUT_CHECK.out.reads
-    ) 
-    ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
-
-    /*
-    STAR_FOR_ARRIBA (
-        UMITOOLS_EXTRACT.out.reads,
-	reads,
-	ch_starindex_ref,
-	ch_gtf,
-	params.star_ignore_sjdbgtf, 
-	'', 
-	''
+    ch_versions = ch_versions.mix(TRIM_ALIGN.out.ch_versions)
+    TRIM_ALIGN_UMI(
+        INPUT_CHECK.out.reads.filter{meta, reads -> meta.has_umi},
+        PREPARE_REFERENCES.out.star_index,
+        PREPARE_REFERENCES.out.gtf,
+        true
     )
-    ch_versions = ch_versions.mix(STAR_FOR_ARRIBA.out.versions.first())
-    */
+    ch_versions = ch_versions.mix(TRIM_ALIGN_UMI.out.ch_versions)
+
+    bam_ch = TRIM_ALIGN.out.bam.mix(TRIM_ALIGN_UMI.out.bam)
+    trimmed_reads_ch = TRIM_ALIGN.out.reads.mix(TRIM_ALIGN_UMI.out.reads)
+    fastp_ch = TRIM_ALIGN.out.fastp_json.mix(TRIM_ALIGN_UMI.out.fastp_json)
+
+    QUANTIFICATION(
+        bam_ch,
+        PREPARE_REFERENCES.out.gtf
+    )
+    ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
+
+    FUSION(
+        trimmed_reads_ch,
+        PREPARE_REFERENCES.out.star_index,
+        PREPARE_REFERENCES.out.gtf,
+        PREPARE_REFERENCES.out.starfusion_ref
+    )
+    ch_versions = ch_versions.mix(FUSION.out.ch_versions)
+
+    QC(
+        bam_ch,
+        PREPARE_REFERENCES.out.refflat,
+        PREPARE_REFERENCES.out.rrna_interval_list,
+        fastp_ch
+    )
+    ch_versions = ch_versions.mix(QC.out.ch_versions)
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
@@ -119,7 +139,8 @@ workflow FORTE {
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
+
+    ch_multiqc_files.collect()
 
     MULTIQC (
         ch_multiqc_files.collect(),

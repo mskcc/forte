@@ -15,6 +15,11 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+params.fasta         = WorkflowMain.getGenomeAttribute(params, 'fasta')
+params.gtf           = WorkflowMain.getGenomeAttribute(params, 'gtf')
+params.star_index    = WorkflowMain.getGenomeAttribute(params, 'star_index')
+params.starfusion_reference    = WorkflowMain.getGenomeAttribute(params, 'starfusion_reference')
+
 WorkflowMain.initialise(workflow, params, log)
 
 /*

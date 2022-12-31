@@ -12,7 +12,7 @@ workflow INPUT_CHECK {
     SAMPLESHEET_CHECK ( samplesheet )
         .csv
         .splitCsv ( header:true, sep:',' )
-        .map { create_fastq_channel(it) }
+        .map { create_fastq_channel(it) }.view()
         .set { reads }
 
     emit:
@@ -24,8 +24,15 @@ workflow INPUT_CHECK {
 def create_fastq_channel(LinkedHashMap row) {
     // create meta map
     def meta = [:]
-    meta.id         = row.sample
-    meta.single_end = row.single_end.toBoolean()
+    meta.id         = row.sample.trim()
+    meta.single_end = row.single_end ? row.single_end.toBoolean() : false
+    meta.umi        = row.umi ? row.umi.trim() : ""
+    meta.has_umi    = meta.umi == "" ? false : true
+    meta.strand     = row.strand ? (row.strand.trim() == "" ? "no" : row.strand.trim()) : "no"
+    if (! ["yes","no","reverse"].contains(meta.strand)){
+        exit 1, "ERROR: Please check input samplesheet -> strand value is invalid!\n${row.strand ? row.strand : ""}"
+    }
+    // meta.target       = row.target.trim()
 
     // add path(s) of the fastq file(s) to the meta map
     def fastq_meta = []
