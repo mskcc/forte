@@ -11,6 +11,9 @@ indent_style = space
 [*.{yml,yaml,html,css,scss,js,cff}]
 indent_size = 2
 
+[*.md]
+indent_size = unset
+
 # These files are edited and tested upstream in nf-core/modules
 [/modules/nf-core/**]
 charset = unset
