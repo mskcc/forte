@@ -22,6 +22,7 @@ workflow TRIM_ALIGN {
 
     if (run_umitools){
         UMITOOLS_EXTRACT(reads)
+        ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
         reads4fastp = UMITOOLS_EXTRACT.out.reads
     } else {
         reads4fastp = reads
