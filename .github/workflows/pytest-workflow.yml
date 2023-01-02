@@ -1,7 +1,7 @@
 name: Pytest-workflow
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
 
 # Cancel if a newer run is started
 concurrency:
