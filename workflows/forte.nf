@@ -80,7 +80,7 @@ workflow FORTE {
 
     PREPARE_REFERENCES()
     ch_versions = ch_versions.mix(PREPARE_REFERENCES.out.ch_versions)
-    
+
     if (params.run_alignment || params.run_qc || params.run_fusion) {
         TRIM_ALIGN(
             INPUT_CHECK.out.reads.filter{meta, reads -> ! meta.has_umi},
@@ -107,7 +107,7 @@ workflow FORTE {
         )
         ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
     }
-    
+
     if (params.run_fusion){
         FUSION(
             trimmed_reads_ch,

@@ -41,15 +41,15 @@ workflow PREPARE_REFERENCES {
         )
         ch_versions = ch_versions.mix(GATK4_BEDTOINTERVALLIST.out.versions)
 
-	refflat = UCSC_GTFTOGENEPRED.out.refflat
-	reference_dict = GATK4_CREATESEQUENCEDICTIONARY.out.dict
-	rrna_bed = PREPARE_RRNA.out.rRNA_bed
-	rrna_interval_list = GATK4_BEDTOINTERVALLIST.out.interval_list
+        refflat = UCSC_GTFTOGENEPRED.out.refflat
+        reference_dict = GATK4_CREATESEQUENCEDICTIONARY.out.dict
+        rrna_bed = PREPARE_RRNA.out.rRNA_bed
+        rrna_interval_list = GATK4_BEDTOINTERVALLIST.out.interval_list
     } else {
         refflat = Channel.empty()
-	reference_dict = Channel.empty()
-	rrna_bed = Channel.empty()
-	rrna_interval_list = Channel.empty()
+        reference_dict = Channel.empty()
+        rrna_bed = Channel.empty()
+        rrna_interval_list = Channel.empty()
 
     }
 
