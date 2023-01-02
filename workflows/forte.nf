@@ -80,47 +80,53 @@ workflow FORTE {
 
     PREPARE_REFERENCES()
     ch_versions = ch_versions.mix(PREPARE_REFERENCES.out.ch_versions)
+    
+    if (params.run_alignment || params.run_qc || params.run_fusion) {
+        TRIM_ALIGN(
+            INPUT_CHECK.out.reads.filter{meta, reads -> ! meta.has_umi},
+            PREPARE_REFERENCES.out.star_index,
+            PREPARE_REFERENCES.out.gtf,
+            false
+        )
+        ch_versions = ch_versions.mix(TRIM_ALIGN.out.ch_versions)
+        TRIM_ALIGN_UMI(
+            INPUT_CHECK.out.reads.filter{meta, reads -> meta.has_umi},
+            PREPARE_REFERENCES.out.star_index,
+            PREPARE_REFERENCES.out.gtf,
+            true
+        )
+        ch_versions = ch_versions.mix(TRIM_ALIGN_UMI.out.ch_versions)
 
-    TRIM_ALIGN(
-        INPUT_CHECK.out.reads.filter{meta, reads -> ! meta.has_umi},
-        PREPARE_REFERENCES.out.star_index,
-        PREPARE_REFERENCES.out.gtf,
-        false
-    )
-    ch_versions = ch_versions.mix(TRIM_ALIGN.out.ch_versions)
-    TRIM_ALIGN_UMI(
-        INPUT_CHECK.out.reads.filter{meta, reads -> meta.has_umi},
-        PREPARE_REFERENCES.out.star_index,
-        PREPARE_REFERENCES.out.gtf,
-        true
-    )
-    ch_versions = ch_versions.mix(TRIM_ALIGN_UMI.out.ch_versions)
+        bam_ch = TRIM_ALIGN.out.bam.mix(TRIM_ALIGN_UMI.out.bam)
+        trimmed_reads_ch = TRIM_ALIGN.out.reads.mix(TRIM_ALIGN_UMI.out.reads)
+        fastp_ch = TRIM_ALIGN.out.fastp_json.mix(TRIM_ALIGN_UMI.out.fastp_json)
 
-    bam_ch = TRIM_ALIGN.out.bam.mix(TRIM_ALIGN_UMI.out.bam)
-    trimmed_reads_ch = TRIM_ALIGN.out.reads.mix(TRIM_ALIGN_UMI.out.reads)
-    fastp_ch = TRIM_ALIGN.out.fastp_json.mix(TRIM_ALIGN_UMI.out.fastp_json)
+        QUANTIFICATION(
+            bam_ch,
+            PREPARE_REFERENCES.out.gtf
+        )
+        ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
+    }
+    
+    if (params.run_fusion){
+        FUSION(
+            trimmed_reads_ch,
+            PREPARE_REFERENCES.out.star_index,
+            PREPARE_REFERENCES.out.gtf,
+            PREPARE_REFERENCES.out.starfusion_ref
+        )
+        ch_versions = ch_versions.mix(FUSION.out.ch_versions)
+    }
 
-    QUANTIFICATION(
-        bam_ch,
-        PREPARE_REFERENCES.out.gtf
-    )
-    ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
-
-    FUSION(
-        trimmed_reads_ch,
-        PREPARE_REFERENCES.out.star_index,
-        PREPARE_REFERENCES.out.gtf,
-        PREPARE_REFERENCES.out.starfusion_ref
-    )
-    ch_versions = ch_versions.mix(FUSION.out.ch_versions)
-
-    QC(
-        bam_ch,
-        PREPARE_REFERENCES.out.refflat,
-        PREPARE_REFERENCES.out.rrna_interval_list,
-        fastp_ch
-    )
-    ch_versions = ch_versions.mix(QC.out.ch_versions)
+    if (params.run_qc){
+        QC(
+            bam_ch,
+            PREPARE_REFERENCES.out.refflat,
+            PREPARE_REFERENCES.out.rrna_interval_list,
+            fastp_ch
+        )
+        ch_versions = ch_versions.mix(QC.out.ch_versions)
+    }
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')

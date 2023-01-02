@@ -1,0 +1,4 @@
+- name: run_align_umi
+  command: nextflow run ./tests/test_trim_align/main.nf -entry test_trim_align -c ./tests/test_trim_align/test.config -c ./tests/nextflow.config
+  tags:
+    - test_trim_align

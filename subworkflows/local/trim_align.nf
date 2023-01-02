@@ -30,6 +30,7 @@ workflow TRIM_ALIGN {
     FASTP(reads4fastp, adapter_fasta, false, false)
     ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
+    if (run_umitools || params.run_alignment) {
     STAR_ALIGN(
         FASTP.out.reads,
         star_index,
@@ -42,6 +43,12 @@ workflow TRIM_ALIGN {
 
     SAMTOOLS_INDEX(STAR_ALIGN.out.bam)
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+
+    processed_bais = SAMTOOLS_INDEX.out.bai
+    } else {
+        processed_bams = Channel.empty()
+        processed_bais = Channel.empty()
+    }
 
     if (run_umitools){
         UMITOOLS_DEDUP(
@@ -60,12 +67,11 @@ workflow TRIM_ALIGN {
         processed_bams = UMITOOLS_DEDUP.out.bam
     } else {
         processed_reads = FASTP.out.reads
-        processed_bams = STAR_ALIGN.out.bam
     }
 
     emit:
     bam             = processed_bams
-    bai             = SAMTOOLS_INDEX.out.bai
+    bai             = processed_bais
     reads           = processed_reads
     fastp_json      = FASTP.out.json
     ch_versions     = ch_versions
