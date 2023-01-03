@@ -28,7 +28,7 @@ workflow TRIM_ALIGN {
         reads4fastp = reads
     }
 
-    if (skip_trimming){
+    if (params.skip_trimming){
         trimmed_reads = reads4fastp
     } else {
         FASTP(reads4fastp, adapter_fasta, false, false)
