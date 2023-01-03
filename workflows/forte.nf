@@ -114,10 +114,14 @@ workflow FORTE {
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
+    // Convert queue channel to value channel
+    refflat = Channel.value()
+    PREPARE_REFERENCES.out.refflat.first().subscribe{refflat << it[1]}
+
     QC(
         bam_ch,
-        PREPARE_REFERENCES.out.refflat,
-        PREPARE_REFERENCES.out.rrna_interval_list,
+        refflat,
+        PREPARE_REFERENCES.out.rrna_interval_list.map{it[1]},
         fastp_ch
     )
     ch_versions = ch_versions.mix(QC.out.ch_versions)

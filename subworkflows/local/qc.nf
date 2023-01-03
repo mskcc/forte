@@ -16,12 +16,11 @@ workflow QC {
 
     PICARD_COLLECTRNASEQMETRICS(
         bam,
-        refflat.map{ it -> it[1]},
+        refflat,
         fasta,
-        rrna_intervals.map{ it -> it[1]}
+        rrna_intervals
     )
-    ch_versions = ch_versions.mix(PICARD_COLLECTRNASEQMETRICS.out.versions)
-
+    ch_versions = ch_versions.mix(PICARD_COLLECTRNASEQMETRICS.out.versions.first())
 
     /*
     PICARD_COLLECTHSMETRICS(
@@ -48,6 +47,5 @@ workflow QC {
 
     emit:
     ch_versions
-
 
 }
