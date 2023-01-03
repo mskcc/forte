@@ -28,11 +28,16 @@ workflow TRIM_ALIGN {
         reads4fastp = reads
     }
 
-    FASTP(reads4fastp, adapter_fasta, false, false)
-    ch_versions = ch_versions.mix(FASTP.out.versions.first())
+    if (skip_trimming){
+        trimmed_reads = reads4fastp
+    } else {
+        FASTP(reads4fastp, adapter_fasta, false, false)
+        trimmed_reads = FASTP.out.reads
+        ch_versions = ch_versions.mix(FASTP.out.versions.first())
+    }
 
     STAR_ALIGN(
-        FASTP.out.reads,
+        trimmed_reads,
         star_index,
         gtf,
         false,
@@ -60,7 +65,7 @@ workflow TRIM_ALIGN {
             }
         processed_bams = UMITOOLS_DEDUP.out.bam
     } else {
-        processed_reads = FASTP.out.reads
+        processed_reads = trimmed_reads
         processed_bams = STAR_ALIGN.out.bam
     }
 
