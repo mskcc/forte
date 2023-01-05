@@ -27,7 +27,17 @@ def create_fastq_channel(LinkedHashMap row) {
     meta.id         = row.sample.trim()
     meta.single_end = row.single_end ? row.single_end.toBoolean() : false
     meta.umi        = row.umi ? row.umi.trim() : ""
+    meta.umi2       = row.umi2 ? row.umi2.trim() : ""
     meta.has_umi    = meta.umi == "" ? false : true
+    if (meta.umi == "" && meta.umi2 != ""){
+        exit 1, "ERROR: Please check input samplesheet -> there cannot be a umi2 pattern if there is no umi pattern:\n${meta.umi} and ${meta.umi2}"
+    }
+    try {
+        meta.umi  = meta.umi.toInteger() * "N"
+    } catch(Exception e) { }
+    try {
+        meta.umi2 = meta.umi2.toInteger() * "N"
+    } catch(Exception e) { }
     meta.strand     = row.strand ? (row.strand.trim() == "" ? "no" : row.strand.trim()) : "no"
     if (! ["yes","no","reverse"].contains(meta.strand)){
         exit 1, "ERROR: Please check input samplesheet -> strand value is invalid!\n${row.strand ? row.strand : ""}"
