@@ -38,10 +38,12 @@ workflow PREPARE_REFERENCES {
 
     emit:
     star_index         = STAR_GENOMEGENERATE.out.index
-    refflat            = UCSC_GTFTOGENEPRED.out.refflat
+    // Convert queue channel to value channel so it never gets poison pilled
+    refflat            = UCSC_GTFTOGENEPRED.out.refflat.map{it[1]}.first()
     reference_dict     = GATK4_CREATESEQUENCEDICTIONARY.out.dict
     rrna_bed           = PREPARE_RRNA.out.rRNA_bed
-    rrna_interval_list = GATK4_BEDTOINTERVALLIST.out.interval_list
+    // Convert queue channel to value channel so it never gets poison pilled
+    rrna_interval_list = GATK4_BEDTOINTERVALLIST.out.interval_list.map{it[1]}.first()
     gtf                = gtf
     starfusion_ref     = STARFUSION_DOWNLOAD.out.reference
     ch_versions        = ch_versions
