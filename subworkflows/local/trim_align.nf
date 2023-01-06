@@ -12,6 +12,7 @@ workflow TRIM_ALIGN {
     star_index
     gtf
     run_umitools
+    run_bam2fq
 
     main:
 
@@ -23,21 +24,29 @@ workflow TRIM_ALIGN {
     if (run_umitools){
         UMITOOLS_EXTRACT(reads)
         ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
-        reads4fastp = UMITOOLS_EXTRACT.out.reads
+        extracted_reads = UMITOOLS_EXTRACT.out.reads
     } else {
-        reads4fastp = reads
+        extracted_reads = Channel.empty()
     }
 
+    // once FASTP can run without producing reads then fix this logic.
+    FASTP(
+        run_umitools ? extracted_reads : reads,
+        adapter_fasta,
+        false,
+        false
+    )
     if (params.skip_trimming){
-        trimmed_reads = reads4fastp
+        trimmed_reads = Channel.empty()
     } else {
-        FASTP(reads4fastp, adapter_fasta, false, false)
         trimmed_reads = FASTP.out.reads
         ch_versions = ch_versions.mix(FASTP.out.versions.first())
     }
 
+    reads_for_alignment = skip_trimming ? (run_umitools ? extracted_reads : reads) : trimmed_reads
+
     STAR_ALIGN(
-        trimmed_reads,
+        reads_for_alignment,
         star_index,
         gtf,
         false,
@@ -53,27 +62,32 @@ workflow TRIM_ALIGN {
         UMITOOLS_DEDUP(
             STAR_ALIGN.out.bam
                 .join(SAMTOOLS_INDEX.out.bai, by:[0]),
-                false
+            false
         )
         ch_versions = ch_versions.mix(UMITOOLS_DEDUP.out.versions.first())
 
-        SAMTOOLS_BAM2FQ(UMITOOLS_DEDUP.out.bam,true)
-        ch_versions = ch_versions.mix(SAMTOOLS_BAM2FQ.out.versions.first())
-        processed_reads = SAMTOOLS_BAM2FQ.out.reads
-            .map{ meta, reads ->
-                [meta, reads.findAll{ !(it.getName().endsWith("singleton.fq.gz") || it.getName().endsWith("other.fq.gz")) }]
-            }
-        processed_bams = UMITOOLS_DEDUP.out.bam
+        dedup_bam = UMITOOLS_DEDUP.out.bam
+
+        if (run_bam2fq) {
+            SAMTOOLS_BAM2FQ(UMITOOLS_DEDUP.out.bam,true)
+            ch_versions = ch_versions.mix(SAMTOOLS_BAM2FQ.out.versions.first())
+            dedup_reads = SAMTOOLS_BAM2FQ.out.reads
+                .map{ meta, reads ->
+                    [meta, reads.findAll{ !(it.getName().endsWith("singleton.fq.gz") || it.getName().endsWith("other.fq.gz")) }]
+                }
+        } else {
+            dedup_reads = Channel.empty()
+        }
+
     } else {
-        processed_reads = trimmed_reads
-        processed_bams = STAR_ALIGN.out.bam
+        dedup_bam = Channel.empty()
+        dedup_reads = Channel.empty()
     }
 
     emit:
-    bam             = processed_bams
+    reads           = run_dedup_fastqs ? dedup_reads : reads_for_alignment
+    bam             = run_umitools ? dedup_bam : STAR_ALIGN.out.bam
     bai             = SAMTOOLS_INDEX.out.bai
-    reads           = processed_reads
     fastp_json      = FASTP.out.json
     ch_versions     = ch_versions
-
 }

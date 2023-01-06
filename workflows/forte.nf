@@ -93,11 +93,16 @@ workflow FORTE {
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         true
+        params.generate_dedup_fq
     )
     ch_versions = ch_versions.mix(TRIM_ALIGN_UMI.out.ch_versions)
 
-    bam_ch = TRIM_ALIGN.out.bam.mix(TRIM_ALIGN_UMI.out.bam)
-    trimmed_reads_ch = TRIM_ALIGN.out.reads.mix(TRIM_ALIGN_UMI.out.reads)
+    bam_ch = TRIM_ALIGN.out.bam
+        .mix(TRIM_ALIGN_UMI.out.bam)
+
+    processed_reads = TRIM_ALIGN.out.reads
+        .mix(TRIM_ALIGN_UMI.out.reads)
+
     fastp_ch = TRIM_ALIGN.out.fastp_json.mix(TRIM_ALIGN_UMI.out.fastp_json)
 
     QUANTIFICATION(
@@ -107,21 +112,17 @@ workflow FORTE {
     ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
 
     FUSION(
-        trimmed_reads_ch,
+        processed_reads,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
-    // Convert queue channel to value channel
-    refflat = Channel.value()
-    PREPARE_REFERENCES.out.refflat.first().subscribe{refflat << it[1]}
-
     QC(
         bam_ch,
-        refflat,
-        PREPARE_REFERENCES.out.rrna_interval_list.map{it[1]},
+        PREPARE_REFERENCES.out.refflat,
+        PREPARE_REFERENCES.out.rrna_interval_list,
         fastp_ch
     )
     ch_versions = ch_versions.mix(QC.out.ch_versions)
