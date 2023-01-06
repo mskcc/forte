@@ -43,7 +43,7 @@ workflow TRIM_ALIGN {
         ch_versions = ch_versions.mix(FASTP.out.versions.first())
     }
 
-    reads_for_alignment = skip_trimming ? (run_umitools ? extracted_reads : reads) : trimmed_reads
+    reads_for_alignment = params.skip_trimming ? (run_umitools ? extracted_reads : reads) : trimmed_reads
 
     STAR_ALIGN(
         reads_for_alignment,
@@ -85,7 +85,7 @@ workflow TRIM_ALIGN {
     }
 
     emit:
-    reads           = run_dedup_fastqs ? dedup_reads : reads_for_alignment
+    reads           = run_bam2fq ? dedup_reads : reads_for_alignment
     bam             = run_umitools ? dedup_bam : STAR_ALIGN.out.bam
     bai             = SAMTOOLS_INDEX.out.bai
     fastp_json      = FASTP.out.json

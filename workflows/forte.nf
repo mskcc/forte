@@ -85,14 +85,15 @@ workflow FORTE {
         INPUT_CHECK.out.reads.filter{meta, reads -> ! meta.has_umi},
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
-        false
+        false,
+	params.generate_dedup_fq
     )
     ch_versions = ch_versions.mix(TRIM_ALIGN.out.ch_versions)
     TRIM_ALIGN_UMI(
         INPUT_CHECK.out.reads.filter{meta, reads -> meta.has_umi},
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
-        true
+        true,
         params.generate_dedup_fq
     )
     ch_versions = ch_versions.mix(TRIM_ALIGN_UMI.out.ch_versions)
