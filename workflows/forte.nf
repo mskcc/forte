@@ -11,7 +11,7 @@ WorkflowForte.initialise(params, log)
 
 // TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.gtf ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -51,7 +51,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 include { CUSTOM_DUMPSOFTWAREVERSIONS       } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { PREPARE_REFERENCES                } from '../subworkflows/local/prepare_references'
 include { TRIM_ALIGN ;
-        TRIM_ALIGN as TRIM_ALIGN_UMI      } from '../subworkflows/local/trim_align'
+    TRIM_ALIGN as TRIM_ALIGN_UMI      } from '../subworkflows/local/trim_align'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
 include { QC                                } from '../subworkflows/local/qc'
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
