@@ -13,24 +13,16 @@ workflow PREPARE_REFERENCES {
 
     if (params.gtf.endsWith(".gz")){
         GUNZIP([[:],params.gtf])
-        gtf = GUNZIP.out.gunzip.map{ it[1] }
+        gtf = GUNZIP.out.gunzip.map{ it[1] }.first()
     } else {
         gtf = params.gtf
     }
 
-    if (params.star_index){
-        if (file(params.star_index).exists()){
-            star_index = params.star_index
-        } else {
-            STAR_GENOMEGENERATE(params.fasta,gtf)
-            star_index = STAR_GENOMEGENERATE.out.index
-        }
-    } else {
-        STAR_GENOMEGENERATE(params.fasta,gtf)
-        star_index = STAR_GENOMEGENERATE.out.index
-    }
+    STAR_GENOMEGENERATE(params.fasta,gtf)
+    ch_versions = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
+    star_index = STAR_GENOMEGENERATE.out.index
 
-    UCSC_GTFTOGENEPRED(Channel.of([[id:params.genome],params.gtf]))
+    UCSC_GTFTOGENEPRED(gtf.map{[[id:params.genome],it]})
     ch_versions = ch_versions.mix(UCSC_GTFTOGENEPRED.out.versions)
 
     GATK4_CREATESEQUENCEDICTIONARY(params.fasta)
@@ -44,17 +36,9 @@ workflow PREPARE_REFERENCES {
     )
     ch_versions = ch_versions.mix(GATK4_BEDTOINTERVALLIST.out.versions)
 
-    if (params.starfusion_reference) {
-        if (file(params.starfusion_reference).exists()){
-            starfusion_ref = params.starfusion_reference
-        } else {
-            STARFUSION_DOWNLOAD(params.starfusion_url)
-            starfusion_ref = STARFUSION_DOWNLOAD.out.reference
-        }
-    } else {
-        STARFUSION_DOWNLOAD(params.starfusion_url)
-        starfusion_ref = STARFUSION_DOWNLOAD.out.reference
-    }
+    STARFUSION_DOWNLOAD(params.starfusion_url)
+    ch_versions = ch_versions.mix(STARFUSION_DOWNLOAD.out.versions)
+    starfusion_ref = STARFUSION_DOWNLOAD.out.reference
 
     emit:
     star_index         = star_index
@@ -65,7 +49,7 @@ workflow PREPARE_REFERENCES {
     // Convert queue channel to value channel so it never gets poison pilled
     rrna_interval_list = GATK4_BEDTOINTERVALLIST.out.interval_list.map{it[1]}.first()
     gtf                = gtf
-    starfusion_ref     = STARFUSION_DOWNLOAD.out.reference
+    starfusion_ref     = starfusion_ref
     ch_versions        = ch_versions
 
 }

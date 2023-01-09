@@ -85,7 +85,7 @@ workflow TRIM_ALIGN {
     }
 
     emit:
-    reads           = run_bam2fq ? dedup_reads : reads_for_alignment
+    reads           = run_bam2fq && run_umitools ? dedup_reads : reads_for_alignment
     bam             = run_umitools ? dedup_bam : STAR_ALIGN.out.bam
     bai             = SAMTOOLS_INDEX.out.bai
     fastp_json      = FASTP.out.json
