@@ -116,7 +116,8 @@ workflow FORTE {
         processed_reads,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
-        PREPARE_REFERENCES.out.starfusion_ref
+        PREPARE_REFERENCES.out.starfusion_ref,
+        PREPARE_REFERENCES.out.fusioncatcher_ref
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 

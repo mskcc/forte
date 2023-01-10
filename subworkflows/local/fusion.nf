@@ -2,6 +2,7 @@ include { STAR_ALIGN as STAR_FOR_ARRIBA     } from '../../modules/nf-core/star/a
 include { ARRIBA                            } from '../../modules/nf-core/arriba/main'
 include { STAR_ALIGN as STAR_FOR_STARFUSION } from '../../modules/nf-core/star/align/main'
 include { STARFUSION                        } from '../../modules/local/starfusion/detect/main'
+include { FUSIONCATCHER_DETECT              } from '../../modules/local/fusioncatcher/detect/main'
 
 workflow FUSION {
 
@@ -10,6 +11,7 @@ workflow FUSION {
     star_index
     gtf
     starfusion_ref
+    fusioncatcher_ref
 
     main:
     ch_versions = Channel.empty()
@@ -52,9 +54,11 @@ workflow FUSION {
     STARFUSION( reads_junction, starfusion_ref)
     ch_versions = ch_versions.mix(STARFUSION.out.versions.first())
 
-    /*
-
-    */
+    FUSIONCATCHER_DETECT(
+        reads,
+	fusioncatcher_ref
+    )
+    ch_versions = ch_versions.mix(FUSIONCATCHER_DETECT.out.versions.first())
 
     emit:
     ch_versions

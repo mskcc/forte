@@ -5,6 +5,7 @@ include { GATK4_BEDTOINTERVALLIST        } from '../../modules/nf-core/gatk4/bed
 include { PREPARE_RRNA                   } from '../../modules/local/prepare_rrna/main'
 include { GUNZIP                         } from '../../modules/nf-core/gunzip/main'
 include { STARFUSION_DOWNLOAD            } from '../../modules/local/starfusion/download/main'
+include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatcher/download/main'
 
 workflow PREPARE_REFERENCES {
 
@@ -37,8 +38,17 @@ workflow PREPARE_REFERENCES {
     ch_versions = ch_versions.mix(GATK4_BEDTOINTERVALLIST.out.versions)
 
     STARFUSION_DOWNLOAD(params.starfusion_url)
-    ch_versions = ch_versions.mix(STARFUSION_DOWNLOAD.out.versions)
     starfusion_ref = STARFUSION_DOWNLOAD.out.reference
+
+    if (["hg19","hg38"].contains(params.genome)){
+        FUSIONCATCHER_DOWNLOAD()
+        ch_versions = ch_versions.mix(FUSIONCATCHER_DOWNLOAD.out.versions)
+        
+	fusioncatcher_ref = FUSIONCATCHER_DOWNLOAD.out.reference
+    } else {
+        fusioncatcher_ref = Channel.empty()
+    }
+
 
     emit:
     star_index         = star_index
@@ -50,6 +60,7 @@ workflow PREPARE_REFERENCES {
     rrna_interval_list = GATK4_BEDTOINTERVALLIST.out.interval_list.map{it[1]}.first()
     gtf                = gtf
     starfusion_ref     = starfusion_ref
+    fusioncatcher_ref  = fusioncatcher_ref
     ch_versions        = ch_versions
 
 }
