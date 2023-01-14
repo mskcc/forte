@@ -62,7 +62,7 @@ workflow TRIM_ALIGN {
         UMITOOLS_DEDUP(
             STAR_ALIGN.out.bam
                 .join(SAMTOOLS_INDEX.out.bai, by:[0]),
-            false
+            true
         )
         ch_versions = ch_versions.mix(UMITOOLS_DEDUP.out.versions.first())
 

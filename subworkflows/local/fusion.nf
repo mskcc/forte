@@ -41,7 +41,8 @@ workflow FUSION {
 
     STAR_FOR_STARFUSION(
         reads,
-        star_index,
+        // use the star index in the starfusion reference to ensure compatibility
+        starfusion_ref.map{ file( it + "/ref_genome.fa.star.idx")},
         gtf,
         false,
         false,
