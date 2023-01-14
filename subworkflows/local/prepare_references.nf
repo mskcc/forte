@@ -23,17 +23,18 @@ workflow PREPARE_REFERENCES {
     ch_versions = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
     star_index = STAR_GENOMEGENERATE.out.index
 
+    if ( params.refflat) {
+        refflat = params.refflat
+    } else {
+        UCSC_GTFTOGENEPRED(Channel.value(gtf).map{[[id:params.genome],it]})
+        ch_versions = ch_versions.mix(UCSC_GTFTOGENEPRED.out.versions)
 
-    /*
-    UCSC_GTFTOGENEPRED(Channel.value(gtf).map{[[id:params.genome],it]})
-    ch_versions = ch_versions.mix(UCSC_GTFTOGENEPRED.out.versions)
-    */
+        refflat = UCSC_GTFTOGENEPRED.out.refflat.map{it[1]}.first()
+    }
+    PREPARE_RRNA([],refflat)
 
     GATK4_CREATESEQUENCEDICTIONARY(params.fasta)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
-
-    // PREPARE_RRNA(params.gtf)
-    PREPARE_RRNA([],params.refflat)
 
     GATK4_BEDTOINTERVALLIST(
         PREPARE_RRNA.out.rRNA_bed.map{ bed -> [[id:params.genome],bed]},
@@ -47,8 +48,8 @@ workflow PREPARE_REFERENCES {
     if (["GRCh37","GRCh38"].contains(params.genome)){
         FUSIONCATCHER_DOWNLOAD()
         ch_versions = ch_versions.mix(FUSIONCATCHER_DOWNLOAD.out.versions)
-        
-	fusioncatcher_ref = FUSIONCATCHER_DOWNLOAD.out.reference
+
+        fusioncatcher_ref = FUSIONCATCHER_DOWNLOAD.out.reference
     } else {
         fusioncatcher_ref = Channel.empty()
     }
@@ -57,7 +58,7 @@ workflow PREPARE_REFERENCES {
     emit:
     star_index         = star_index
     // Convert queue channel to value channel so it never gets poison pilled
-    //refflat            = UCSC_GTFTOGENEPRED.out.refflat.map{it[1]}.first()
+    refflat            = refflat
     reference_dict     = GATK4_CREATESEQUENCEDICTIONARY.out.dict
     rrna_bed           = PREPARE_RRNA.out.rRNA_bed
     // Convert queue channel to value channel so it never gets poison pilled

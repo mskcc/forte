@@ -17,6 +17,7 @@ process PREPARE_RRNA {
                 /transcript_id "([^"]+)"/ or die "no transcript_id on \$.";
                 print join "\t", (@F[0,1,2,3], \$1)
             ' | \\
+            grep -vP "^HG|^HSCHR" | \\
             sort -k1V -k2n -k3n \\
             > rna.bed
 
@@ -25,7 +26,7 @@ process PREPARE_RRNA {
         """
         ${"${refflat}".endsWith(".gz") ? "z" : ""}grep -P "^RNA5|^RNA1|^RNA2" ${refflat} | \\
             awk -F"\\t" -v OFS="\\t" '{ print \$3,\$5,\$6,\$4,\$2 }' | \\
-            grep -v "^HG" | \\
+            grep -vP "^HG|^HSCHR" | \\
             sort -k1V -k2n -k3n \\
             > rna.bed
         """

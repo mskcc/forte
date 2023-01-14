@@ -123,8 +123,7 @@ workflow FORTE {
 
     QC(
         bam_ch,
-        //PREPARE_REFERENCES.out.refflat,
-        params.refflat,
+        PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         fastp_ch
     )
