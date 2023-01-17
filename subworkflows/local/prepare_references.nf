@@ -42,8 +42,12 @@ workflow PREPARE_REFERENCES {
     )
     ch_versions = ch_versions.mix(GATK4_BEDTOINTERVALLIST.out.versions)
 
-    STARFUSION_DOWNLOAD(params.starfusion_url)
-    starfusion_ref = STARFUSION_DOWNLOAD.out.reference
+    if (params.starfusion_url) {
+        STARFUSION_DOWNLOAD(params.starfusion_url)
+        starfusion_ref = STARFUSION_DOWNLOAD.out.reference
+    } else {
+        starfusion_ref = Channel.empty()
+    }
 
     if (["GRCh37","GRCh38"].contains(params.genome)){
         FUSIONCATCHER_DOWNLOAD()
