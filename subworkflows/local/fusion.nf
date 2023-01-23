@@ -3,6 +3,7 @@ include { ARRIBA                            } from '../../modules/nf-core/arriba
 include { STAR_ALIGN as STAR_FOR_STARFUSION } from '../../modules/nf-core/star/align/main'
 include { STARFUSION                        } from '../../modules/local/starfusion/detect/main'
 include { FUSIONCATCHER_DETECT              } from '../../modules/local/fusioncatcher/detect/main'
+include { FUSIONREPORT                      } from '../../modules/local/fusionreport/run/main'
 
 workflow FUSION {
 
@@ -12,6 +13,7 @@ workflow FUSION {
     gtf
     starfusion_ref
     fusioncatcher_ref
+    fusion_report_db
 
     main:
     ch_versions = Channel.empty()
@@ -60,6 +62,15 @@ workflow FUSION {
 	fusioncatcher_ref
     )
     ch_versions = ch_versions.mix(FUSIONCATCHER_DETECT.out.versions.first())
+
+    fc_fusions = ["GRCh37","hg19","smallGRCh37"].contains(params.genome) ? FUSIONCATCHER_DETECT.out.fusions_alt : FUSIONCATCHER_DETECT.out.fusions
+
+    FUSIONREPORT(
+        ARRIBA.out.fusions
+	    .join(STARFUSION.out.abridged,by:[0])
+	    .join(fc_fusions,by:[0]),
+        fusion_report_db
+    )
 
     emit:
     ch_versions

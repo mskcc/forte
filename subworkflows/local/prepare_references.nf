@@ -6,6 +6,7 @@ include { PREPARE_RRNA                   } from '../../modules/local/prepare_rrn
 include { GUNZIP                         } from '../../modules/nf-core/gunzip/main'
 include { STARFUSION_DOWNLOAD            } from '../../modules/local/starfusion/download/main'
 include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatcher/download/main'
+include { FUSIONREPORT_DOWNLOAD          } from '../../modules/local/fusionreport/download/main'
 
 workflow PREPARE_REFERENCES {
 
@@ -58,6 +59,10 @@ workflow PREPARE_REFERENCES {
         fusioncatcher_ref = Channel.empty()
     }
 
+    cosmic_usr = params.cosmic_usr ?: ""
+    cosmic_passwd = params.cosmic_passwd ?: ""
+    FUSIONREPORT_DOWNLOAD(cosmic_usr,cosmic_passwd)
+
 
     emit:
     star_index         = star_index
@@ -70,6 +75,7 @@ workflow PREPARE_REFERENCES {
     gtf                = gtf
     starfusion_ref     = starfusion_ref
     fusioncatcher_ref  = fusioncatcher_ref
+    fusion_report_db   = FUSIONREPORT_DOWNLOAD.out.reference
     ch_versions        = ch_versions
 
 }
