@@ -59,7 +59,7 @@ workflow FUSION {
 
     FUSIONCATCHER_DETECT(
         reads,
-	fusioncatcher_ref
+        fusioncatcher_ref
     )
     ch_versions = ch_versions.mix(FUSIONCATCHER_DETECT.out.versions.first())
 
@@ -67,8 +67,16 @@ workflow FUSION {
 
     FUSIONREPORT(
         ARRIBA.out.fusions
-	    .join(STARFUSION.out.abridged,by:[0])
-	    .join(fc_fusions,by:[0]),
+            .join(STARFUSION.out.abridged,by:[0])
+            .join(fc_fusions,by:[0])
+            .map{ meta, arriba, starfusion, fusioncatcher ->
+                [
+                    meta,
+                    ["arriba","starfusion","fusioncatcher"], // names of callers recognized by fusionreport
+                    [33,33,34], // weights
+                    [arriba, starfusion, fusioncatcher] // files
+                ]
+            },
         fusion_report_db
     )
 
