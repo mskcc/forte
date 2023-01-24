@@ -26,9 +26,10 @@ process FUSIONREPORT {
     task.ext.when == null || task.ext.when
 
     script:
-    def tools = arriba_fusions ? "--arriba ${arriba_fusions} " : '' 
-    tools    += starfusion_fusions ? "--starfusion ${starfusion_fusions} " : ''
-    tools    += fusioncatcher_fusions ? "--fusioncatcher ${fusioncatcher_fusions} " : ''
+    def tools   = arriba_fusions ? "--arriba ${arriba_fusions} " : ''
+    tools      += starfusion_fusions ? "--starfusion ${starfusion_fusions} " : ''
+    tools      += fusioncatcher_fusions ? "--fusioncatcher ${fusioncatcher_fusions} " : ''
+    def weights = "--starfusion_weight 33 --arriba_weight 33 --fusioncatcher_weight 34"
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     fusion_report run \\
@@ -36,6 +37,7 @@ process FUSIONREPORT {
         . \\
         $fusionreport_ref \\
         $tools \\
+        $weights \\
         --allow-multiple-gene-symbols \\
         --export csv
 
