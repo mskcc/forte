@@ -1,5 +1,5 @@
 process FUSIONCATCHER_DETECT {
-    tag '$meta.id'
+    tag "$meta.id"
     label 'process_high'
 
     conda (params.enable_conda ? "bioconda::fusioncatcher=1.33" : null)
@@ -12,8 +12,9 @@ process FUSIONCATCHER_DETECT {
     path reference
 
     output:
-    tuple val(meta), path("*.fusioncatcher.fusion-genes.txt")   , optional:true  , emit: fusions
-    tuple val(meta), path("*.fusioncatcher.summary.txt")        , optional:true  , emit: summary
+    tuple val(meta), path("*.fusioncatcher.fusion-genes.txt")     , optional:true, emit: fusions
+    tuple val(meta), path("*.fusioncatcher.fusion-genes.hg19.txt"), optional:true, emit: fusions_alt
+    tuple val(meta), path("*.fusioncatcher.summary.txt")          , optional:true, emit: summary
     tuple val(meta), path("*.fusioncatcher.log")                                 , emit: log
     path "versions.yml"                                                          , emit: versions
 
@@ -35,6 +36,7 @@ process FUSIONCATCHER_DETECT {
         $args
 
     mv final-list_candidate-fusion-genes.txt ${prefix}.fusioncatcher.fusion-genes.txt
+    mv final-list_candidate-fusion-genes.hg19.txt ${prefix}.fusioncatcher.fusion-genes.hg19.txt
     mv summary_candidate_fusions.txt ${prefix}.fusioncatcher.summary.txt
     mv fusioncatcher.log ${prefix}.fusioncatcher.log
 

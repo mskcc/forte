@@ -2,7 +2,10 @@ include { FASTP            } from '../../modules/nf-core/fastp/main'
 include { STAR_ALIGN       } from '../../modules/nf-core/star/align/main'
 include { UMITOOLS_EXTRACT } from '../../modules/nf-core/umitools/extract/main'
 include { UMITOOLS_DEDUP   } from '../../modules/nf-core/umitools/dedup/main'
-include { SAMTOOLS_INDEX   } from '../../modules/nf-core/samtools/index/main'
+include {
+    SAMTOOLS_INDEX;
+    SAMTOOLS_INDEX as SAMTOOLS_INDEX_DEDUP
+} from '../../modules/nf-core/samtools/index/main'
 include { SAMTOOLS_BAM2FQ  } from '../../modules/nf-core/samtools/bam2fq/main'
 
 workflow TRIM_ALIGN {
@@ -62,9 +65,11 @@ workflow TRIM_ALIGN {
         UMITOOLS_DEDUP(
             STAR_ALIGN.out.bam
                 .join(SAMTOOLS_INDEX.out.bai, by:[0]),
-            false
+            true
         )
         ch_versions = ch_versions.mix(UMITOOLS_DEDUP.out.versions.first())
+
+        SAMTOOLS_INDEX_DEDUP(UMITOOLS_DEDUP.out.bam)
 
         dedup_bam = UMITOOLS_DEDUP.out.bam
 

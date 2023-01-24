@@ -86,7 +86,7 @@ workflow FORTE {
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         false,
-	params.generate_dedup_fq
+        params.generate_dedup_fq
     )
     ch_versions = ch_versions.mix(TRIM_ALIGN.out.ch_versions)
     TRIM_ALIGN_UMI(
@@ -117,7 +117,8 @@ workflow FORTE {
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
-        PREPARE_REFERENCES.out.fusioncatcher_ref
+        PREPARE_REFERENCES.out.fusioncatcher_ref,
+        PREPARE_REFERENCES.out.fusion_report_db
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 

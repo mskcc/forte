@@ -6,6 +6,7 @@ include { PREPARE_RRNA                   } from '../../modules/local/prepare_rrn
 include { GUNZIP                         } from '../../modules/nf-core/gunzip/main'
 include { STARFUSION_DOWNLOAD            } from '../../modules/local/starfusion/download/main'
 include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatcher/download/main'
+include { FUSIONREPORT_DOWNLOAD          } from '../../modules/local/fusionreport/download/main'
 
 workflow PREPARE_REFERENCES {
 
@@ -23,13 +24,18 @@ workflow PREPARE_REFERENCES {
     ch_versions = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
     star_index = STAR_GENOMEGENERATE.out.index
 
-    UCSC_GTFTOGENEPRED(gtf.map{[[id:params.genome],it]})
-    ch_versions = ch_versions.mix(UCSC_GTFTOGENEPRED.out.versions)
+    if ( params.refflat) {
+        refflat = params.refflat
+    } else {
+        UCSC_GTFTOGENEPRED(Channel.value(gtf).map{[[id:params.genome],it]})
+        ch_versions = ch_versions.mix(UCSC_GTFTOGENEPRED.out.versions)
+
+        refflat = UCSC_GTFTOGENEPRED.out.refflat.map{it[1]}.first()
+    }
+    PREPARE_RRNA([],refflat)
 
     GATK4_CREATESEQUENCEDICTIONARY(params.fasta)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
-
-    PREPARE_RRNA(params.gtf)
 
     GATK4_BEDTOINTERVALLIST(
         PREPARE_RRNA.out.rRNA_bed.map{ bed -> [[id:params.genome],bed]},
@@ -37,23 +43,31 @@ workflow PREPARE_REFERENCES {
     )
     ch_versions = ch_versions.mix(GATK4_BEDTOINTERVALLIST.out.versions)
 
-    STARFUSION_DOWNLOAD(params.starfusion_url)
-    starfusion_ref = STARFUSION_DOWNLOAD.out.reference
+    if (params.starfusion_url) {
+        STARFUSION_DOWNLOAD(params.starfusion_url)
+        starfusion_ref = STARFUSION_DOWNLOAD.out.reference
+    } else {
+        starfusion_ref = Channel.empty()
+    }
 
-    if (["hg19","hg38"].contains(params.genome)){
+    if (["GRCh37","GRCh38"].contains(params.genome)){
         FUSIONCATCHER_DOWNLOAD()
         ch_versions = ch_versions.mix(FUSIONCATCHER_DOWNLOAD.out.versions)
-        
-	fusioncatcher_ref = FUSIONCATCHER_DOWNLOAD.out.reference
+
+        fusioncatcher_ref = FUSIONCATCHER_DOWNLOAD.out.reference
     } else {
         fusioncatcher_ref = Channel.empty()
     }
+
+    cosmic_usr = params.cosmic_usr ?: ""
+    cosmic_passwd = params.cosmic_passwd ?: ""
+    FUSIONREPORT_DOWNLOAD(cosmic_usr,cosmic_passwd)
 
 
     emit:
     star_index         = star_index
     // Convert queue channel to value channel so it never gets poison pilled
-    refflat            = UCSC_GTFTOGENEPRED.out.refflat.map{it[1]}.first()
+    refflat            = refflat
     reference_dict     = GATK4_CREATESEQUENCEDICTIONARY.out.dict
     rrna_bed           = PREPARE_RRNA.out.rRNA_bed
     // Convert queue channel to value channel so it never gets poison pilled
@@ -61,6 +75,7 @@ workflow PREPARE_REFERENCES {
     gtf                = gtf
     starfusion_ref     = starfusion_ref
     fusioncatcher_ref  = fusioncatcher_ref
+    fusion_report_db   = FUSIONREPORT_DOWNLOAD.out.reference
     ch_versions        = ch_versions
 
 }
