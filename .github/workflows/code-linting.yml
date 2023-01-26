@@ -27,7 +27,7 @@ jobs:
         run: prettier -v
 
       - name: Run Prettier --check
-        run: prettier --check --list-different . 
+        run: prettier --list-different . 
 
   EditorConfig:
     runs-on: ubuntu-latest
