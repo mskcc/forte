@@ -27,7 +27,7 @@ jobs:
         run: prettier -v
 
       - name: Run Prettier --check
-        run: prettier --check --loglevel debug .
+        run: prettier --check --list-different . 
 
   EditorConfig:
     runs-on: ubuntu-latest
