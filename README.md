@@ -3,11 +3,12 @@
 <!-- TODO nf-core: Write a 1-2 sentence summary of what data the pipeline is for and what it does -->
 
 **anoronh4/forte** is a best-practice analysis pipeline for bulk RNAseq.
-   * **F**unctional
-   * **O**bservation of
-   * **R**NA
-   * **T**ranscriptome
-   * **E**lements/**E**xpression
+
+- **F**unctional
+- **O**bservation of
+- **R**NA
+- **T**ranscriptome
+- **E**lements/**E**xpression
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
@@ -48,14 +49,14 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
    The input file should contain IDs, paths and meta-data pertaining to each sample. The following is a description of each field that can be used. Fields that do not have a default value are required; those that do are not.
 
-   | Header     | Type        | Values               | Defaults |
-   | :---       | :---        | :---                 | :---     |
-   | sample     | `str`       |                      | (none)   |
-   | umi        | `str`/`int` | `NNNXX`/`3`          | `''`     |
-   | umi2       | `str`/`int` | `NNNXX`/`3`          | `''`     |
-   | strand     | `str`       | `yes`/`no`/`reverse` | `no`     |
-   | fastq_1    | `str`       | `/path/to/*fastq.gz` | (none)   |
-   | fastq_1    | `str`       | `/path/to/*fastq.gz` | (none)   |
+   | Header  | Type        | Values               | Defaults |
+   | :------ | :---------- | :------------------- | :------- |
+   | sample  | `str`       |                      | (none)   |
+   | umi     | `str`/`int` | `NNNXX`/`3`          | `''`     |
+   | umi2    | `str`/`int` | `NNNXX`/`3`          | `''`     |
+   | strand  | `str`       | `yes`/`no`/`reverse` | `no`     |
+   | fastq_1 | `str`       | `/path/to/*fastq.gz` | (none)   |
+   | fastq_1 | `str`       | `/path/to/*fastq.gz` | (none)   |
 
    If you are running on juno, chain the `juno` profile (i.e. `-profile singularity,juno`) to take advantage of local resources on juno.
 
