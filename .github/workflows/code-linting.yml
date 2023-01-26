@@ -21,13 +21,13 @@ jobs:
         uses: actions/setup-node@v2
 
       - name: Install Prettier
-        run: npm install -g prettier@2.8.0
+        run: npm install -g prettier
 
       - name: Get Prettier version
         run: prettier -v
 
       - name: Run Prettier --check
-        run: prettier --list-different .
+        run: prettier --check .
 
   EditorConfig:
     runs-on: ubuntu-latest
