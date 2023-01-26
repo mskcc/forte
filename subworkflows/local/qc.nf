@@ -38,8 +38,8 @@ workflow QC {
 
     multiqc_ch = PICARD_COLLECTRNASEQMETRICS.out.metrics
         .mix(fastp_json)
-        .groupTuple()
-        .map{meta, multiqc_files -> multiqc_files.flatten() }
+        .map{meta, multiqc_files -> multiqc_files }
+        .collect()
 
     MULTIQC(
         multiqc_ch,
