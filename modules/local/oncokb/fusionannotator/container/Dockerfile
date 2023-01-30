@@ -1,0 +1,19 @@
+FROM continuumio/miniconda3:22.11.1
+
+LABEL maintainer="Anne Marie Noronha (noronhaa@mskcc.org)" \
+    version.image="0.0.1" \
+    version.oncokb_annotator="v3.3.2"
+
+ENV ONCOKB_ANNOTATOR_VERSION v3.3.2
+
+RUN apt-get update
+RUN apt-get install git build-essential -y
+RUN git clone https://github.com/oncokb/oncokb-annotator.git --branch ${ONCOKB_ANNOTATOR_VERSION}
+WORKDIR oncokb-annotator
+RUN pip install -r requirements/common.txt -r requirements/pip3.txt
+RUN chmod +x ./*.py
+
+ENV PATH /oncokb-annotator:$PATH
+RUN echo "export PATH=$PATH" > /etc/environment
+
+RUN ln -fs /opt/conda/bin/python /usr/bin/python
