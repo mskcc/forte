@@ -23,8 +23,9 @@ process ONCOKB_FUSIONANNOTATOR {
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
+    awk 'BEGIN {FS=OFS="|"}{gsub("--","-",\$1)}1' ${fusions} > ${fusions}.reformat
     FusionAnnotator.py \\
-        -i ${fusions} \\
+        -i ${fusions}.reformat \\
         -o ${prefix}.oncokb.tsv \\
         ${args}
 
