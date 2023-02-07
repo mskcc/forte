@@ -85,9 +85,11 @@ nextflow pull anoronh4/forte
 ### OncoKB annotation
 
 To enable OncoKB fusion annotation, you must have an [API token to access data from OncoKB](https://www.oncokb.org/apiAccess). Once you have obtained a token, it needs to be registered as a Nextflow Secret, which allows for the secure transmission of sensitive information within the pipeline:
+
 ```bash
 nextflow secrets set ONCOKB_TOKEN 'mytokenstr'
 ```
+
 The token will be saved to a hidden folder in your home directory: `~/.nextflow/secrets`. Once `ONCOKB_TOKEN` is configured, you can turn on the annotation process by adding the parameter `--run_oncokb_fusionannotator` on the command line.
 
 ### Reproducibility
