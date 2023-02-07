@@ -82,6 +82,14 @@ When you run the above command, Nextflow automatically pulls the pipeline code f
 nextflow pull anoronh4/forte
 ```
 
+### OncoKB annotation
+
+To enable OncoKB fusion annotation, you must have an [API token to access data from OncoKB](https://www.oncokb.org/apiAccess). Once you have obtained a token, it needs to be registered as a Nextflow Secret, which allows for the secure transmission of sensitive information within the pipeline:
+```bash
+nextflow secrets set ONCOKB_TOKEN 'mytokenstr'
+```
+The token will be saved to a hidden folder in your home directory: `~/.nextflow/secrets`. Once `ONCOKB_TOKEN` is configured, you can turn on the annotation process by adding the parameter `--run_oncokb_fusionannotator` on the command line.
+
 ### Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
