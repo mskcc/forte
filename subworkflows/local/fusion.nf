@@ -4,6 +4,8 @@ include { STAR_ALIGN as STAR_FOR_STARFUSION } from '../../modules/nf-core/star/a
 include { STARFUSION                        } from '../../modules/local/starfusion/detect/main'
 include { FUSIONCATCHER_DETECT              } from '../../modules/local/fusioncatcher/detect/main'
 include { FUSIONREPORT                      } from '../../modules/local/fusionreport/run/main'
+include { ONCOKB_FUSIONANNOTATOR            } from '../../modules/local/oncokb/fusionannotator/main'
+include { CSVTK_CONCAT as CSV_TO_TSV        } from '../../modules/nf-core/csvtk/concat/main'
 
 workflow FUSION {
 
@@ -79,6 +81,20 @@ workflow FUSION {
             },
         fusion_report_db
     )
+    ch_versions = ch_versions.mix(FUSIONREPORT.out.versions.first())
+
+    CSV_TO_TSV(
+        FUSIONREPORT.out.fusionreport_csv
+            .map{ meta, csv ->
+                [meta, [csv]]
+            },
+        "csv",
+        "tsv"
+    )
+    ch_versions = ch_versions.mix(CSV_TO_TSV.out.versions.first())
+
+    ONCOKB_FUSIONANNOTATOR(CSV_TO_TSV.out.csv)
+    ch_versions = ch_versions.mix(ONCOKB_FUSIONANNOTATOR.out.versions.first())
 
     emit:
     ch_versions
