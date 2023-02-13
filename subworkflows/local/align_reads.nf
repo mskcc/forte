@@ -29,7 +29,7 @@ workflow ALIGN_READS {
 
     star_align_bam = STAR_ALIGN.out.bam
         .map{ meta, bam ->
-	    def meta_clone = meta.clone()
+	    def meta_clone = meta.clone().findAll { ["read_group","fq_pair_id"].contains(it.key) }
 	    meta_clone.id = meta.sample
 	    [meta_clone, bam]
 	}.branch { meta, bam ->
