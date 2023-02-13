@@ -20,7 +20,7 @@ workflow MERGE_READS {
             skips_merge: true
         }
 
-     bam_ch = bam
+    bam_ch = bam
         .branch { meta, bam ->
             needs_bam2fq: meta.has_umi && params.dedup_umi_for_fusions
             skips_bam2fq: true
@@ -49,7 +49,7 @@ workflow MERGE_READS {
                     [meta, reads.findAll{ !(it.getName().endsWith("singleton.fq.gz") || it.getName().endsWith("other.fq.gz")) }]
                 }
         )
-    
+
     emit:
     merged_reads = merged_reads
     ch_versions  = ch_versions

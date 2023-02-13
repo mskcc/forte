@@ -29,13 +29,13 @@ workflow ALIGN_READS {
 
     star_align_bam = STAR_ALIGN.out.bam
         .map{ meta, bam ->
-	    def meta_clone = meta.clone().findAll { !["read_group","fastq_pair_id"].contains(it.key) }
-	    meta_clone.id = meta.sample
-	    [meta_clone, bam]
-	}.branch { meta, bam ->
+            def meta_clone = meta.clone().findAll { !["read_group","fastq_pair_id"].contains(it.key) }
+            meta_clone.id = meta.sample
+            [meta_clone, bam]
+        }.branch { meta, bam ->
             needs_merge: meta.fq_num > 1
-	    skips_merge: meta.fq_num == 1
-	}
+            skips_merge: meta.fq_num == 1
+        }
 
     SAMTOOLS_MERGE(
         star_align_bam.needs_merge
@@ -46,8 +46,8 @@ workflow ALIGN_READS {
     ch_versions = ch_versions.mix(SAMTOOLS_MERGE.out.versions.first())
 
     merged_bam = star_align_bam.skips_merge
-	.mix(SAMTOOLS_MERGE.out.bam)
-    
+        .mix(SAMTOOLS_MERGE.out.bam)
+
     SAMTOOLS_INDEX(merged_bam)
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
@@ -62,7 +62,7 @@ workflow ALIGN_READS {
     SAMTOOLS_INDEX_DEDUP(UMITOOLS_DEDUP.out.bam)
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX_DEDUP.out.versions.first())
 
-    dedup_bam = UMITOOLS_DEDUP.out.bam 
+    dedup_bam = UMITOOLS_DEDUP.out.bam
         .mix(
             merged_bam
                 .filter{ meta, bam -> ! meta.has_umi }
@@ -70,7 +70,7 @@ workflow ALIGN_READS {
 
 
     emit:
-    bam             = dedup_bam 
+    bam             = dedup_bam
     bam_withdup     = merged_bam
     bai             = SAMTOOLS_INDEX_DEDUP.out.bai
     bai_withdup     = SAMTOOLS_INDEX.out.bai

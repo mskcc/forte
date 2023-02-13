@@ -38,20 +38,20 @@ workflow PREPROCESS_READS {
 
     // once FASTP can run without producing reads then fix this logic.
     FASTP(
-        extracted_reads, 
+        extracted_reads,
         adapter_fasta,
         false,
         false
     )
     if (params.skip_trimming){
-        trimmed_reads = extracted_reads 
+        trimmed_reads = extracted_reads
     } else {
         trimmed_reads = FASTP.out.reads
         ch_versions = ch_versions.mix(FASTP.out.versions.first())
     }
 
     emit:
-    reads           = trimmed_reads 
+    reads           = trimmed_reads
     fastp_json      = FASTP.out.json
     ch_versions     = ch_versions
 }

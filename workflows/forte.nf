@@ -52,7 +52,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS       } from '../modules/nf-core/custom/du
 include { PREPARE_REFERENCES                } from '../subworkflows/local/prepare_references'
 include { PREPROCESS_READS                  } from '../subworkflows/local/preprocess_reads'
 include { ALIGN_READS                       } from '../subworkflows/local/align_reads'
-include { MERGE_READS                       } from '../subworkflows/local/merge_reads'  
+include { MERGE_READS                       } from '../subworkflows/local/merge_reads'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
 include { QC                                } from '../subworkflows/local/qc'
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
@@ -101,14 +101,14 @@ workflow FORTE {
     )
     ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
 
-    
+
     MERGE_READS(
         PREPROCESS_READS.out.reads,
-	ALIGN_READS.out.bam
+        ALIGN_READS.out.bam
     )
 
     FUSION(
-        MERGE_READS.out.merged_reads, 
+        MERGE_READS.out.merged_reads,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
@@ -121,7 +121,7 @@ workflow FORTE {
         ALIGN_READS.out.bam,
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
-        PREPROCESS_READS.out.fastp_json 
+        PREPROCESS_READS.out.fastp_json
     )
     ch_versions = ch_versions.mix(QC.out.ch_versions)
 
