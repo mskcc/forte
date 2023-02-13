@@ -62,7 +62,7 @@ class Utils {
         String lane
         if (fields.size() >= 7) {
             fcid = fields[2]
-            lane = fields[0]
+            lane = fields[3]
         } else if (fields.size() == 5) {
             fcid = fields[0]
             lane = fields[1]
