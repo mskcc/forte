@@ -32,6 +32,8 @@ class RowChecker:
     def __init__(
         self,
         sample_col="sample",
+        id_col="fastq_pair_id",
+        num_col="fastq_num",
         first_col="fastq_1",
         second_col="fastq_2",
         single_col="single_end",
@@ -54,6 +56,8 @@ class RowChecker:
         """
         super().__init__(**kwargs)
         self._sample_col = sample_col
+        self._id_col = id_col
+        self._num_col = num_col
         self._first_col = first_col
         self._second_col = second_col
         self._single_col = single_col
@@ -127,7 +131,10 @@ class RowChecker:
         for row in self.modified:
             sample = row[self._sample_col]
             seen[sample] += 1
-            row[self._sample_col] = f"{sample}_T{seen[sample]}"
+            row[self._id_col] = f"{sample}_T{seen[sample]}"
+        for row in self.modified:
+            sample = row[self._sample_col]
+            row[self._num_col] = f"{seen[sample]}"
 
 
 def read_head(handle, num_lines=10):
@@ -210,7 +217,9 @@ def check_samplesheet(file_in, file_out):
                 sys.exit(1)
         checker.validate_unique_samples()
     header = list(reader.fieldnames)
-    header.insert(1, "single_end")
+    header.insert(1, checker._single_col)
+    header.insert(1, checker._id_col)
+    header.insert(1, checker._num_col)
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
     with file_out.open(mode="w", newline="") as out_handle:
         writer = csv.DictWriter(out_handle, header, delimiter=",")
