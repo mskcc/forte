@@ -39,7 +39,8 @@ workflow ALIGN_READS {
 
     SAMTOOLS_MERGE(
         star_align_bam.needs_merge
-            .groupTuple(by: [0]),
+            .map{ meta, bam -> [groupKey(meta, meta.fq_num),bam] }
+            .groupTuple(),
         [],
         []
     )

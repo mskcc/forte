@@ -29,7 +29,8 @@ workflow MERGE_READS {
 
     CAT_FASTQ(
         reads_ch.needs_merge
-            .groupTuple(by:[0])
+            .map{ meta, reads -> [ groupKey(meta, meta.fq_num), reads ] }
+            .groupTuple()
             .map{ meta, reads -> [ meta, reads.flatten() ] }
     )
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
