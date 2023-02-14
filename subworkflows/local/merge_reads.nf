@@ -14,7 +14,7 @@ workflow MERGE_READS {
             def meta_clone = meta.clone().findAll { !["read_group","fastq_pair_id"].contains(it.key) }
             meta_clone.id = meta.sample
             [meta_clone, reads]
-        }.view().branch { meta, reads ->
+        }.branch { meta, reads ->
             needs_merge: ( meta.fq_num > 1 ) && ( ! ( meta.has_umi && params.dedup_umi_for_fusions ) )
             needs_bam2fq: meta.has_umi && params.dedup_umi_for_fusions
             skips_merge: true
@@ -31,7 +31,6 @@ workflow MERGE_READS {
         reads_ch.needs_merge
             .groupTuple(by:[0])
             .map{ meta, reads -> [ meta, reads.flatten() ] }
-            .view()
     )
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
