@@ -50,8 +50,9 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS       } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { PREPARE_REFERENCES                } from '../subworkflows/local/prepare_references'
-include { TRIM_ALIGN ;
-    TRIM_ALIGN as TRIM_ALIGN_UMI      } from '../subworkflows/local/trim_align'
+include { PREPROCESS_READS                  } from '../subworkflows/local/preprocess_reads'
+include { ALIGN_READS                       } from '../subworkflows/local/align_reads'
+include { MERGE_READS                       } from '../subworkflows/local/merge_reads'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
 include { QC                                } from '../subworkflows/local/qc'
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
@@ -81,39 +82,33 @@ workflow FORTE {
     PREPARE_REFERENCES()
     ch_versions = ch_versions.mix(PREPARE_REFERENCES.out.ch_versions)
 
-    TRIM_ALIGN(
-        INPUT_CHECK.out.reads.filter{meta, reads -> ! meta.has_umi},
-        PREPARE_REFERENCES.out.star_index,
-        PREPARE_REFERENCES.out.gtf,
-        false,
-        params.generate_dedup_fq
+
+    PREPROCESS_READS(
+        INPUT_CHECK.out.reads
     )
-    ch_versions = ch_versions.mix(TRIM_ALIGN.out.ch_versions)
-    TRIM_ALIGN_UMI(
-        INPUT_CHECK.out.reads.filter{meta, reads -> meta.has_umi},
+    ch_versions = ch_versions.mix(PREPROCESS_READS.out.ch_versions)
+
+    ALIGN_READS(
+        PREPROCESS_READS.out.reads,
         PREPARE_REFERENCES.out.star_index,
-        PREPARE_REFERENCES.out.gtf,
-        true,
-        params.generate_dedup_fq
+        PREPARE_REFERENCES.out.gtf
     )
-    ch_versions = ch_versions.mix(TRIM_ALIGN_UMI.out.ch_versions)
-
-    bam_ch = TRIM_ALIGN.out.bam
-        .mix(TRIM_ALIGN_UMI.out.bam)
-
-    processed_reads = TRIM_ALIGN.out.reads
-        .mix(TRIM_ALIGN_UMI.out.reads)
-
-    fastp_ch = TRIM_ALIGN.out.fastp_json.mix(TRIM_ALIGN_UMI.out.fastp_json)
+    ch_versions = ch_versions.mix(ALIGN_READS.out.ch_versions)
 
     QUANTIFICATION(
-        bam_ch,
+        ALIGN_READS.out.bam,
         PREPARE_REFERENCES.out.gtf
     )
     ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
 
+
+    MERGE_READS(
+        PREPROCESS_READS.out.reads,
+        ALIGN_READS.out.bam
+    )
+
     FUSION(
-        processed_reads,
+        MERGE_READS.out.merged_reads,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
@@ -123,10 +118,10 @@ workflow FORTE {
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
     QC(
-        bam_ch,
+        ALIGN_READS.out.bam,
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
-        fastp_ch
+        PREPROCESS_READS.out.fastp_json
     )
     ch_versions = ch_versions.mix(QC.out.ch_versions)
 

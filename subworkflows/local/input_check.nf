@@ -24,7 +24,10 @@ workflow INPUT_CHECK {
 def create_fastq_channel(LinkedHashMap row) {
     // create meta map
     def meta = [:]
-    meta.id         = row.sample.trim()
+    meta.fq_num     = row.fastq_num.trim().toInteger()
+    meta.sample     = row.sample.trim()
+    meta.id         = meta.fq_num == 1 ? meta.sample : row.fastq_pair_id.trim()
+    meta.fastq_pair_id = row.fastq_pair_id
     meta.single_end = row.single_end ? row.single_end.toBoolean() : false
     meta.umi        = row.umi ? row.umi.trim() : ""
     meta.umi2       = row.umi2 ? row.umi2.trim() : ""
