@@ -17,7 +17,7 @@ workflow PREPROCESS_READS {
         .map{ meta, reads ->
             def meta_clone = meta.clone()
             if (params.extract_fq_read_group) {
-                def rg_map = Utils.flowcellLaneFromFastq(meta.single_end ? reads : reads[0])
+                def rg_map = Utils.flowcellLaneFromFastq(reads[0])
                 meta_clone.read_group = "${meta.sample}@${rg_map["fcid"]}@${rg_map["lane"]}"
                 meta_clone.id = meta_clone.read_group
             } else {
