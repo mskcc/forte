@@ -67,6 +67,9 @@ workflow FUSION {
 
     fc_fusions = ["GRCh37","hg19","smallGRCh37"].contains(params.genome) ? FUSIONCATCHER_DETECT.out.fusions_alt : FUSIONCATCHER_DETECT.out.fusions
 
+    // get expected number of callers for groupTuple
+    numcallers = 1 + ( params.starfusion_url ? 1 : 0 ) + ( ["GRCh37","GRCh38"].contains(params.genome) ? 1 : 0 )
+
     FUSIONREPORT(
         ARRIBA.out.fusions
             .map{ meta, file ->[ meta, "arriba", file ] }
@@ -76,7 +79,7 @@ workflow FUSION {
             ).mix(
                 STARFUSION.out.abridged
                     .map{ meta, file -> [ meta, "starfusion", file ] }
-            ).groupTuple(by:[0])
+            ).groupTuple(by:[0],size:numcallers)
             .map{ meta, caller, file ->
                 def avg_weight = caller.collect({(100/caller.size()).toInteger()})
                 avg_weight[-1] = avg_weight[-1] + (100-avg_weight.sum())
