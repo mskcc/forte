@@ -69,15 +69,18 @@ workflow FUSION {
 
     FUSIONREPORT(
         ARRIBA.out.fusions
-            .join(STARFUSION.out.abridged,by:[0])
-            .join(fc_fusions,by:[0])
-            .map{ meta, arriba, starfusion, fusioncatcher ->
-                [
-                    meta,
-                    ["arriba","starfusion","fusioncatcher"], // names of callers recognized by fusionreport
-                    [33,33,34], // weights
-                    [arriba, starfusion, fusioncatcher] // files
-                ]
+            .map{ meta, file ->[ meta, "arriba", file ] }
+            .mix(
+                fc_fusions
+                    .map{ meta, file -> [ meta, "fusioncatcher", file ] }
+            ).mix(
+                STARFUSION.out.abridged
+                    .map{ meta, file -> [ meta, "starfusion", file ] }
+            ).groupTuple(by:[0])
+            .map{ meta, caller, file ->
+                def avg_weight = caller.collect({(100/caller.size()).toInteger()})
+                avg_weight[-1] = avg_weight[-1] + (100-avg_weight.sum())
+                [ meta, caller, avg_weight, file ]
             },
         fusion_report_db
     )
