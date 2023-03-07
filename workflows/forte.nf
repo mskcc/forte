@@ -119,9 +119,13 @@ workflow FORTE {
 
     QC(
         ALIGN_READS.out.bam,
+        ALIGN_READS.out.bai,
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
-        PREPROCESS_READS.out.fastp_json
+        PREPARE_REFERENCES.out.rseqc_bed,
+        PREPROCESS_READS.out.fastp_json,
+        QUANTIFICATION.out.htseq_counts,
+        ALIGN_READS.out.star_log_final
     )
     ch_versions = ch_versions.mix(QC.out.ch_versions)
 
