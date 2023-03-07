@@ -108,7 +108,7 @@ workflow FORTE {
     )
 
     FUSION(
-        MERGE_READS.out.merged_reads,
+        MERGE_READS.out.dedup_reads,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,

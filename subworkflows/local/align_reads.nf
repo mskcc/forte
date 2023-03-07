@@ -1,5 +1,4 @@
-include { STAR_ALIGN       } from '../../modules/nf-core/star/align/main'
-include { SAMTOOLS_MERGE   } from '../../modules/nf-core/samtools/merge/main'
+include { STAR_ALIGN       } from '../../modules/local/star/align/main'
 include { UMITOOLS_DEDUP   } from '../../modules/nf-core/umitools/dedup/main'
 include {
     SAMTOOLS_INDEX;
@@ -20,34 +19,11 @@ workflow ALIGN_READS {
     STAR_ALIGN(
         reads,
         star_index,
-        gtf,
-        false,
-        false,
-        false
+        gtf
     )
     ch_versions = ch_versions.mix(STAR_ALIGN.out.versions.first())
 
-    star_align_bam = STAR_ALIGN.out.bam
-        .map{ meta, bam ->
-            def meta_clone = meta.clone().findAll { !["read_group","fastq_pair_id"].contains(it.key) }
-            meta_clone.id = meta.sample
-            [meta_clone, bam]
-        }.branch { meta, bam ->
-            needs_merge: meta.fq_num > 1
-            skips_merge: meta.fq_num == 1
-        }
-
-    SAMTOOLS_MERGE(
-        star_align_bam.needs_merge
-            .map{ meta, bam -> [groupKey(meta, meta.fq_num),bam] }
-            .groupTuple(),
-        [],
-        []
-    )
-    ch_versions = ch_versions.mix(SAMTOOLS_MERGE.out.versions.first())
-
-    merged_bam = star_align_bam.skips_merge
-        .mix(SAMTOOLS_MERGE.out.bam)
+    merged_bam = STAR_ALIGN.out.bam
 
     SAMTOOLS_INDEX(merged_bam)
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
@@ -68,7 +44,6 @@ workflow ALIGN_READS {
             merged_bam
                 .filter{ meta, bam -> ! meta.has_umi }
         )
-
 
     emit:
     bam             = dedup_bam

@@ -1,6 +1,6 @@
-include { STAR_ALIGN as STAR_FOR_ARRIBA     } from '../../modules/nf-core/star/align/main'
+include { STAR_ALIGN as STAR_FOR_ARRIBA     } from '../../modules/local/star/align/main'
 include { ARRIBA                            } from '../../modules/nf-core/arriba/main'
-include { STAR_ALIGN as STAR_FOR_STARFUSION } from '../../modules/nf-core/star/align/main'
+include { STAR_ALIGN as STAR_FOR_STARFUSION } from '../../modules/local/star/align/main'
 include { STARFUSION                        } from '../../modules/local/starfusion/detect/main'
 include { FUSIONCATCHER_DETECT              } from '../../modules/local/fusioncatcher/detect/main'
 include { FUSIONREPORT                      } from '../../modules/local/fusionreport/run/main'
@@ -24,10 +24,7 @@ workflow FUSION {
     STAR_FOR_ARRIBA(
         reads,
         star_index,
-        gtf,
-        false,
-        false,
-        false
+        gtf
     )
     ch_versions = ch_versions.mix(STAR_FOR_ARRIBA.out.versions.first())
 
@@ -47,10 +44,7 @@ workflow FUSION {
         reads,
         // use the star index in the starfusion reference to ensure compatibility
         starfusion_ref.map{ file( it + "/ref_genome.fa.star.idx")},
-        gtf,
-        false,
-        false,
-        false
+        gtf
     )
     ch_versions = ch_versions.mix(STAR_FOR_STARFUSION.out.versions.first())
 
