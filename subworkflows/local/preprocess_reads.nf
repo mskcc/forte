@@ -60,7 +60,7 @@ workflow PREPROCESS_READS {
         .map{ meta, reads, read_group ->
             meta = meta + [read_group:read_group]
             [meta, reads.flatten()]
-        }.view()
+        }
 
     emit:
     reads           = trimmed_grouped_reads
