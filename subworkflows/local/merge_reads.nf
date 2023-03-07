@@ -10,12 +10,12 @@ workflow MERGE_READS {
 
     reads_ch = reads
         .filter{ meta, reads -> ! ( meta.has_umi && params.dedup_umi_for_fusions) }
-        
+
     bam_ch = bam
         .filter{ meta, bam -> meta.has_umi && params.dedup_umi_for_fusions }
 
     SAMTOOLS_BAM2FQ(
-        bam_ch, 
+        bam_ch,
         true
     )
     ch_versions = ch_versions.mix(SAMTOOLS_BAM2FQ.out.versions.first())
