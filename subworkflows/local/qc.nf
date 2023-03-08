@@ -24,7 +24,7 @@ workflow QC {
     BAM_RSEQC(
         bam.join(bai, by:[0]),
         rseqc_bed,
-        ['bam_stat','inner_distance','infer_experiment','junction_annotation','junction_saturation','read_distribution','read_duplication','tin']
+        params.rseqc_modules
     )
     ch_versions = ch_versions.mix(BAM_RSEQC.out.versions.first())
 
