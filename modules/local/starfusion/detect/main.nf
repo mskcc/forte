@@ -17,13 +17,14 @@ process STARFUSION {
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def fasta = meta.single_end ? "--left_fq ${reads[0]}" : "--left_fq ${reads[0]} --right_fq ${reads[1]}"
+    def reads_in = reads ? ( meta.single_end ? "--left_fq ${reads[0]}" : "--left_fq ${reads[0]} --right_fq ${reads[1]}" ) : ''
+    def junction_in = junction ? "-J $junction" : ''
     def args = task.ext.args ?: ''
     """
     STAR-Fusion \\
         --genome_lib_dir $reference \\
-        $fasta \\
-        -J $junction \\
+        $reads_in \\
+        $junction_in \\
         --CPU $task.cpus \\
         --examine_coding_effect \\
         --output_dir . \\

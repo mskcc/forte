@@ -48,9 +48,12 @@ workflow FUSION {
     )
     ch_versions = ch_versions.mix(STAR_FOR_STARFUSION.out.versions.first())
 
-    reads_junction = reads.join( STAR_FOR_STARFUSION.out.junction )
+    //reads_junction = reads.join( STAR_FOR_STARFUSION.out.junction,by:[0] )
 
-    STARFUSION( reads_junction, starfusion_ref)
+    STARFUSION(
+        STAR_FOR_STARFUSION.out.junction.map{ meta, junction -> [ meta, [], junction ] },
+        starfusion_ref
+    )
     ch_versions = ch_versions.mix(STARFUSION.out.versions.first())
 
     FUSIONCATCHER_DETECT(
@@ -73,7 +76,10 @@ workflow FUSION {
             ).mix(
                 STARFUSION.out.abridged
                     .map{ meta, file -> [ meta, "starfusion", file ] }
-            ).groupTuple(by:[0],size:numcallers)
+            ).map{ meta, caller, file ->
+                def meta_clone = meta.clone().findAll { !["read_group","fastq_pair_id"].contains(it.key) }
+                [meta_clone, caller, file]
+            }.groupTuple(by:[0],size:numcallers)
             .map{ meta, caller, file ->
                 def avg_weight = caller.collect({(100/caller.size()).toInteger()})
                 avg_weight[-1] = avg_weight[-1] + (100-avg_weight.sum())
