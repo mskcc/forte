@@ -76,10 +76,8 @@ workflow FUSION {
             ).mix(
                 STARFUSION.out.abridged
                     .map{ meta, file -> [ meta, "starfusion", file ] }
-            ).map{ meta, caller, file ->
-                def meta_clone = meta.clone().findAll { !["read_group","fastq_pair_id"].contains(it.key) }
-                [meta_clone, caller, file]
-            }.groupTuple(by:[0],size:numcallers)
+            )
+            .groupTuple(by:[0],size:numcallers)
             .map{ meta, caller, file ->
                 def avg_weight = caller.collect({(100/caller.size()).toInteger()})
                 avg_weight[-1] = avg_weight[-1] + (100-avg_weight.sum())
