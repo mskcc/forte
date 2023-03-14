@@ -59,10 +59,9 @@ workflow PREPARE_REFERENCES {
         fusioncatcher_ref = Channel.empty()
     }
 
-    cosmic_usr = params.cosmic_usr ?: ""
-    cosmic_passwd = params.cosmic_passwd ?: ""
-    FUSIONREPORT_DOWNLOAD(cosmic_usr,cosmic_passwd)
-
+    //cosmic_usr = params.cosmic_usr ?: ""
+    //cosmic_passwd = params.cosmic_passwd ?: ""
+    FUSIONREPORT_DOWNLOAD()
 
     emit:
     star_index         = star_index

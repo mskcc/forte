@@ -10,18 +10,16 @@ process FUSIONREPORT_DOWNLOAD {
         //'docker.io/rannickscilifelab/fusion-report:2.1.5updated' :
         //'docker.io/rannickscilifelab/fusion-report:2.1.5updated' }"
 
-
-    input:
-    val(username)
-    val(passwd)
-
     output:
     path "db"                , emit: reference
-    path "versions.yml"     , emit: versions
+    path "versions.yml"      , emit: versions
 
     script:
+    def args = task.ext.args ?: ''
     """
-    fusion_report download --cosmic_usr $username --cosmic_passwd $passwd db
+    fusion_report download \\
+        $args \\
+        db
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
