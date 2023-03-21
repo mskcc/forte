@@ -3,7 +3,7 @@ on:
   push:
     branches: [master]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 # Cancel if a newer run is started
 concurrency:
