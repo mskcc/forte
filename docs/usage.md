@@ -85,6 +85,7 @@ nextflow pull anoronh4/forte
 ### Fusion-report annotation
 
 Annotation with the fusion-report module uses a reference database that is built within the Forte pipeline. Building the reference database requires access to COSMIC with a username and password. Once you have these two items, you can pass in the username on the command-line like so: `--cosmic_usr <yourusername>` and you must set up the password using nextflow's `secrets` functionality, which allows for the secure transmission of sensitive information within the pipeline:
+
 ```bash
 nextflow secrets set COSMIC_PASSWD 'mycosmicpw'
 ```
