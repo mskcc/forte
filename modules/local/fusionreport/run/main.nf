@@ -3,7 +3,7 @@ process FUSIONREPORT {
     label 'process_low'
 
     // Note: 2.7X indices incompatible with AWS iGenomes.
-    conda (params.enable_conda ? 'bioconda::star=2.7.9a' : null)
+    conda 'bioconda::star=2.7.9a'
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'cmopipeline/fusion-report:0.0.1' :
         'cmopipeline/fusion-report:0.0.1' }"
