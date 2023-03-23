@@ -2,7 +2,7 @@ process FUSIONCATCHER_DETECT {
     tag "$meta.id"
     label 'process_high'
 
-    conda (params.enable_conda ? "bioconda::fusioncatcher=1.33" : null)
+    conda "bioconda::fusioncatcher=1.33"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'docker.io/clinicalgenomics/fusioncatcher:1.33' :
         'docker.io/clinicalgenomics/fusioncatcher:1.33' }"
