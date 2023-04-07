@@ -197,10 +197,6 @@
         }
     ],
     "properties": {
-        "umi_pattern": {
-            "type": "string",
-            "default": "NNN"
-        },
         "extract_fq_read_group": {
             "type": "boolean",
             "default": "true"
