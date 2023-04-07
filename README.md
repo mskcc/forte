@@ -56,9 +56,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
    | umi2    | `str`/`int` | `NNNXX`/`3`          | `''`     |
    | strand  | `str`       | `yes`/`no`/`reverse` | `no`     |
    | fastq_1 | `str`       | `/path/to/*fastq.gz` | (none)   |
-   | fastq_1 | `str`       | `/path/to/*fastq.gz` | (none)   |
+   | fastq_2 | `str`       | `/path/to/*fastq.gz` | (none)   |
 
    If you are running on juno, chain the `juno` profile (i.e. `-profile singularity,juno`) to take advantage of local resources on juno.
+
+5. For more information on running the pipeline, please see the [detailed usage documentation](docs/usage.md).
 
 ## Credits
 
