@@ -217,7 +217,7 @@
         },
         "dedup_umi_for_fusions": {
             "type": "boolean",
-            "default": true
+            "default": false
         },
         "run_oncokb_fusionannotator": {
             "type": "boolean",
