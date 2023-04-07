@@ -1,1 +1,3 @@
 show_analysis_paths: False
+extra_fn_clean_trim:
+  - "htseq.count.txt"
