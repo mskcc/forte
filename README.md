@@ -77,6 +77,7 @@ We also thank the following contributors:
 - Sam Tischfield <tischfis@mskcc.org>
 - Martina Bradic <bradicm@mskcc.org>
 - Jun Woo <wooh@mskcc.org>
+- Mark Donoghue <donoghum@mskcc.org>
 - Helen Won
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
