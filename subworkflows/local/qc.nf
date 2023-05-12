@@ -8,8 +8,12 @@ workflow QC {
 
     take:
     bam
+    bai
     refflat
     rrna_intervals
+    fai
+    dict
+    baits
     fastp_json
 
     main:
@@ -24,20 +28,25 @@ workflow QC {
     )
     ch_versions = ch_versions.mix(PICARD_COLLECTRNASEQMETRICS.out.versions.first())
 
-    /*
     PICARD_COLLECTHSMETRICS(
-        bam_ch.filter{ meta, bam ->
-            meta.target != "none"
-        },
-        fasta,
+        bam
+            .filter{ meta, bam ->
+                meta.bait != ""
+            }.combine(bai, by:[0])
+            .combine(baits)
+            .filter{ meta, bam, bai, bait, bait_file, target_file ->
+                meta.bait == bait
+            }.map{ meta, bam, bai, bait, bait_file, target_file ->
+                [meta, bam, bai, bait_file, target_file]
+            },
+        [[:],fasta],
         fai,
-        bait,
-        target
+        dict.map{ dict -> [[:],dict]}
     )
-    */
 
     multiqc_ch = PICARD_COLLECTRNASEQMETRICS.out.metrics
         .mix(fastp_json)
+        .mix(PICARD_COLLECTHSMETRICS.out.metrics)
         .map{meta, multiqc_files -> multiqc_files }
         .collect()
 

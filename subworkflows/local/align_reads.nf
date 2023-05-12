@@ -29,7 +29,7 @@ workflow ALIGN_READS {
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     UMITOOLS_DEDUP(
-        merged_bam
+        STAR_ALIGN.out.bam
             .filter{ meta, bam -> meta.has_umi }
             .join(SAMTOOLS_INDEX.out.bai, by:[0]),
         true
@@ -41,14 +41,20 @@ workflow ALIGN_READS {
 
     dedup_bam = UMITOOLS_DEDUP.out.bam
         .mix(
-            merged_bam
+            STAR_ALIGN.out.bam
                 .filter{ meta, bam -> ! meta.has_umi }
+        )
+
+    dedup_bai = SAMTOOLS_INDEX_DEDUP.out.bai
+        .mix(
+            SAMTOOLS_INDEX.out.bai
+                .filter{meta, bai -> ! meta.has_umi}
         )
 
     emit:
     bam             = dedup_bam
-    bam_withdup     = merged_bam
-    bai             = SAMTOOLS_INDEX_DEDUP.out.bai
+    bam_withdup     = STAR_ALIGN.out.bam
+    bai             = dedup_bai
     bai_withdup     = SAMTOOLS_INDEX.out.bai
     ch_versions     = ch_versions
 }

@@ -19,6 +19,7 @@ params.fasta          = WorkflowMain.getGenomeAttribute(params, 'fasta')
 params.gtf            = WorkflowMain.getGenomeAttribute(params, 'gtf')
 params.starfusion_url = WorkflowMain.getGenomeAttribute(params, 'starfusion_url')
 params.refflat        = WorkflowMain.getGenomeAttribute(params, 'refflat')
+params.baits          = WorkflowMain.getGenomeAttribute(params, 'baits')
 
 WorkflowMain.initialise(workflow, params, log)
 
