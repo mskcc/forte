@@ -49,14 +49,16 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
    The input file should contain IDs, paths and meta-data pertaining to each sample. The following is a description of each field that can be used. Fields that do not have a default value are required; those that do are not.
 
-   | Header  | Type        | Values               | Defaults |
-   | :------ | :---------- | :------------------- | :------- |
-   | sample  | `str`       |                      | (none)   |
-   | umi     | `str`/`int` | `NNNXX`/`3`          | `''`     |
-   | umi2    | `str`/`int` | `NNNXX`/`3`          | `''`     |
-   | strand  | `str`       | `yes`/`no`/`reverse` | `no`     |
-   | fastq_1 | `str`       | `/path/to/*fastq.gz` | (none)   |
-   | fastq_2 | `str`       | `/path/to/*fastq.gz` | (none)   |
+   | Header     | Type        | Values                  | Defaults |
+   | :--------- | :---------- | :---------------------- | :------- |
+   | sample     | `str`       |                         | (none)   |
+   | single_end | `bool`      | `true`/`false`          | `false`  |
+   | umi        | `str`/`int` | `NNNXX`/`3`             | `''`     |
+   | umi2       | `str`/`int` | `NNNXX`/`3`             | `''`     |
+   | strand     | `str`       | `yes`/`no`/`reverse`    | `no`     |
+   | bait       | `str`       | `idt_v2/idt_v1/agilent` | `''`     |
+   | fastq_1    | `str`       | `/path/to/*fastq.gz`    | (none)   |
+   | fastq_2    | `str`       | `/path/to/*fastq.gz`    | (none)   |
 
    If you are running on juno, chain the `juno` profile (i.e. `-profile singularity,juno`) to take advantage of local resources on juno.
 

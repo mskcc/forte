@@ -29,6 +29,16 @@ def create_fastq_channel(LinkedHashMap row) {
     meta.id         = meta.fq_num == 1 ? meta.sample : row.fastq_pair_id.trim()
     meta.fastq_pair_id = row.fastq_pair_id
     meta.single_end = row.single_end ? row.single_end.toBoolean() : false
+    meta.bait       = row.bait ? row.bait.trim() : ""
+    if (meta.bait != "") {
+        try {
+            params.baits[meta.bait]
+        } catch(Exception e){
+            throw e
+            exit 1, "ERROR: Target files for baitset ${meta.bait} not available. Please check the samplesheet and add correct target files if applicable."
+        }
+    }
+
     meta.umi        = row.umi ? row.umi.trim() : ""
     meta.umi2       = row.umi2 ? row.umi2.trim() : ""
     meta.has_umi    = meta.umi == "" ? false : true
@@ -45,7 +55,6 @@ def create_fastq_channel(LinkedHashMap row) {
     if (! ["yes","no","reverse"].contains(meta.strand)){
         exit 1, "ERROR: Please check input samplesheet -> strand value is invalid!\n${row.strand ? row.strand : ""}"
     }
-    // meta.target       = row.target.trim()
 
     // add path(s) of the fastq file(s) to the meta map
     def fastq_meta = []

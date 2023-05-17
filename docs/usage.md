@@ -45,15 +45,16 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 
 the following is a description of each field that can be used. Fields that do not have a default value are required; those that do are not.
 
-| Header     | Type        | Values               | Defaults |
-| :--------- | :---------- | :------------------- | :------- |
-| sample     | `str`       |                      | (none)   |
-| single_end | `bool`      | `true`/`false`       | `false`  |
-| umi        | `str`/`int` | `NNNXX`/`3`          | `''`     |
-| umi2       | `str`/`int` | `NNNXX`/`3`          | `''`     |
-| strand     | `str`       | `yes`/`no`/`reverse` | `no`     |
-| fastq_1    | `str`       | `/path/to/*fastq.gz` | (none)   |
-| fastq_1    | `str`       | `/path/to/*fastq.gz` | (none)   |
+| Header     | Type        | Values                  | Defaults |
+| :--------- | :---------- | :---------------------- | :------- |
+| sample     | `str`       |                         | (none)   |
+| single_end | `bool`      | `true`/`false`          | `false`  |
+| umi        | `str`/`int` | `NNNXX`/`3`             | `''`     |
+| umi2       | `str`/`int` | `NNNXX`/`3`             | `''`     |
+| strand     | `str`       | `yes`/`no`/`reverse`    | `no`     |
+| bait       | `str`       | `idt_v2/idt_v1/agilent` | `''`     |
+| fastq_1    | `str`       | `/path/to/*fastq.gz`    | (none)   |
+| fastq_2    | `str`       | `/path/to/*fastq.gz`    | (none)   |
 
 ## Running the pipeline
 
@@ -99,6 +100,10 @@ nextflow secrets set ONCOKB_TOKEN 'mytokenstr'
 ```
 
 The token will be saved to a hidden folder in your home directory: `~/.nextflow/secrets`. Once `ONCOKB_TOKEN` is configured, you can turn on the annotation process by adding the parameter `--run_oncokb_fusionannotator` on the command line.
+
+### Baits
+
+Forte performs QC analysis on targeted assays using Picard's `CollectHsMetrics` tool. Currently, `idt_v1`, `idt_v2` and `agilent` are supported when using the `GRCh37` genome (default). For other baitsets, `conf/igenomes.config` should be customized. Multiple baitsets can be used in the same run.
 
 ### Reproducibility
 

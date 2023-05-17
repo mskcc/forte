@@ -38,6 +38,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { BAIT_INPUTS } from '../subworkflows/local/baits'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -70,6 +71,11 @@ def multiqc_report = []
 workflow FORTE {
 
     ch_versions = Channel.empty()
+
+    //
+    // SUBWORKFLOW: If baitsets are available, they will be added to the channel
+    //
+    BAIT_INPUTS ()
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
@@ -119,8 +125,12 @@ workflow FORTE {
 
     QC(
         ALIGN_READS.out.bam,
+        ALIGN_READS.out.bai,
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
+        PREPARE_REFERENCES.out.fasta_fai,
+        PREPARE_REFERENCES.out.fasta_dict,
+        BAIT_INPUTS.out.baits,
         PREPROCESS_READS.out.fastp_json
     )
     ch_versions = ch_versions.mix(QC.out.ch_versions)
