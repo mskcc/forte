@@ -1,4 +1,4 @@
-include { STAR_ALIGN       } from '../../modules/local/star/align/main'
+include { STAR_ALIGN       } from '../../modules/nf-core/star/align/main'
 include { UMITOOLS_DEDUP   } from '../../modules/nf-core/umitools/dedup/main'
 include {
     SAMTOOLS_INDEX;
@@ -19,7 +19,10 @@ workflow ALIGN_READS {
     STAR_ALIGN(
         reads,
         star_index,
-        gtf
+        gtf,
+        false,
+        [],
+        []
     )
     ch_versions = ch_versions.mix(STAR_ALIGN.out.versions.first())
 
