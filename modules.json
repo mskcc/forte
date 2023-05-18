@@ -80,6 +80,11 @@
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
+                    "star/align": {
+                        "branch": "master",
+                        "git_sha": "57d75dbac06812c59798a48585032f6e50bb1914",
+                        "installed_by": ["modules"]
+                    },
                     "star/genomegenerate": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
