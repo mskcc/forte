@@ -2,7 +2,10 @@ ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config
 
 include { PICARD_COLLECTRNASEQMETRICS } from '../../modules/nf-core/picard/collectrnaseqmetrics/main'
 include { PICARD_COLLECTHSMETRICS     } from '../../modules/nf-core/picard/collecthsmetrics/main'
-include { MULTIQC                     } from '../../modules/nf-core/multiqc/main'
+include {
+    MULTIQC ;
+    MULTIQC as MULTIQC_COLLECT
+} from '../../modules/nf-core/multiqc/main'
 
 workflow QC {
 
@@ -47,11 +50,16 @@ workflow QC {
     multiqc_ch = PICARD_COLLECTRNASEQMETRICS.out.metrics
         .mix(fastp_json)
         .mix(PICARD_COLLECTHSMETRICS.out.metrics)
-        .map{meta, multiqc_files -> multiqc_files }
-        .collect()
 
     MULTIQC(
         multiqc_ch,
+        ch_multiqc_config.collect().ifEmpty([]),
+        [],
+        []
+    )
+
+    MULTIQC_COLLECT(
+        multiqc_ch.map{meta, multiqc_files -> multiqc_files}.collect().map{[[:],it]},
         ch_multiqc_config.collect().ifEmpty([]),
         [],
         []

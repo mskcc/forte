@@ -14,6 +14,12 @@ tools:
       licence: ["GPL-3.0-or-later"]
 
 input:
+  - meta:
+      type: 
+      type: map
+      description: |
+        Groovy Map containing meta information
+        e.g. [ id:'test' ]
   - multiqc_files:
       type: file
       description: |
