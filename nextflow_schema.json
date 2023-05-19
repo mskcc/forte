@@ -202,7 +202,7 @@
         "targets_base": {
             "type": "string",
             "default": "None"
-	}
+        },
         "skip_trimming": {
             "type": "boolean",
             "default": false
