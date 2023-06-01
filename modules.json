@@ -52,7 +52,7 @@
                     },
                     "picard/collecthsmetrics": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "0ce3ab0ac301f160225b22254fa238478b4389f2",
                         "installed_by": ["modules"]
                     },
                     "picard/collectrnaseqmetrics": {
@@ -105,6 +105,11 @@
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
+                    "samtools/faidx": {
+                        "branch": "master",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["modules"]
+                    },
                     "samtools/index": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
@@ -113,6 +118,11 @@
                     "samtools/merge": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["modules"]
+                    },
+                    "star/align": {
+                        "branch": "master",
+                        "git_sha": "57d75dbac06812c59798a48585032f6e50bb1914",
                         "installed_by": ["modules"]
                     },
                     "star/genomegenerate": {

@@ -9,9 +9,8 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 // Validate input parameters
 WorkflowForte.initialise(params, log)
 
-// TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.gtf ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.gtf, params.refflat, params.starfusion_url ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -38,6 +37,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { BAIT_INPUTS } from '../subworkflows/local/baits'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -70,6 +70,11 @@ def multiqc_report = []
 workflow FORTE {
 
     ch_versions = Channel.empty()
+
+    //
+    // SUBWORKFLOW: If baitsets are available, they will be added to the channel
+    //
+    BAIT_INPUTS ()
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
@@ -122,7 +127,10 @@ workflow FORTE {
         ALIGN_READS.out.bai_withdup,
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
-        PREPARE_REFERENCES.out.rseqc_bed,
+	PREPARE_REFERENCES.out.rseqc_bed,
+	PREPARE_REFERENCES.out.fasta_fai,
+	PREPARE_REFERENCES.out.fasta_dict,
+	BAIT_INPUTS.out.baits,
         PREPROCESS_READS.out.fastp_json,
         QUANTIFICATION.out.htseq_counts,
         ALIGN_READS.out.star_log_final

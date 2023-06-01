@@ -13,6 +13,9 @@ workflow QC {
     refflat
     rrna_intervals
     rseqc_bed
+    fai
+    dict
+    baits
     fastp_json
     htseq_counts
     star_log_final
@@ -36,20 +39,25 @@ workflow QC {
     )
     ch_versions = ch_versions.mix(PICARD_COLLECTRNASEQMETRICS.out.versions.first())
 
-    /*
     PICARD_COLLECTHSMETRICS(
-        bam_ch.filter{ meta, bam ->
-            meta.target != "none"
-        },
-        fasta,
+        bam
+            .filter{ meta, bam ->
+                meta.bait != ""
+            }.combine(bai, by:[0])
+            .combine(baits)
+            .filter{ meta, bam, bai, bait, bait_file, target_file ->
+                meta.bait == bait
+            }.map{ meta, bam, bai, bait, bait_file, target_file ->
+                [meta, bam, bai, bait_file, target_file]
+            },
+        [[:],fasta],
         fai,
-        bait,
-        target
+        dict.map{ dict -> [[:],dict]}
     )
-    */
 
     multiqc_ch = PICARD_COLLECTRNASEQMETRICS.out.metrics
         .mix(fastp_json)
+<<<<<<< HEAD
         .mix(star_log_final)
         .mix(htseq_counts)
         .mix(BAM_RSEQC.out.bamstat_txt)
@@ -60,6 +68,9 @@ workflow QC {
         .mix(BAM_RSEQC.out.readdistribution_txt)
         .mix(BAM_RSEQC.out.readduplication_pos_xls)
         .mix(BAM_RSEQC.out.tin_txt)
+=======
+        .mix(PICARD_COLLECTHSMETRICS.out.metrics)
+>>>>>>> develop
         .map{meta, multiqc_files -> multiqc_files }
         .collect()
 

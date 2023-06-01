@@ -1,4 +1,4 @@
-include { STAR_ALIGN       } from '../../modules/local/star/align/main'
+include { STAR_ALIGN       } from '../../modules/nf-core/star/align/main'
 include { UMITOOLS_DEDUP   } from '../../modules/nf-core/umitools/dedup/main'
 include {
     SAMTOOLS_INDEX;
@@ -19,7 +19,10 @@ workflow ALIGN_READS {
     STAR_ALIGN(
         reads,
         star_index,
-        gtf
+        gtf,
+        false,
+        [],
+        []
     )
     ch_versions = ch_versions.mix(STAR_ALIGN.out.versions.first())
 
@@ -39,7 +42,7 @@ workflow ALIGN_READS {
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     UMITOOLS_DEDUP(
-        merged_bam
+        STAR_ALIGN.out.bam
             .filter{ meta, bam -> meta.has_umi }
             .join(SAMTOOLS_INDEX.out.bai, by:[0]),
         true
@@ -51,7 +54,7 @@ workflow ALIGN_READS {
 
     dedup_bam = UMITOOLS_DEDUP.out.bam
         .mix(
-            merged_bam
+            STAR_ALIGN.out.bam
                 .filter{ meta, bam -> ! meta.has_umi }
         )
     dedup_bai = SAMTOOLS_INDEX_DEDUP.out.bai
@@ -60,9 +63,15 @@ workflow ALIGN_READS {
 	        .filter{ meta, bai -> ! meta.has_umi }
         )
 
+    dedup_bai = SAMTOOLS_INDEX_DEDUP.out.bai
+        .mix(
+            SAMTOOLS_INDEX.out.bai
+                .filter{meta, bai -> ! meta.has_umi}
+        )
+
     emit:
     bam             = dedup_bam
-    bam_withdup     = merged_bam
+    bam_withdup     = STAR_ALIGN.out.bam
     bai             = dedup_bai
     bai_withdup     = SAMTOOLS_INDEX.out.bai
     star_log_final  = STAR_ALIGN.out.log_final
