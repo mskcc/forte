@@ -2,7 +2,10 @@ ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config
 
 include { PICARD_COLLECTRNASEQMETRICS } from '../../modules/nf-core/picard/collectrnaseqmetrics/main'
 include { PICARD_COLLECTHSMETRICS     } from '../../modules/nf-core/picard/collecthsmetrics/main'
-include { MULTIQC                     } from '../../modules/nf-core/multiqc/main'
+include {
+    MULTIQC ;
+    MULTIQC as MULTIQC_COLLECT
+} from '../../modules/nf-core/multiqc/main'
 include { BAM_RSEQC                   } from '../nf-core/bam_rseqc/main'
 
 workflow QC {
@@ -10,15 +13,13 @@ workflow QC {
     take:
     bam
     bai
+    multiqc_files
     refflat
     rrna_intervals
     rseqc_bed
     fai
     dict
     baits
-    fastp_json
-    htseq_counts
-    star_log_final
 
     main:
     fasta = params.fasta
@@ -55,11 +56,9 @@ workflow QC {
         dict.map{ dict -> [[:],dict]}
     )
 
-    multiqc_ch = PICARD_COLLECTRNASEQMETRICS.out.metrics
-        .mix(fastp_json)
-<<<<<<< HEAD
-        .mix(star_log_final)
-        .mix(htseq_counts)
+    multiqc_files = multiqc_files
+        .mix(PICARD_COLLECTRNASEQMETRICS.out.metrics)
+	.mix(PICARD_COLLECTHSMETRICS.out.metrics)
         .mix(BAM_RSEQC.out.bamstat_txt)
         .mix(BAM_RSEQC.out.innerdistance_freq)
         .mix(BAM_RSEQC.out.inferexperiment_txt)
@@ -68,14 +67,19 @@ workflow QC {
         .mix(BAM_RSEQC.out.readdistribution_txt)
         .mix(BAM_RSEQC.out.readduplication_pos_xls)
         .mix(BAM_RSEQC.out.tin_txt)
-=======
-        .mix(PICARD_COLLECTHSMETRICS.out.metrics)
->>>>>>> develop
-        .map{meta, multiqc_files -> multiqc_files }
-        .collect()
+        .map{ meta, file ->
+            [meta.subMap(['sample']),file]
+        }
 
     MULTIQC(
-        multiqc_ch,
+        multiqc_files.groupTuple(by:[0]),
+        ch_multiqc_config.collect().ifEmpty([]),
+        [],
+        []
+    )
+
+    MULTIQC_COLLECT(
+        multiqc_files.map{meta, multiqc_files -> multiqc_files}.collect().map{[[:],it]},
         ch_multiqc_config.collect().ifEmpty([]),
         [],
         []

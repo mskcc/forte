@@ -54,7 +54,10 @@ include { PREPROCESS_READS                  } from '../subworkflows/local/prepro
 include { ALIGN_READS                       } from '../subworkflows/local/align_reads'
 include { MERGE_READS                       } from '../subworkflows/local/merge_reads'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
-include { QC                                } from '../subworkflows/local/qc'
+include {
+    QC as QC_DUP ;
+    QC as QC_DEDUP
+} from '../subworkflows/local/qc'
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
 include { FUSION                            } from '../subworkflows/local/fusion'
 
@@ -122,20 +125,34 @@ workflow FORTE {
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
-    QC(
-        ALIGN_READS.out.bam_withdup,
-        ALIGN_READS.out.bai_withdup,
+    QC_DEDUP(
+        ALIGN_READS.out.bam,
+        ALIGN_READS.out.bai,
+        PREPROCESS_READS.out.fastp_json
+            .mix(QUANTIFICATION.out.htseq_counts)
+            .mix(ALIGN_READS.out.star_log_final),
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
-	PREPARE_REFERENCES.out.rseqc_bed,
-	PREPARE_REFERENCES.out.fasta_fai,
-	PREPARE_REFERENCES.out.fasta_dict,
-	BAIT_INPUTS.out.baits,
-        PREPROCESS_READS.out.fastp_json,
-        QUANTIFICATION.out.htseq_counts,
-        ALIGN_READS.out.star_log_final
+        PREPARE_REFERENCES.out.rseqc_bed,	
+        PREPARE_REFERENCES.out.fasta_fai,
+        PREPARE_REFERENCES.out.fasta_dict,
+        BAIT_INPUTS.out.baits
     )
-    ch_versions = ch_versions.mix(QC.out.ch_versions)
+    ch_versions = ch_versions.mix(QC_DEDUP.out.ch_versions)
+
+    QC_DUP(
+        ALIGN_READS.out.bam_withdup,
+        ALIGN_READS.out.bai_withdup,
+        PREPROCESS_READS.out.fastp_json
+            .mix(QUANTIFICATION.out.htseq_counts)
+            .mix(ALIGN_READS.out.star_log_final),
+        PREPARE_REFERENCES.out.refflat,
+        PREPARE_REFERENCES.out.rrna_interval_list,
+        PREPARE_REFERENCES.out.rseqc_bed,
+        PREPARE_REFERENCES.out.fasta_fai,
+        PREPARE_REFERENCES.out.fasta_dict,
+        BAIT_INPUTS.out.baits
+    )
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
@@ -155,10 +172,10 @@ workflow FORTE {
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
-    ch_multiqc_files.collect()
+    ch_multiqc_files = ch_multiqc_files.collect().map{ files -> [[:], files] }
 
     MULTIQC (
-        ch_multiqc_files.collect(),
+        ch_multiqc_files,
         ch_multiqc_config.collect().ifEmpty([]),
         ch_multiqc_custom_config.collect().ifEmpty([]),
         ch_multiqc_logo.collect().ifEmpty([])
