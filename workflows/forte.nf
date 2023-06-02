@@ -126,8 +126,8 @@ workflow FORTE {
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
     QC_DEDUP(
-        ALIGN_READS.out.bam,
-        ALIGN_READS.out.bai,
+        ALIGN_READS.out.bam_dedup,
+        ALIGN_READS.out.bai_dedup,
         PREPROCESS_READS.out.fastp_json
             .mix(QUANTIFICATION.out.htseq_counts)
             .mix(ALIGN_READS.out.star_log_final),

@@ -58,7 +58,7 @@ workflow QC {
 
     multiqc_files = multiqc_files
         .mix(PICARD_COLLECTRNASEQMETRICS.out.metrics)
-	.mix(PICARD_COLLECTHSMETRICS.out.metrics)
+        .mix(PICARD_COLLECTHSMETRICS.out.metrics)
         .mix(BAM_RSEQC.out.bamstat_txt)
         .mix(BAM_RSEQC.out.innerdistance_freq)
         .mix(BAM_RSEQC.out.inferexperiment_txt)
