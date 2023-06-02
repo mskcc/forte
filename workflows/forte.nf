@@ -133,7 +133,7 @@ workflow FORTE {
             .mix(ALIGN_READS.out.star_log_final),
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
-        PREPARE_REFERENCES.out.rseqc_bed,	
+        PREPARE_REFERENCES.out.rseqc_bed,
         PREPARE_REFERENCES.out.fasta_fai,
         PREPARE_REFERENCES.out.fasta_dict,
         BAIT_INPUTS.out.baits

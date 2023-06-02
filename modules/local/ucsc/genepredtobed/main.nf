@@ -11,7 +11,7 @@ process UCSC_GENEPREDTOBED {
     tuple val(meta), path(genepred)
 
     output:
-    tuple val(meta), path("*.bed")     , emit: bed 
+    tuple val(meta), path("*.bed")     , emit: bed
     path "versions.yml"                , emit: versions
 
     when:

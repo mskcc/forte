@@ -28,9 +28,9 @@ workflow ALIGN_READS {
 
     star_log_final  = STAR_ALIGN.out.log_final
         .map{meta, log_final ->
-	    def meta_clone = meta.clone().findAll { !["read_group","fastq_pair_id"].contains(it.key) }
-	    [meta_clone,log_final]
-	}
+            def meta_clone = meta.clone().findAll { !["read_group","fastq_pair_id"].contains(it.key) }
+            [meta_clone,log_final]
+        }
 
     SAMTOOLS_INDEX(STAR_ALIGN.out.bam)
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
@@ -53,8 +53,8 @@ workflow ALIGN_READS {
         )
     final_bai = SAMTOOLS_INDEX_DEDUP.out.bai
         .mix(
-	    SAMTOOLS_INDEX.out.bai
-	        .filter{ meta, bai -> ! meta.has_umi }
+            SAMTOOLS_INDEX.out.bai
+                .filter{ meta, bai -> ! meta.has_umi }
         )
 
     emit:
