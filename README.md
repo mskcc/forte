@@ -1,7 +1,5 @@
 ## Introduction
 
-<!-- TODO nf-core: Write a 1-2 sentence summary of what data the pipeline is for and what it does -->
-
 **anoronh4/forte** is a best-practice analysis pipeline for bulk RNAseq.
 
 - **F**unctional
@@ -80,7 +78,6 @@ We also thank the following contributors:
 - Martina Bradic <bradicm@mskcc.org>
 - Jun Woo <wooh@mskcc.org>
 - Helen Won
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
 ## Contributions and Support
 
