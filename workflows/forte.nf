@@ -128,10 +128,7 @@ workflow FORTE {
     QC_DEDUP(
         ALIGN_READS.out.bam_dedup,
         ALIGN_READS.out.bai_dedup,
-        PREPROCESS_READS.out.fastp_json
-            .mix(QUANTIFICATION.out.htseq_counts)
-            .mix(ALIGN_READS.out.star_log_final)
-            .filter{ meta, file -> meta.has_umi },
+        Channel.empty(),
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
