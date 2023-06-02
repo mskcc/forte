@@ -15,7 +15,6 @@ tools:
 
 input:
   - meta:
-      type: 
       type: map
       description: |
         Groovy Map containing meta information
