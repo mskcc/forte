@@ -2,19 +2,23 @@ ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config
 
 include { PICARD_COLLECTRNASEQMETRICS } from '../../modules/nf-core/picard/collectrnaseqmetrics/main'
 include { PICARD_COLLECTHSMETRICS     } from '../../modules/nf-core/picard/collecthsmetrics/main'
-include { MULTIQC                     } from '../../modules/nf-core/multiqc/main'
+include {
+    MULTIQC ;
+    MULTIQC as MULTIQC_COLLECT
+} from '../../modules/nf-core/multiqc/main'
 
 workflow QC {
 
     take:
     bam
     bai
+    multiqc_files
     refflat
     rrna_intervals
     fai
     dict
     baits
-    fastp_json
+
 
     main:
     fasta = params.fasta
@@ -44,14 +48,22 @@ workflow QC {
         dict.map{ dict -> [[:],dict]}
     )
 
-    multiqc_ch = PICARD_COLLECTRNASEQMETRICS.out.metrics
-        .mix(fastp_json)
+    multiqc_files = multiqc_files
+        .mix(PICARD_COLLECTRNASEQMETRICS.out.metrics)
         .mix(PICARD_COLLECTHSMETRICS.out.metrics)
-        .map{meta, multiqc_files -> multiqc_files }
-        .collect()
+        .map{ meta, file ->
+            [meta.subMap(['sample']),file]
+        }
 
     MULTIQC(
-        multiqc_ch,
+        multiqc_files.groupTuple(by:[0]),
+        ch_multiqc_config.collect().ifEmpty([]),
+        [],
+        []
+    )
+
+    MULTIQC_COLLECT(
+        multiqc_files.map{meta, multiqc_files -> multiqc_files}.collect().map{[[:],it]},
         ch_multiqc_config.collect().ifEmpty([]),
         [],
         []
