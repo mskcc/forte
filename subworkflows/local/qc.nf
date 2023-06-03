@@ -6,6 +6,7 @@ include {
     MULTIQC ;
     MULTIQC as MULTIQC_COLLECT
 } from '../../modules/nf-core/multiqc/main'
+include { BAM_RSEQC                   } from '../nf-core/bam_rseqc/main'
 
 workflow QC {
 
@@ -15,14 +16,21 @@ workflow QC {
     multiqc_files
     refflat
     rrna_intervals
+    rseqc_bed
     fai
     dict
     baits
 
-
     main:
     fasta = params.fasta
     ch_versions = Channel.empty()
+
+    BAM_RSEQC(
+        bam.join(bai, by:[0]),
+        rseqc_bed,
+        params.rseqc_modules
+    )
+    ch_versions = ch_versions.mix(BAM_RSEQC.out.versions.first())
 
     PICARD_COLLECTRNASEQMETRICS(
         bam,
@@ -51,6 +59,14 @@ workflow QC {
     multiqc_files = multiqc_files
         .mix(PICARD_COLLECTRNASEQMETRICS.out.metrics)
         .mix(PICARD_COLLECTHSMETRICS.out.metrics)
+        .mix(BAM_RSEQC.out.bamstat_txt)
+        .mix(BAM_RSEQC.out.innerdistance_freq)
+        .mix(BAM_RSEQC.out.inferexperiment_txt)
+        .mix(BAM_RSEQC.out.junctionannotation_log)
+        .mix(BAM_RSEQC.out.junctionsaturation_rscript)
+        .mix(BAM_RSEQC.out.readdistribution_txt)
+        .mix(BAM_RSEQC.out.readduplication_pos_xls)
+        .mix(BAM_RSEQC.out.tin_txt)
         .map{ meta, file ->
             [meta.subMap(['sample']),file]
         }

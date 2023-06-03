@@ -13,5 +13,6 @@ workflow QUANTIFICATION {
     ch_versions = ch_versions.mix(HTSEQ_COUNT.out.versions)
 
     emit:
+    htseq_counts = HTSEQ_COUNT.out.counts
     ch_versions = ch_versions
 }

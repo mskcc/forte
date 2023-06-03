@@ -126,11 +126,12 @@ workflow FORTE {
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
     QC_DEDUP(
-        ALIGN_READS.out.bam,
-        ALIGN_READS.out.bai,
-        PREPROCESS_READS.out.fastp_json,
+        ALIGN_READS.out.bam_dedup,
+        ALIGN_READS.out.bai_dedup,
+        Channel.empty(),
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
+        PREPARE_REFERENCES.out.rseqc_bed,
         PREPARE_REFERENCES.out.fasta_fai,
         PREPARE_REFERENCES.out.fasta_dict,
         BAIT_INPUTS.out.baits
@@ -140,9 +141,12 @@ workflow FORTE {
     QC_DUP(
         ALIGN_READS.out.bam_withdup,
         ALIGN_READS.out.bai_withdup,
-        PREPROCESS_READS.out.fastp_json,
+        PREPROCESS_READS.out.fastp_json
+            .mix(QUANTIFICATION.out.htseq_counts)
+            .mix(ALIGN_READS.out.star_log_final),
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
+        PREPARE_REFERENCES.out.rseqc_bed,
         PREPARE_REFERENCES.out.fasta_fai,
         PREPARE_REFERENCES.out.fasta_dict,
         BAIT_INPUTS.out.baits
