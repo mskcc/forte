@@ -48,7 +48,8 @@
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "ee80d14721e76e2e079103b8dcd5d57129e584ba",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/multiqc/multiqc.diff"
                     },
                     "picard/collecthsmetrics": {
                         "branch": "master",
@@ -59,6 +60,46 @@
                         "branch": "master",
                         "git_sha": "54f28e020daf9215ab000da7af3b273e85639855",
                         "installed_by": ["modules"]
+                    },
+                    "rseqc/bamstat": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["bam_rseqc", "modules"]
+                    },
+                    "rseqc/inferexperiment": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["bam_rseqc", "modules"]
+                    },
+                    "rseqc/innerdistance": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["bam_rseqc", "modules"]
+                    },
+                    "rseqc/junctionannotation": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["modules", "bam_rseqc"]
+                    },
+                    "rseqc/junctionsaturation": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["bam_rseqc", "modules"]
+                    },
+                    "rseqc/readdistribution": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["bam_rseqc", "modules"]
+                    },
+                    "rseqc/readduplication": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["bam_rseqc", "modules"]
+                    },
+                    "rseqc/tin": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["bam_rseqc", "modules"]
                     },
                     "samtools/bam2fq": {
                         "branch": "master",
@@ -108,7 +149,13 @@
                 }
             },
             "subworkflows": {
-                "nf-core": {}
+                "nf-core": {
+                    "bam_rseqc": {
+                        "branch": "master",
+                        "git_sha": "b8f7bdc6f0e37f2946c84c5ac676c6030ebbf8c4",
+                        "installed_by": ["subworkflows"]
+                    }
+                }
             }
         }
     }
