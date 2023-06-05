@@ -105,6 +105,7 @@ workflow FORTE {
 
     QUANTIFICATION(
         ALIGN_READS.out.bam,
+        ALIGN_READS.out.bai,
         PREPARE_REFERENCES.out.gtf
     )
     ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
