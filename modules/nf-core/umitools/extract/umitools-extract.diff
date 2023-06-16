@@ -1,0 +1,14 @@
+Changes in module 'nf-core/umitools/extract'
+--- modules/nf-core/umitools/extract/main.nf
++++ modules/nf-core/umitools/extract/main.nf
+@@ -12,7 +12,7 @@
+     tuple val(meta), path(reads)
+ 
+     output:
+-    tuple val(meta), path("*.fastq.gz"), emit: reads
++    tuple val(meta), path("*.umi_extract*.fastq.gz"), emit: reads
+     tuple val(meta), path("*.log")     , emit: log
+     path  "versions.yml"               , emit: versions
+ 
+
+************************************************************
