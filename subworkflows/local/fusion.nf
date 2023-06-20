@@ -10,7 +10,7 @@ include { TO_CFF as ARRIBA_TO_CFF} from '../../modules/local/convert_to_cff/main
 include { TO_CFF as FUSIONCATCHER_TO_CFF} from '../../modules/local/convert_to_cff/main'
 include { TO_CFF as STARFUSION_TO_CFF} from '../../modules/local/convert_to_cff/main'
 include { CSVTK_CONCAT as MERGE_CFF } from '../../modules/nf-core/csvtk/concat/main'
-include {METAFUSION} from '../../modules/local/metafusion/main'
+include { METAFUSION } from '../../modules/local/metafusion/main'
 
 
 workflow FUSION {
@@ -29,7 +29,7 @@ workflow FUSION {
     genebed = params.genebed
     info = params.info
     blocklist = params.blocklist
-
+    numtools = params.numtools
 
     STAR_FOR_ARRIBA(
         reads,
@@ -105,7 +105,7 @@ workflow FUSION {
         info,
         fasta,
         blocklist,
-        "2"
+        numtools
     )
 
     ONCOKB_FUSIONANNOTATOR(METAFUSION.out.cluster)

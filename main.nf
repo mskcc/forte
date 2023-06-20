@@ -37,13 +37,25 @@ WorkflowMain.initialise(workflow, params, log)
 
 include { FORTE } from './workflows/forte'
 
+//
+// WORKFLOW: Run main anoronh4/forte analysis pipeline
+//
+workflow ANORONH4_FORTE {
+    FORTE ()
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    RUN ALL WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
 //
 // WORKFLOW: Execute a single named workflow for the pipeline
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    FORTE ()
+    ANORONH4_FORTE ()
 }
 
 /*
