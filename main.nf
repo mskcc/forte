@@ -23,6 +23,9 @@ params.baits          = WorkflowMain.getGenomeAttribute(params, 'baits')
 params.arriba_blacklist       = WorkflowMain.getGenomeAttribute(params, 'arriba_blacklist')
 params.arriba_known_fusions   = WorkflowMain.getGenomeAttribute(params, 'arriba_known_fusions')
 params.arriba_protein_domains = WorkflowMain.getGenomeAttribute(params, 'arriba_protein_domains')
+params.blocklist       = WorkflowMain.getGenomeAttribute(params, 'block')
+params.genebed  = WorkflowMain.getGenomeAttribute(params, 'genebed')
+params.info = WorkflowMain.getGenomeAttribute(params, 'info')
 
 WorkflowMain.initialise(workflow, params, log)
 
@@ -34,25 +37,13 @@ WorkflowMain.initialise(workflow, params, log)
 
 include { FORTE } from './workflows/forte'
 
-//
-// WORKFLOW: Run main anoronh4/forte analysis pipeline
-//
-workflow ANORONH4_FORTE {
-    FORTE ()
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN ALL WORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
 
 //
 // WORKFLOW: Execute a single named workflow for the pipeline
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    ANORONH4_FORTE ()
+    FORTE ()
 }
 
 /*

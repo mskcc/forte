@@ -12,6 +12,7 @@ process TO_CFF {
 
     output:
     tuple val(meta), path("*.cff"), emit: cff
+    path "versions.yml"                          , emit: versions
 
     when: 
     task.ext.when == null || task.ext.when
@@ -21,5 +22,9 @@ process TO_CFF {
     """
     make_cff_from_forte.R $caller $fusions $sample ${sample}_${caller}.cff
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        R: \$(R --version | head -n1)
+    END_VERSIONS
     """
 }

@@ -6,6 +6,12 @@ include { FUSIONCATCHER_DETECT              } from '../../modules/local/fusionca
 include { FUSIONREPORT                      } from '../../modules/local/fusionreport/run/main'
 include { ONCOKB_FUSIONANNOTATOR            } from '../../modules/local/oncokb/fusionannotator/main'
 include { CSVTK_CONCAT as CSV_TO_TSV        } from '../../modules/nf-core/csvtk/concat/main'
+include { TO_CFF as ARRIBA_TO_CFF} from '../../modules/local/convert_to_cff/main'
+include { TO_CFF as FUSIONCATCHER_TO_CFF} from '../../modules/local/convert_to_cff/main'
+include { TO_CFF as STARFUSION_TO_CFF} from '../../modules/local/convert_to_cff/main'
+include { CSVTK_CONCAT as MERGE_CFF } from '../../modules/nf-core/csvtk/concat/main'
+include {METAFUSION} from '../../modules/local/metafusion/main'
+
 
 workflow FUSION {
 
@@ -20,6 +26,10 @@ workflow FUSION {
     main:
     ch_versions = Channel.empty()
     fasta = params.fasta
+    genebed = params.genebed
+    info = params.info
+    blocklist = params.blocklist
+
 
     STAR_FOR_ARRIBA(
         reads,
@@ -70,40 +80,35 @@ workflow FUSION {
 
     fc_fusions = ["GRCh37","hg19","smallGRCh37"].contains(params.genome) ? FUSIONCATCHER_DETECT.out.fusions_alt : FUSIONCATCHER_DETECT.out.fusions
 
-    // get expected number of callers for groupTuple
-    numcallers = 1 + ( params.starfusion_url ? 1 : 0 ) + ( ["GRCh37","GRCh38"].contains(params.genome) ? 1 : 0 )
 
-    FUSIONREPORT(
-        ARRIBA.out.fusions
-            .map{ meta, file ->[ meta, "arriba", file ] }
-            .mix(
-                fc_fusions
-                    .map{ meta, file -> [ meta, "fusioncatcher", file ] }
+    ARRIBA_TO_CFF(ARRIBA.out.fusions
+            .map{ meta, file ->[ meta, "arriba", file ] })
+    FUSIONCATCHER_TO_CFF(fc_fusions
+                    .map{ meta, file -> [ meta, "fusioncatcher", file ] } )
+    STARFUSION_TO_CFF(STARFUSION.out.abridged
+                    .map{ meta, file -> [ meta, "starfusion", file ] })
+    MERGE_CFF(ARRIBA_TO_CFF.out.cff
+            .map{ meta, file -> [meta, file]}
+            .mix( 
+                FUSIONCATCHER_TO_CFF.out.cff
+                 .map{ meta, file -> [meta, file]}
             ).mix(
-                STARFUSION.out.abridged
-                    .map{ meta, file -> [ meta, "starfusion", file ] }
-            )
-            .groupTuple(by:[0],size:numcallers)
-            .map{ meta, caller, file ->
-                def avg_weight = caller.collect({(100/caller.size()).toInteger()})
-                avg_weight[-1] = avg_weight[-1] + (100-avg_weight.sum())
-                [ meta, caller, avg_weight, file ]
-            },
-        fusion_report_db
-    )
-    ch_versions = ch_versions.mix(FUSIONREPORT.out.versions.first())
+                STARFUSION_TO_CFF.out.cff
+                 .map{ meta, file -> [meta, file]}
+            ).groupTuple(by:[0]),
+        'tsv',
+        'tsv')
 
-    CSV_TO_TSV(
-        FUSIONREPORT.out.fusionreport_csv
-            .map{ meta, csv ->
-                [meta, [csv]]
-            },
-        "csv",
-        "tsv"
+    METAFUSION(
+        MERGE_CFF.out.csv,
+        genebed,
+        info,
+        fasta,
+        blocklist,
+        "2"
     )
-    ch_versions = ch_versions.mix(CSV_TO_TSV.out.versions.first())
 
-    ONCOKB_FUSIONANNOTATOR(CSV_TO_TSV.out.csv)
+    ONCOKB_FUSIONANNOTATOR(METAFUSION.out.cluster)
     ch_versions = ch_versions.mix(ONCOKB_FUSIONANNOTATOR.out.versions.first())
 
     emit:
