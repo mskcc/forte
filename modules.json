@@ -1,6 +1,6 @@
 {
-    "name": "anoronh4/forte",
-    "homePage": "https://github.com/anoronh4/forte",
+    "name": "mskcc/forte",
+    "homePage": "https://github.com/mskcc/forte",
     "repos": {
         "https://github.com/nf-core/modules.git": {
             "modules": {

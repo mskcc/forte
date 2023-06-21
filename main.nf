@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    anoronh4/forte
+    mskcc/forte
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/anoronh4/forte
+    Github : https://github.com/mskcc/forte
 ----------------------------------------------------------------------------------------
 */
 
@@ -35,9 +35,9 @@ WorkflowMain.initialise(workflow, params, log)
 include { FORTE } from './workflows/forte'
 
 //
-// WORKFLOW: Run main anoronh4/forte analysis pipeline
+// WORKFLOW: Run main mskcc/forte analysis pipeline
 //
-workflow ANORONH4_FORTE {
+workflow MSKCC_FORTE {
     FORTE ()
 }
 
@@ -52,7 +52,7 @@ workflow ANORONH4_FORTE {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    ANORONH4_FORTE ()
+    MSKCC_FORTE ()
 }
 
 /*
