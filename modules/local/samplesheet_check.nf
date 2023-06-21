@@ -13,7 +13,7 @@ process SAMPLESHEET_CHECK {
     path '*.csv'       , emit: csv
     path "versions.yml", emit: versions
 
-    script: // This script is bundled with the pipeline, in anoronh4/forte/bin/
+    script: // This script is bundled with the pipeline, in mskcc/forte/bin/
     """
     check_samplesheet.py \\
         $samplesheet \\

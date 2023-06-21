@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/anoronh4/forte/master/nextflow_schema.json",
-    "title": "anoronh4/forte pipeline parameters",
+    "$id": "https://raw.githubusercontent.com/mskcc/forte/master/nextflow_schema.json",
+    "title": "mskcc/forte pipeline parameters",
     "description": "RNAseq pipeline",
     "type": "object",
     "definitions": {

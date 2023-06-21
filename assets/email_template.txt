@@ -1,10 +1,10 @@
 Run Name: $runName
 
 <% if (success){
-    out << "## anoronh4/forte execution completed successfully! ##"
+    out << "## mskcc/forte execution completed successfully! ##"
 } else {
     out << """####################################################
-## anoronh4/forte execution completed unsuccessfully! ##
+## mskcc/forte execution completed unsuccessfully! ##
 ####################################################
 The exit status of the task that caused the workflow execution to fail was: $exitStatus.
 The full error message was:
@@ -27,5 +27,5 @@ Pipeline Configuration:
 <% out << summary.collect{ k,v -> " - $k: $v" }.join("\n") %>
 
 --
-anoronh4/forte
-https://github.com/anoronh4/forte
+mskcc/forte
+https://github.com/mskcc/forte
