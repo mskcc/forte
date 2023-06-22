@@ -15,7 +15,7 @@ process METAFUSION {
     val numtools
 
     output:
-    tuple val(meta), path("*cluster"), emit: cluster
+    tuple val(meta), path("*final*cluster"), emit: cluster
     tuple val(meta), path("*.filtered.cff"), emit: filtered
     path "versions.yml"                          , emit: versions
 
