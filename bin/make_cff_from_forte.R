@@ -81,19 +81,19 @@ sample_file <- fread(opt[2],data.table = F)
 tool_cff <-  setNames(data.frame(matrix(ncol = length(cff_format), nrow = 0)), cff_format)
 if(opt[1] == "arriba"){
 
-  if(nrow(sample_file) > 0){
+if(nrow(sample_file) > 0){
     tool_cff <- make_arriba(sample_file)
     }
 } else if( opt[1]  == "fusioncatcher") {
 
-  if(nrow(sample_file) > 0){
+if(nrow(sample_file) > 0){
     tool_cff <-make_fusioncatcher(sample_file)
-  }
+    }
 } else if (opt[1]  == "starfusion"){
 
-  if(nrow(sample_file) > 0){
+if(nrow(sample_file) > 0){
     tool_cff <-make_starfusion(sample_file)
-  }
+    }
 }
 if(nrow(tool_cff) > 0 ){
 tool_cff$sample_name <- opt[3]

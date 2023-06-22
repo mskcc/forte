@@ -6,7 +6,7 @@ process TO_CFF {
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'ghcr.io/rocker-org/devcontainer/tidyverse:4' :
         'ghcr.io/rocker-org/devcontainer/tidyverse:4' }"
-    
+
     input:
     tuple val(meta), val(caller), path(fusions)
 
@@ -14,7 +14,7 @@ process TO_CFF {
     tuple val(meta), path("*.cff"), emit: cff
     path "versions.yml"                          , emit: versions
 
-    when: 
+    when:
     task.ext.when == null || task.ext.when
 
     script:
