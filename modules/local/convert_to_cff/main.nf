@@ -3,8 +3,8 @@ process TO_CFF {
     label "process_single"
 
 /// must be using singularity 3.7+
-   container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/rocker-org/devcontainer/tidyverse:4' : 
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'ghcr.io/rocker-org/devcontainer/tidyverse:4' :
         'ghcr.io/rocker-org/devcontainer/tidyverse:4' }"
     
     input:

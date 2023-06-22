@@ -88,85 +88,85 @@ cff=$outdir/$(basename $cff).reformat
 
 #Rename cff
 if [ $rename -eq 1 ]; then
-  echo Rename cff
-  echo rename_cff_file_genes.MetaFusion.py $cff $gene_info \> $outdir/$(basename $cff).renamed
-  rename_cff_file_genes.MetaFusion.py $cff $gene_info > $outdir/$(basename $cff).renamed
-  cff=$outdir/$(basename $cff).renamed
+echo Rename cff
+echo rename_cff_file_genes.MetaFusion.py $cff $gene_info \> $outdir/$(basename $cff).renamed
+rename_cff_file_genes.MetaFusion.py $cff $gene_info > $outdir/$(basename $cff).renamed
+cff=$outdir/$(basename $cff).renamed
 fi
 
 #Annotate cff
 if [ $annotate -eq 1 ]; then
-  if [ $genome_fasta ]; then
+if [ $genome_fasta ]; then
     echo Annotate cff, extract sequence surrounding breakpoint
     reann_cff_fusion.py --cff $cff --gene_bed $gene_bed --ref_fa $genome_fasta > $outdir/$(basename $cff).reann.WITH_SEQ
-  else
+else
     echo Annotate cff, no extraction of sequence surrounding breakpoint
     reann_cff_fusion.py --cff $cff --gene_bed $gene_bed > $outdir/$(basename $cff).reann.NO_SEQ
-  fi
+fi
 fi
 # Assign .cff based on SEQ or NOSEQ
 if [ $genome_fasta ]; then
-  cff=$outdir/$(basename $cff).reann.WITH_SEQ
-  echo cff $cff
+cff=$outdir/$(basename $cff).reann.WITH_SEQ
+echo cff $cff
 else
-  cff=$outdir/$(basename $cff).reann.NO_SEQ
-  echo cff $cff
+cff=$outdir/$(basename $cff).reann.NO_SEQ
+echo cff $cff
 fi
 
 if [ $annotate_exons -eq 1 ] && [ $exons -eq 1 ]; then
-  echo Add adjacent exons to cff
-  extract_closest_exons.py $cff $gene_bed $genome_fasta  > $outdir/$(basename $cff).exons
+echo Add adjacent exons to cff
+extract_closest_exons.py $cff $gene_bed $genome_fasta  > $outdir/$(basename $cff).exons
 fi
 # assign cff as ".exons" if --annotate_exons flag was specified
 if [ $exons -eq 1 ]; then
-  cff=$outdir/$(basename $cff).exons
+cff=$outdir/$(basename $cff).exons
 fi
 
 #Merge
 cluster=$outdir/$(basename $cff).cluster
 if [ $exons -eq 1 ] && [ $merge -eq 1 ]; then
-  echo Merge cff by exons
-  RUN_cluster_exons.sh $cff $outdir > $cluster
+echo Merge cff by exons
+RUN_cluster_exons.sh $cff $outdir > $cluster
 elif [ $merge -eq 1 ]; then
-  echo Merge cff by genes and breakpoints
-  RUN_cluster_genes_breakpoints.sh $cff $outdir > $cluster
+echo Merge cff by genes and breakpoints
+RUN_cluster_genes_breakpoints.sh $cff $outdir > $cluster
 fi
 
 #output ANC_RT_SG file
 if [ $output_ANC_RT_SG -eq 1 ]; then
-  echo output cis-sage.cluster file
-  output_ANC_RT_SG.py $cluster > $outdir/cis-sage.cluster
+echo output cis-sage.cluster file
+output_ANC_RT_SG.py $cluster > $outdir/cis-sage.cluster
 fi
 
 #ReadThrough Callerfilter
 if [ $RT_call_filter -eq 1 ]; then
-  echo ReadThrough, callerfilter $num_tools
-  cat $cluster | grep ReadThrough > $outdir/$(basename $cluster).ReadThrough
-  echo python callerfilter_num.py --cluster $cluster  --num_tools $num_tools \| grep -v ReadThrough \> $outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools
-  callerfilter_num.py --cluster $cluster  --num_tools $num_tools | grep -v ReadThrough  > $outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools
+echo ReadThrough, callerfilter $num_tools
+cat $cluster | grep ReadThrough > $outdir/$(basename $cluster).ReadThrough
+echo python callerfilter_num.py --cluster $cluster  --num_tools $num_tools \| grep -v ReadThrough \> $outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools
+callerfilter_num.py --cluster $cluster  --num_tools $num_tools | grep -v ReadThrough  > $outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools
 fi
 cluster_RT_call=$outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools
 
 # Blocklist Filter
 if [ $blck_filter -eq 1 ]; then
-  echo blocklist filter
-  #echo bash blocklist_filter_recurrent_breakpoints.sh $cff $cluster_RT_call $outdir $recurrent_bedpe
-  blocklist_filter_recurrent_breakpoints.sh $cff $cluster_RT_call $outdir $recurrent_bedpe > $outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools.blck_filter
+echo blocklist filter
+#echo bash blocklist_filter_recurrent_breakpoints.sh $cff $cluster_RT_call $outdir $recurrent_bedpe
+blocklist_filter_recurrent_breakpoints.sh $cff $cluster_RT_call $outdir $recurrent_bedpe > $outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools.blck_filter
 fi
 cluster=$outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools.blck_filter
 
 
 # Adjacent Noncoding filter
 if [ $ANC_filter -eq 1 ]; then
-  echo ANC adjacent noncoding filter
-  filter_adjacent_noncoding.py $cluster > $outdir/$(basename $cluster).ANC_filter
+echo ANC adjacent noncoding filter
+filter_adjacent_noncoding.py $cluster > $outdir/$(basename $cluster).ANC_filter
 fi
 cluster=$outdir/$(basename $cluster).ANC_filter
 
 #Rank and generate final.cluster
 if [ $rank -eq 1 ]; then
-   echo Rank and generate final.cluster
-  rank_cluster_file.py $cluster > $outdir/final.n$num_tools.cluster
+echo Rank and generate final.cluster
+rank_cluster_file.py $cluster > $outdir/final.n$num_tools.cluster
 fi
 cluster=$outdir/final.n$num_tools.cluster
 ### Generate filtered FID file
@@ -186,7 +186,7 @@ for this in echo ${out//,/ }; do grep $this $cff; done >> $outdir/$(basename $cf
 
 #Benchmark
 #if [ $benchmark -eq 1 ] && [ $truth_set ]; then
- # echo Running benchmarking
+# echo Running benchmarking
 #  bash benchmarking_cluster.MetaFusion.sh $outdir $truth_set $cluster
 #else
 #	echo no benchmarking performed

@@ -89,12 +89,12 @@ workflow FUSION {
                     .map{ meta, file -> [ meta, "starfusion", file ] })
     MERGE_CFF(ARRIBA_TO_CFF.out.cff
             .map{ meta, file -> [meta, file]}
-            .mix( 
+            .mix(
                 FUSIONCATCHER_TO_CFF.out.cff
-                 .map{ meta, file -> [meta, file]}
+                .map{ meta, file -> [meta, file]}
             ).mix(
                 STARFUSION_TO_CFF.out.cff
-                 .map{ meta, file -> [meta, file]}
+                .map{ meta, file -> [meta, file]}
             ).groupTuple(by:[0]),
         'tsv',
         'tsv')

@@ -41,7 +41,7 @@ include { FORTE } from './workflows/forte'
 // WORKFLOW: Run main anoronh4/forte analysis pipeline
 //
 workflow ANORONH4_FORTE {
-    FORTE ()
+    FORTE()
 }
 
 /*
@@ -55,7 +55,7 @@ workflow ANORONH4_FORTE {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    ANORONH4_FORTE ()
+    ANORONH4_FORTE()
 }
 
 /*
