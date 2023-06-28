@@ -115,7 +115,7 @@ workflow FORTE {
         ALIGN_READS.out.bam,
         ALIGN_READS.out.bai,
         PREPARE_REFERENCES.out.gtf,
-        GET_DEDUP_FQ.out.dedup_reads
+        EXTRACT_DEDUP_FQ.out.dedup_reads
             .mix(
                 PREPROCESS_READS.out.reads
                     .filter{ meta, reads -> ! ( meta.has_umi && params.dedup_umi_for_kallisto ) }
