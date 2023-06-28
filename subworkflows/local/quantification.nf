@@ -1,5 +1,5 @@
 include { HTSEQ_COUNT    } from '../../modules/local/htseq/count/main'
-include { KALLISTO_QUANT } from '../../modules/local/kallisto/quant/main'
+include { KALLISTO_QUANT } from '../../modules/nf-core/kallisto/quant/main'
 
 
 workflow QUANTIFICATION {
