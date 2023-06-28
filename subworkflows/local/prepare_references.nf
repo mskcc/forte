@@ -9,7 +9,7 @@ include { GUNZIP                         } from '../../modules/nf-core/gunzip/ma
 include { STARFUSION_DOWNLOAD            } from '../../modules/local/starfusion/download/main'
 include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatcher/download/main'
 include { FUSIONREPORT_DOWNLOAD          } from '../../modules/local/fusionreport/download/main'
-include { KALLISTO_INDEX                 } from '../../modules/local/kallisto/index/main'
+include { KALLISTO_INDEX                 } from '../../modules/nf-core/kallisto/index/main'
 
 
 workflow PREPARE_REFERENCES {
