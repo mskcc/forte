@@ -30,5 +30,6 @@ workflow QUANTIFICATION {
 
     emit:
     htseq_counts    = HTSEQ_COUNT.out.counts
+    kallisto_log    = KALLISTO_QUANT.out.log
     ch_versions     = ch_versions
 }

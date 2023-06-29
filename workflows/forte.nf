@@ -137,7 +137,10 @@ workflow FORTE {
     QC_DEDUP(
         ALIGN_READS.out.bam_dedup,
         ALIGN_READS.out.bai_dedup,
-        Channel.empty(),
+        QUANTIFICATION.out.kallisto_log
+            .filter{meta, log ->
+                meta.has_umi && params.dedup_umi_for_kallisto
+            },
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
@@ -152,7 +155,13 @@ workflow FORTE {
         ALIGN_READS.out.bai_withdup,
         PREPROCESS_READS.out.fastp_json
             .mix(QUANTIFICATION.out.htseq_counts)
-            .mix(ALIGN_READS.out.star_log_final),
+            .mix(ALIGN_READS.out.star_log_final)
+            .mix(
+                QUANTIFICATION.out.kallisto_log
+                    .filter{meta, log ->
+                        ! (meta.has_umi && params.dedup_umi_for_kallisto)
+                    }
+            ),
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
