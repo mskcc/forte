@@ -2,3 +2,6 @@ show_analysis_paths: False
 extra_fn_clean_trim:
   - "htseq.count"
 export_plots: true
+
+use_filename_as_sample_name:
+  - kallisto
