@@ -9,6 +9,8 @@ include { GUNZIP                         } from '../../modules/nf-core/gunzip/ma
 include { STARFUSION_DOWNLOAD            } from '../../modules/local/starfusion/download/main'
 include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatcher/download/main'
 include { FUSIONREPORT_DOWNLOAD          } from '../../modules/local/fusionreport/download/main'
+include { KALLISTO_INDEX                 } from '../../modules/nf-core/kallisto/index/main'
+
 
 workflow PREPARE_REFERENCES {
 
@@ -70,6 +72,9 @@ workflow PREPARE_REFERENCES {
     //cosmic_passwd = params.cosmic_passwd ?: ""
     FUSIONREPORT_DOWNLOAD()
 
+    KALLISTO_INDEX(params.cdna)
+    ch_versions = ch_versions.mix(KALLISTO_INDEX.out.versions)
+
     emit:
     star_index         = star_index
     // Convert queue channel to value channel so it never gets poison pilled
@@ -84,6 +89,7 @@ workflow PREPARE_REFERENCES {
     fusioncatcher_ref  = fusioncatcher_ref
     fusion_report_db   = FUSIONREPORT_DOWNLOAD.out.reference
     rseqc_bed          = UCSC_GENEPREDTOBED.out.bed.map{it[1]}.first()
+    kallisto_index     = KALLISTO_INDEX.out.idx
     ch_versions        = ch_versions
 
 }

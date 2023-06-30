@@ -52,12 +52,12 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS       } from '../modules/nf-core/custom/du
 include { PREPARE_REFERENCES                } from '../subworkflows/local/prepare_references'
 include { PREPROCESS_READS                  } from '../subworkflows/local/preprocess_reads'
 include { ALIGN_READS                       } from '../subworkflows/local/align_reads'
-include { MERGE_READS                       } from '../subworkflows/local/merge_reads'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
 include {
     QC as QC_DUP ;
     QC as QC_DEDUP
 } from '../subworkflows/local/qc'
+include { EXTRACT_DEDUP_FQ                  } from '../subworkflows/local/extract_dedup_fq'
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
 include { FUSION                            } from '../subworkflows/local/fusion'
 
@@ -103,21 +103,29 @@ workflow FORTE {
     )
     ch_versions = ch_versions.mix(ALIGN_READS.out.ch_versions)
 
+    EXTRACT_DEDUP_FQ(
+        ALIGN_READS.out.bam
+            .filter{ meta, bam ->
+                meta.has_umi && params.dedup_umi_for_kallisto
+            }
+    )
+    ch_versions = ch_versions.mix(EXTRACT_DEDUP_FQ.out.ch_versions)
+
     QUANTIFICATION(
         ALIGN_READS.out.bam,
         ALIGN_READS.out.bai,
-        PREPARE_REFERENCES.out.gtf
+        PREPARE_REFERENCES.out.gtf,
+        EXTRACT_DEDUP_FQ.out.dedup_reads
+            .mix(
+                PREPROCESS_READS.out.reads
+                    .filter{ meta, reads -> ! ( meta.has_umi && params.dedup_umi_for_kallisto ) }
+            ),
+        PREPARE_REFERENCES.out.kallisto_index
     )
     ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
 
-
-    MERGE_READS(
-        PREPROCESS_READS.out.reads,
-        ALIGN_READS.out.bam
-    )
-
     FUSION(
-        MERGE_READS.out.dedup_reads,
+        PREPROCESS_READS.out.reads,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
@@ -129,7 +137,10 @@ workflow FORTE {
     QC_DEDUP(
         ALIGN_READS.out.bam_dedup,
         ALIGN_READS.out.bai_dedup,
-        Channel.empty(),
+        QUANTIFICATION.out.kallisto_log
+            .filter{meta, log ->
+                meta.has_umi && params.dedup_umi_for_kallisto
+            },
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
@@ -144,7 +155,13 @@ workflow FORTE {
         ALIGN_READS.out.bai_withdup,
         PREPROCESS_READS.out.fastp_json
             .mix(QUANTIFICATION.out.htseq_counts)
-            .mix(ALIGN_READS.out.star_log_final),
+            .mix(ALIGN_READS.out.star_log_final)
+            .mix(
+                QUANTIFICATION.out.kallisto_log
+                    .filter{meta, log ->
+                        ! (meta.has_umi && params.dedup_umi_for_kallisto)
+                    }
+            ),
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
