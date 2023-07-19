@@ -116,7 +116,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 [STAR-Fusion](https://github.com/STAR-Fusion/STAR-Fusion) uses the STAR aligner to identify candidate fusion transcripts supported by Illumina reads.
 
-*More coming soon...*
+_More coming soon..._
 
 ### QC
 
@@ -167,7 +167,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - `pdf/*.pdf`
     - `png/*.png`
     - `svg/*.svg`
-
 
 </details>
 
