@@ -15,8 +15,8 @@ cff_format_df <- setNames(data.frame(matrix(ncol = length(cff_format), nrow = 0)
 make_arriba <- function(sample_file){
 df <- as.data.frame(matrix(ncol = 0,nrow=nrow(sample_file)))
 
-df$t_gene1 <- sample_file[,1]
-df$t_gene2 <- sample_file$gene2
+df$t_gene1 <- sample_file$gene_id1
+df$t_gene2 <- sample_file$gene_id2
 df$chr1 <- str_split_fixed(sample_file$breakpoint1,":",2)[,1]
 df$pos1 <- str_split_fixed(sample_file$breakpoint1,":",2)[,2]
 df$chr2 <-  str_split_fixed(sample_file$breakpoint2,":",2)[,1]
@@ -35,8 +35,8 @@ return(df)
 make_fusioncatcher <- function(sample_file){
 df <- as.data.frame(matrix(ncol = 0,nrow=nrow(sample_file)))
 
-df$t_gene1 <- sample_file[,1]
-df$t_gene2 <- sample_file[,2]
+df$t_gene1 <- sample_file[,"Gene_1_id(5end_fusion_partner)"]
+df$t_gene2 <- sample_file[,"Gene_2_id(3end_fusion_partner)"]
 df$chr1 <- str_split_fixed(sample_file[,"Fusion_point_for_gene_1(5end_fusion_partner)"],":",3)[,1]
 df$pos1 <- str_split_fixed(sample_file[,"Fusion_point_for_gene_1(5end_fusion_partner)"],":",3)[,2]
 df$chr2 <-  str_split_fixed(sample_file[,"Fusion_point_for_gene_2(3end_fusion_partner)"],":",3)[,1]
@@ -57,8 +57,8 @@ return(df)
 make_starfusion <- function(sample_file){
 
 df <- as.data.frame(matrix(ncol = 0,nrow=nrow(sample_file)))
-df$t_gene1 <- str_split_fixed(sample_file$LeftGene,"\\^",2)[,1]
-df$t_gene2 <- str_split_fixed(sample_file$RightGene,"\\^",2)[,1]
+df$t_gene1 <- str_split_fixed(sample_file$LeftGene,"\\^",2)[,2]
+df$t_gene2 <- str_split_fixed(sample_file$RightGene,"\\^",2)[,2]
 df$chr1 <- str_replace(str_split_fixed(sample_file$LeftBreakpoint,":",3)[,1],"chr","")
 df$pos1 <- str_split_fixed(sample_file$LeftBreakpoint,":",3)[,2]
 df$chr2 <-    str_replace(str_split_fixed(sample_file$RightBreakpoint,":",3)[,1],"chr","")
