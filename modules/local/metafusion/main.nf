@@ -3,8 +3,8 @@ process METAFUSION {
     label "process_low"
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'cmopipeline/metafusion:0.0.3' :
-        'cmopipeline/metafusion:0.0.3' }"
+        'cmopipeline/metafusion:0.0.4' :
+        'cmopipeline/metafusion:0.0.4' }"
 
     input:
     tuple val(meta), path(cff)
