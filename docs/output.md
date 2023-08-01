@@ -1,4 +1,4 @@
-# anoronh4/forte: Output
+# mskcc/forte: Output
 
 ## Introduction
 
