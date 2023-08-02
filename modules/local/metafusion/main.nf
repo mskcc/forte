@@ -29,10 +29,10 @@ process METAFUSION {
     def sample = "${meta.sample}"
     """
     Metafusion_forte.sh  --cff $cff --outdir .  --gene_bed $genebed --gene_info $info  --genome_fasta $fasta --recurrent_bedpe $blocklist --num_tools=$numtools
-    
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        Metafusion docker: metafusion:0.0.4 
+        Metafusion docker: metafusion:0.0.4
         Metafusion_forte.sh: 0.0.1
     END_VERSIONS
     """
