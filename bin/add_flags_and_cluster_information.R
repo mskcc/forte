@@ -161,7 +161,7 @@ header_filtered <-
     }
     })
 
-    filtered_cff <- rbind(weird_chromosomes, filtered_cff)
+    filtered_cff <- rbind(filtered_cff,weird_chromosomes)
     write.table(
     filtered_cff,
     paste0(sample_name, "_metafusion_cluster.cff"),
