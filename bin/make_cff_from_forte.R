@@ -90,7 +90,7 @@ make_fusioncatcher <- function(sample_file) {
             !is.na(sample_file$Spanning_unique_reads),
             sample_file$Spanning_unique_reads,
             -1
-        )   
+        )
     df$span_cnt <-
         ifelse(!is.na(sample_file$Spanning_pairs),
             sample_file$Spanning_pairs,
