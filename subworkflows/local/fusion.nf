@@ -117,6 +117,11 @@ workflow FUSION {
 
     ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.cff)
     ch_versions = ch_versions.mix(ONCOKB_FUSIONANNOTATOR.out.versions.first())
+    ch_versions = ch_versions.mix(ADD_FLAG.out.versions.first())
+    ch_versions = ch_versions.mix(METAFUSION.out.versions.first())
+    ch_versions = ch_versions.mix(ARRIBA_TO_CFF.out.versions.first())
+    ch_versions = ch_versions.mix(FUSIONCATCHER_TO_CFF.out.versions.first())
+    ch_versions = ch_versions.mix(STARFUSION_TO_CFF.out.versions.first())
 
     emit:
     ch_versions
