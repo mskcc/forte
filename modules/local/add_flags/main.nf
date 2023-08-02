@@ -1,4 +1,4 @@
-process TO_CFF {
+process ADD_FLAG{
     tag "$meta.id"
     label "process_single"
 
@@ -8,11 +8,14 @@ process TO_CFF {
         'ghcr.io/rocker-org/devcontainer/tidyverse:4' }"
 
     input:
-    tuple val(meta), val(caller), path(fusions)
+    tuple val(meta), path(cluster)
+    tuple val(meta), path(cis)
+    tuple val(meta), path(filtered)
+    tuple val(meta), path(problem_chrom)
 
     output:
-    tuple val(meta), path("*.cff")               , emit: cff
-    path "versions.yml"                          , emit: versions
+    tuple val(meta), path("*_metafusion_cluster.cff"), emit: cff
+    path "versions.yml"                              , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,7 +23,7 @@ process TO_CFF {
     script:
     def sample = "${meta.sample}"
     """
-    make_cff_from_forte.R $caller $fusions $sample ${sample}_${caller}.cff
+    add_flags_and_cluster_information.R $filtered $cluster $cis $problem_chrom $sample
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

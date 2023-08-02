@@ -3,14 +3,14 @@ include { ARRIBA                            } from '../../modules/nf-core/arriba
 include { STAR_ALIGN as STAR_FOR_STARFUSION } from '../../modules/nf-core/star/align/main'
 include { STARFUSION                        } from '../../modules/local/starfusion/detect/main'
 include { FUSIONCATCHER_DETECT              } from '../../modules/local/fusioncatcher/detect/main'
-include { FUSIONREPORT                      } from '../../modules/local/fusionreport/run/main'
 include { ONCOKB_FUSIONANNOTATOR            } from '../../modules/local/oncokb/fusionannotator/main'
 include { CSVTK_CONCAT as CSV_TO_TSV        } from '../../modules/nf-core/csvtk/concat/main'
-include { TO_CFF as ARRIBA_TO_CFF} from '../../modules/local/convert_to_cff/main'
-include { TO_CFF as FUSIONCATCHER_TO_CFF} from '../../modules/local/convert_to_cff/main'
-include { TO_CFF as STARFUSION_TO_CFF} from '../../modules/local/convert_to_cff/main'
-include { CSVTK_CONCAT as MERGE_CFF } from '../../modules/nf-core/csvtk/concat/main'
-include { METAFUSION } from '../../modules/local/metafusion/main'
+include { TO_CFF as ARRIBA_TO_CFF           } from '../../modules/local/convert_to_cff/main'
+include { TO_CFF as FUSIONCATCHER_TO_CFF    } from '../../modules/local/convert_to_cff/main'
+include { TO_CFF as STARFUSION_TO_CFF       } from '../../modules/local/convert_to_cff/main'
+include { CSVTK_CONCAT as MERGE_CFF         } from '../../modules/nf-core/csvtk/concat/main'
+include { METAFUSION                        } from '../../modules/local/metafusion/main'
+include { ADD_FLAG                          } from '../../modules/local/add_flags/main'
 
 
 workflow FUSION {
@@ -108,7 +108,14 @@ workflow FUSION {
         numtools
     )
 
-    ONCOKB_FUSIONANNOTATOR(METAFUSION.out.cluster)
+    ADD_FLAG(
+        METAFUSION.out.cluster,
+        METAFUSION.out.cis,
+        METAFUSION.out.filtered,
+        METAFUSION.out.problem_chrom
+    )    
+
+    ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.cff)
     ch_versions = ch_versions.mix(ONCOKB_FUSIONANNOTATOR.out.versions.first())
 
     emit:
