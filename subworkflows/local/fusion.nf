@@ -113,7 +113,7 @@ workflow FUSION {
         METAFUSION.out.cis,
         METAFUSION.out.filtered,
         METAFUSION.out.problem_chrom
-    )    
+    )
 
     ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.cff)
     ch_versions = ch_versions.mix(ONCOKB_FUSIONANNOTATOR.out.versions.first())

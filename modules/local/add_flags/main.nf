@@ -28,6 +28,7 @@ process ADD_FLAG{
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -n1)
+        add_flags_and_cluster_information.R: 0.0.1
     END_VERSIONS
     """
 }

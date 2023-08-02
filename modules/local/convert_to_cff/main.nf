@@ -25,6 +25,7 @@ process TO_CFF {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -n1)
+        make_cff_from_forte.R: 0.0.1
     END_VERSIONS
     """
 }

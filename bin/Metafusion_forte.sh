@@ -1,12 +1,20 @@
 #!/bin/bash
 #STEPS
+
+# __author__      = "Alexandria Dymun"
+# __email__       = "pintoa1@mskcc.org"
+# __contributor__ = "Anne Marie Noronha (noronhaa@mskcc.org)"
+# __version__     = "0.0.1"
+# __status__      = "Dev"
+
+
 output_ANC_RT_SG=1
 RT_call_filter=1
 blck_filter=1
 ANC_filter=1
-usage() { 
-	echo "Usage: Metafusion_forte.sh [--num_tools=<minNumToolsCalled> --genome_fasta <FASTA adds SEQ to fusion>  --recurrent_bedpe <blacklistFusions> ] --outdir <outputDirectory> --cff <cffFile> --gene_bed <geneBedFile> --gene_info <geneInfoFile>" 1>&2;
-	exit 1; 
+usage() {
+    echo "Usage: Metafusion_forte.sh [--num_tools=<minNumToolsCalled> --genome_fasta <FASTA adds SEQ to fusion>  --recurrent_bedpe <blacklistFusions> ] --outdir <outputDirectory> --cff <cffFile> --gene_bed <geneBedFile> --gene_info <geneInfoFile>" 1>&2;
+    exit 1;
 }
 
 # Loop through arguments and process them
@@ -36,25 +44,9 @@ while test $# -gt 0;do
         genome_fasta="$2"
         shift 2
         ;;
-        --truth_set)
-        truth_set="$2"
-        shift 2
-        ;;
         --recurrent_bedpe)
         recurrent_bedpe="$2"
         shift 2
-        ;;
-        --scripts)
-        fusiontools="$2"
-        shift 2
-        ;;
-        --fusion_annotator)
-        FA=1
-        shift
-        ;;
-        --annotate_exons)
-        exons=1
-        shift
         ;;
         *)
         #OTHER_ARGUMENTS+=("$1")
@@ -62,6 +54,12 @@ while test $# -gt 0;do
         ;;
     esac
 done
+
+if [[ ! $cff || ! $gene_info  || ! $gene_bed ]]; then
+    echo "Missing required argument"
+    usage
+fi
+
 
 mkdir $outdir
 
@@ -151,5 +149,3 @@ out2=`awk -F '\t' '{print $22}' $outdir/cis-sage.cluster | tail -n +2`
 out3=`echo $out $out2`
 
 for this in echo ${out3//,/ }; do grep $this $cff; done >> $outdir/$(basename $cff).filtered.cff
-
-filt_cff=$outdir/$(basename $cff).filtered.cff
