@@ -1,0 +1,49 @@
+name: agfusion_batch
+description: AGFusion batch annotation
+keywords:
+  - agfusion
+  - fusion
+  - batch
+  - frame
+tools:
+  - batch:
+      description: Annotate a file containing fusions
+      homepage: https://github.com/anoronh4/AGFusion
+      documentation: https://github.com/anoronh4/AGFusion/blob/master/README.md
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - fusions:
+      type: path
+      description: Fusions in one of many formats (may include arriba outputs or cff)
+      pattern: "*"
+  - agfusion_db:
+      type: path
+      description: File containing AGFusion reference information.
+      pattern: "*.db"
+  - pyensembl_cache:
+      type: path
+      description: Folder containing pyensembl cache.
+      pattern: "*"
+
+output:
+  - versions:
+      type: path
+      description: File containing software versions
+      pattern: "versions.yml"
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - agfusion_result:
+      type: path
+      description: Folder containing annotations
+      pattern: "${prefix}/"
+
+authors:
+  - "@anoronh4"
