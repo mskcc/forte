@@ -28,7 +28,14 @@ process METAFUSION {
     script:
     def sample = "${meta.sample}"
     """
-    Metafusion_forte.sh  --cff $cff --outdir .  --gene_bed $genebed --gene_info $info  --genome_fasta $fasta --recurrent_bedpe $blocklist --num_tools=$numtools
+    Metafusion_forte.sh \\
+        --cff $cff \\
+        --outdir . \\
+        --gene_bed $genebed \\
+        --gene_info $info \\
+        --genome_fasta $fasta \\
+        --recurrent_bedpe $blocklist \\
+        --num_tools=$numtools
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
