@@ -24,9 +24,6 @@ params.cdna           = WorkflowMain.getGenomeAttribute(params, 'cdna')
 params.arriba_blacklist       = WorkflowMain.getGenomeAttribute(params, 'arriba_blacklist')
 params.arriba_known_fusions   = WorkflowMain.getGenomeAttribute(params, 'arriba_known_fusions')
 params.arriba_protein_domains = WorkflowMain.getGenomeAttribute(params, 'arriba_protein_domains')
-params.blocklist       = WorkflowMain.getGenomeAttribute(params, 'block')
-params.genebed  = WorkflowMain.getGenomeAttribute(params, 'genebed')
-params.info = WorkflowMain.getGenomeAttribute(params, 'info')
 
 WorkflowMain.initialise(workflow, params, log)
 

@@ -3,16 +3,16 @@ process ONCOKB_FUSIONANNOTATOR {
     label 'process_low'
 
     // Note: 2.7X indices incompatible with AWS iGenomes.
-    //conda "shahcompbio::oncokb-annotator=2.3.3"
+    conda "shahcompbio::oncokb-annotator=2.3.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'cmopipeline/oncokb-annotator:0.0.1' :
         'cmopipeline/oncokb-annotator:0.0.1' }"
 
     input:
-    tuple val(meta), path(cluster)
+    tuple val(meta), path(fusions)
 
     output:
-    tuple val(meta), path("*.oncokb.tsv")        , emit: oncokb_fusions
+    tuple val(meta), path("*.oncokb.tsv"), emit: oncokb_fusions
     path "versions.yml"                          , emit: versions
 
     when:
@@ -23,10 +23,9 @@ process ONCOKB_FUSIONANNOTATOR {
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    awk 'BEGIN { FS = "\\t"; OFS = "\\t"} {print \$18,\$20"-"\$22}' ${cluster} | tail -n+2 > ${cluster}.reformat
-    echo -e "Tumor_Sample_Barcode\tFusion" | cat - ${cluster}.reformat  > ${cluster}.1reformat
+    awk 'BEGIN {FS=OFS="|"}{gsub("--","-",\$1)}1' ${fusions} > ${fusions}.reformat
     FusionAnnotator.py \\
-        -i ${cluster}.1reformat \\
+        -i ${fusions}.reformat \\
         -o ${prefix}.oncokb.tsv \\
         ${args}
 

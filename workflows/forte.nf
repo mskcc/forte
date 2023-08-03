@@ -10,7 +10,7 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 WorkflowForte.initialise(params, log)
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.gtf, params.refflat, params.starfusion_url, params.genebed,params.blocklist,params.info ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.gtf, params.refflat, params.starfusion_url ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
