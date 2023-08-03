@@ -17,7 +17,6 @@ process METAFUSION {
     output:
     tuple val(meta), path("*final*cluster")             , emit: cluster
     tuple val(meta), path("*.filtered.cff")             , emit: filtered
-    tuple val(meta), path("*reformat*")                 , emit: all
     tuple val(meta), path("cis-sage.cluster")           , emit: cis
     tuple val(meta), path("problematic_chromosomes.cff"), emit: problem_chrom
     path "versions.yml"                                 , emit: versions
