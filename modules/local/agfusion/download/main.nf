@@ -35,7 +35,7 @@ process AGFUSION_DOWNLOAD {
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
-            agfusion: \$(agfusion -v) (forked)
+            agfusion: \$(agfusion -v) (fork)
         END_VERSIONS
         """
     } else {
@@ -51,7 +51,7 @@ process AGFUSION_DOWNLOAD {
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
-            agfusion: \$(agfusion -v) (forked)
+            agfusion: \$(agfusion -v) (fork)
         END_VERSIONS
         """
     }
