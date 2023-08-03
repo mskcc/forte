@@ -37,7 +37,7 @@ process AGFUSION_BATCH {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        agfusion: \$(agfusion -v)
+        agfusion: \$(agfusion -v) (fork)
     END_VERSIONS
     """
 }
