@@ -1,6 +1,6 @@
 process HTSEQ_COUNT {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_low'
 
     conda "bioconda::htseq=2.0.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -8,7 +8,7 @@ process HTSEQ_COUNT {
         'quay.io/biocontainers/htseq:2.0.2--py39h919a90d_0' }"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(bam), path(bai)
     path gff
 
     output:

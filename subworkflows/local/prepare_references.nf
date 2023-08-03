@@ -1,5 +1,6 @@
 include { STAR_GENOMEGENERATE            } from '../../modules/nf-core/star/genomegenerate/main'
 include { UCSC_GTFTOGENEPRED             } from '../../modules/nf-core/ucsc/gtftogenepred/main'
+include { UCSC_GENEPREDTOBED             } from '../../modules/local/ucsc/genepredtobed/main'
 include { GATK4_CREATESEQUENCEDICTIONARY } from '../../modules/nf-core/gatk4/createsequencedictionary/main'
 include { SAMTOOLS_FAIDX                 } from '../../modules/nf-core/samtools/faidx/main'
 include { GATK4_BEDTOINTERVALLIST        } from '../../modules/nf-core/gatk4/bedtointervallist/main'
@@ -8,6 +9,8 @@ include { GUNZIP                         } from '../../modules/nf-core/gunzip/ma
 include { STARFUSION_DOWNLOAD            } from '../../modules/local/starfusion/download/main'
 include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatcher/download/main'
 include { FUSIONREPORT_DOWNLOAD          } from '../../modules/local/fusionreport/download/main'
+include { KALLISTO_INDEX                 } from '../../modules/nf-core/kallisto/index/main'
+
 
 workflow PREPARE_REFERENCES {
 
@@ -25,12 +28,15 @@ workflow PREPARE_REFERENCES {
     ch_versions = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
     star_index = STAR_GENOMEGENERATE.out.index
 
+    UCSC_GTFTOGENEPRED(Channel.value(gtf).map{[[id:params.genome],it]})
+    ch_versions = ch_versions.mix(UCSC_GTFTOGENEPRED.out.versions)
+
+    UCSC_GENEPREDTOBED(UCSC_GTFTOGENEPRED.out.genepred)
+    ch_versions = ch_versions.mix(UCSC_GENEPREDTOBED.out.versions)
+
     if ( params.refflat) {
         refflat = params.refflat
     } else {
-        UCSC_GTFTOGENEPRED(Channel.value(gtf).map{[[id:params.genome],it]})
-        ch_versions = ch_versions.mix(UCSC_GTFTOGENEPRED.out.versions)
-
         refflat = UCSC_GTFTOGENEPRED.out.refflat.map{it[1]}.first()
     }
     PREPARE_RRNA([],refflat)
@@ -66,6 +72,9 @@ workflow PREPARE_REFERENCES {
     //cosmic_passwd = params.cosmic_passwd ?: ""
     FUSIONREPORT_DOWNLOAD()
 
+    KALLISTO_INDEX(params.cdna)
+    ch_versions = ch_versions.mix(KALLISTO_INDEX.out.versions)
+
     emit:
     star_index         = star_index
     // Convert queue channel to value channel so it never gets poison pilled
@@ -79,6 +88,8 @@ workflow PREPARE_REFERENCES {
     starfusion_ref     = starfusion_ref
     fusioncatcher_ref  = fusioncatcher_ref
     fusion_report_db   = FUSIONREPORT_DOWNLOAD.out.reference
+    rseqc_bed          = UCSC_GENEPREDTOBED.out.bed.map{it[1]}.first()
+    kallisto_index     = KALLISTO_INDEX.out.idx
     ch_versions        = ch_versions
 
 }
