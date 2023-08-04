@@ -9,58 +9,58 @@
 
 library(dplyr)
 library(data.table)
-args <- commandArgs(TRUE)
-if (length(args) != 5) {
-    stop(
-        "5 arguments are required as input in the following order: filtered_cff cluster_file cis_sage_file problematic_chromosomes_file sample_name"
-    )
-}
+    args <- commandArgs(TRUE)
+    if (length(args) != 5) {
+        stop(
+            "5 arguments are required as input in the following order: filtered_cff cluster_file cis_sage_file problematic_chromosomes_file sample_name"
+        )
+    }
 
-filtered_cff <- read.table(args[1])
-header_filtered <-
-    c(
-        "gene5_chr",
-        "gene5_breakpoint",
-        "gene5_strand",
-        "gene3_chr",
-        "gene3_breakpoint",
-        "gene3_strand",
-        "library",
-        "sample",
-        "T_N",
-        "disease",
-        "tool",
-        "max_split_cnt",
-        "max_span_cnt",
-        "gene5_renamed_symbol",
-        "gene5_tool_annotation",
-        "gene3_renamed_symbol",
-        "gene3_tool_annotation",
-        "FusionType",
-        "reann_gene5_symbol",
-        "reann_gene5_region",
-        "reann_gene3_symbol",
-        "reann_gene3_region",
-        "reann_gene5_on_bndry",
-        "reann_gene5_close_to_bndry",
-        "reann_gene3_on_bndry",
-        "reann_gene3_close_to_bndry",
-        "score",
-        "coding_id_distance",
-        "gene_interval_distance",
-        "dnasupp",
-        "FID",
-        "gene5_seq",
-        "gene3_seq",
-        "is_inframe",
-        'closest_exon5',
-        'closest_exon3',
-        'captured_reads',
-        "gene5_transcript_id",
-        "gene3_transcript_id"
-    )
+    filtered_cff <- fread(args[1],data.table = F)
+    header_filtered <-
+        c(
+            "gene5_chr",
+            "gene5_breakpoint",
+            "gene5_strand",
+            "gene3_chr",
+            "gene3_breakpoint",
+            "gene3_strand",
+            "library",
+            "sample",
+            "T_N",
+            "disease",
+            "tool",
+            "max_split_cnt",
+            "max_span_cnt",
+            "gene5_renamed_symbol",
+            "gene5_tool_annotation",
+            "gene3_renamed_symbol",
+            "gene3_tool_annotation",
+            "FusionType",
+            "reann_gene5_symbol",
+            "reann_gene5_region",
+            "reann_gene3_symbol",
+            "reann_gene3_region",
+            "reann_gene5_on_bndry",
+            "reann_gene5_close_to_bndry",
+            "reann_gene3_on_bndry",
+            "reann_gene3_close_to_bndry",
+            "score",
+            "coding_id_distance",
+            "gene_interval_distance",
+            "dnasupp",
+            "FID",
+            "gene5_seq",
+            "gene3_seq",
+            "is_inframe",
+            "closest_exon5",
+            "closest_exon3",
+            "captured_reads",
+            "gene5_transcript_id",
+            "gene3_transcript_id"
+        )
     colnames(filtered_cff) <- header_filtered
-    cluster <- read.table(args[2])
+    cluster <- fread(args[2],data.table = F)
     header_cluster <-
     c(
         "gene5_renamed_symbol",
@@ -80,7 +80,7 @@ header_filtered <-
         "FID"
     )
     colnames(cluster) <- header_cluster
-    cis_sage <- read.table(args[3])
+    cis_sage <- fread(args[3],data.table = F )
     header_cis <-
     c(
         "test",
@@ -108,7 +108,7 @@ header_filtered <-
     )
     colnames(cis_sage) <- header_cis
 
-    weird_chromosomes <- read.table(args[4])
+    weird_chromosomes <- fread(args[4],data.table = F)
     colnames(weird_chromosomes) <-
     c(
         "gene5_chr",

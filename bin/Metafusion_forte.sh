@@ -13,7 +13,7 @@ RT_call_filter=1
 blck_filter=1
 ANC_filter=1
 usage() {
-    echo "Usage: Metafusion_forte.sh [--num_tools=<minNumToolsCalled> --genome_fasta <FASTA adds SEQ to fusion>  --recurrent_bedpe <blacklistFusions> ] --outdir <outputDirectory> --cff <cffFile> --gene_bed <geneBedFile> --gene_info <geneInfoFile>" 1>&2;
+    echo "Usage: Metafusion_forte.sh --num_tools=<minNumToolsCalled> --genome_fasta <FASTA adds SEQ to fusion>  --recurrent_bedpe <blacklistFusions>  --outdir <outputDirectory> --cff <cffFile> --gene_bed <geneBedFile> --gene_info <geneInfoFile>" 1>&2;
     exit 1;
 }
 
@@ -65,9 +65,6 @@ mkdir $outdir
 
 #Check CFF file format:
 #Remove entries with nonconformming chromosome name
-#Remove "." from strand field and replace with "NA"
-#cat $cff | awk '$1 ~ /[0-9XY]/ && $4 ~ /[0-9XY]/ ' |  awk 'BEGIN{FS=OFS="\t"} $3 !~ /^[-+]$/{$3="NA"} 1' | awk 'BEGIN{FS=OFS="\t"} $6 !~ /^[-+]$/{$6="NA"} 1'   > $outdir/$(basename $cff).reformat
-#cff=$outdir/$(basename $cff).reformat
 
 all_gene_bed_chrs=`awk -F '\t' '{print $1}' $gene_bed | sort | uniq | sed 's/chr//g '`
 awk -F " " -v arr="${all_gene_bed_chrs[*]}" 'BEGIN{OFS = "\t"; split(arr,arr1); for(i in arr1) dict[arr1[i]]=""} $1 in dict && $4 in dict' $cff >  $outdir/$(basename $cff).cleaned_chr
