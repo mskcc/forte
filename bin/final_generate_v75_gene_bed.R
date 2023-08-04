@@ -41,64 +41,59 @@ ptm <- proc.time()
 ## Forward strand: Exon 0 == Exon 1
 ### Reverse strand: Exon 0 == LAST EXON IN TRANSCRIPT
 for (id in transcript_ids){
-  transcript <- total.introns.bed[total.introns.bed$transcript_id == id,]
-  # Remove exons if coding gene, since "exon" and "CDS" are duplicates of one another
-  if ("CDS" %in% transcript$type){
-    transcript <- transcript[!transcript$type == "exon",]
-  }
-  # Order features by increasing bp 
-  transcript <- transcript[order(transcript$start, decreasing = FALSE),]
-  # Index features
-  idx <- 0
-  for (i in 1:nrow(transcript)){
-    transcript$idx [i]<- idx
-    if (transcript$type[i] == "intron"){
-      idx <- idx + 1
+    transcript <- total.introns.bed[total.introns.bed$transcript_id == id,]
+    # Remove exons if coding gene, since "exon" and "CDS" are duplicates of one another
+    if ("CDS" %in% transcript$type){
+        transcript <- transcript[!transcript$type == "exon",]
+        }
+    # Order features by increasing bp
+    transcript <- transcript[order(transcript$start, decreasing = FALSE),]
+    # Index features
+    idx <- 0
+    for (i in 1:nrow(transcript)){
+        transcript$idx [i]<- idx
+        if (transcript$type[i] == "intron"){
+            idx <- idx + 1
+        }
     }
-  }
-  # REFORMAT TRANSCRIPT
-  #Change strand info (+ --> f, - --> r)
-  if (unique(transcript$strand) == "+"){
-    transcript$strand <- 'f'
-  } else if  (unique(transcript$strand) == "-"){
-    transcript$strand <- 'r'
-  } else {
-    errorCondition("Strand info for this transcript is inconsistent")
-  }
-  #Add "chr" prefix to chromosomes
-  transcript$chr <- sapply("chr", paste0,  transcript$chr)
-  #Change CDS --> cds ### IF A TRANSCRIPT LACKS "CDS" THIS LINE WILL DO NOTHING, Changing exon values to UTRs later 
-  if ("CDS" %in% unique(transcript$type)){transcript[transcript$type == "CDS",]$type <- "cds"}
-  
-  ## DETERMING UTR3 and UTR5
-  
-  
-  ### INSTEAD OF START AND STOP, USE CDS LOCATIONS AND STRAND INFORMATION.....
-  if ("UTR" %in% unique(transcript$type)){
-    if( unique(transcript$strand) == "f"){
-      #Forward strand 
-      start_coding <- min(transcript[transcript$type == "cds","start"])
-      stop_coding <-  max(transcript[transcript$type == "cds","end"])
-      transcript$type[transcript$end <= start_coding &  transcript$type == "UTR"] <- "utr5"
-      transcript$type[transcript$start >= stop_coding & transcript$type == "UTR"] <- "utr3"
-    }else {
-      start_coding <- max(transcript[transcript$type == "cds","end"])
-      stop_coding <- min(transcript[transcript$type == "cds","start"])
-      transcript$type[transcript$end <= start_coding &  transcript$type == "UTR"] <- "utr3"
-      transcript$type[transcript$start >= stop_coding & transcript$type == "UTR"] <- "utr5"
+    # REFORMAT TRANSCRIPT
+    #Change strand info (+ --> f, - --> r)
+    if (unique(transcript$strand) == "+"){
+        transcript$strand <- 'f'
+    } else if  (unique(transcript$strand) == "-"){
+        transcript$strand <- 'r'
+    } else {
+        errorCondition("Strand info for this transcript is inconsistent")
     }
-    
-  }
-  
-  transcript <- transcript[,c("chr", "start", "end", "transcript_id", "type", "idx", "strand", "gene_name", "gene_id" )]
-  write.table(transcript, file.to_write, append=TRUE, sep="\t", quote=F,  row.names=F, col.names=F)
+    #Add "chr" prefix to chromosomes
+    transcript$chr <- sapply("chr", paste0,  transcript$chr)
+    #Change CDS --> cds ### IF A TRANSCRIPT LACKS "CDS" THIS LINE WILL DO NOTHING, Changing exon values to UTRs later
+    if ("CDS" %in% unique(transcript$type)){transcript[transcript$type == "CDS",]$type <- "cds"}
+    ## DETERMING UTR3 and UTR5
+    ### INSTEAD OF START AND STOP, USE CDS LOCATIONS AND STRAND INFORMATION.....
+    if ("UTR" %in% unique(transcript$type)){
+        if( unique(transcript$strand) == "f"){
+            #Forward strand
+            start_coding <- min(transcript[transcript$type == "cds","start"])
+            stop_coding <-  max(transcript[transcript$type == "cds","end"])
+            transcript$type[transcript$end <= start_coding &  transcript$type == "UTR"] <- "utr5"
+            transcript$type[transcript$start >= stop_coding & transcript$type == "UTR"] <- "utr3"
+        }else {
+            start_coding <- max(transcript[transcript$type == "cds","end"])
+            stop_coding <- min(transcript[transcript$type == "cds","start"])
+            transcript$type[transcript$end <= start_coding &  transcript$type == "UTR"] <- "utr3"
+            transcript$type[transcript$start >= stop_coding & transcript$type == "UTR"] <- "utr5"
+        }
+    }
+    transcript <- transcript[,c("chr", "start", "end", "transcript_id", "type", "idx", "strand", "gene_name", "gene_id" )]
+    write.table(transcript, file.to_write, append=TRUE, sep="\t", quote=F,  row.names=F, col.names=F)
 }
 
 time <- proc.time() - ptm
 time
-# 
-# user    system   elapsed 
-# 16657.116    32.227 16741.382 
+#
+# user    system   elapsed
+# 16657.116    32.227 16741.382
 
 
 new.bed <- fread(file.to_write,data.table = F)
@@ -111,7 +106,6 @@ colnames(new.bed) <- c("chr","start","end","transcript_id","type","idx","strand"
 new.bed$type[new.bed$strand == "f" &  new.bed$type == "exon" ] <- "utr5"
 #Reverse strand
 new.bed$type[new.bed$strand == "r" &  new.bed$type == "exon"]<- "utr3"
-      63677        1091211            114          73353          73406         215117         327592         353023 
 
 expected_types <- c("cds","intron","utr3","utr5")
 new.bed.ready <- new.bed[new.bed$type %in% c(expected_types),]
