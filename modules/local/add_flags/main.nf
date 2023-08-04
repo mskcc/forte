@@ -1,4 +1,4 @@
-process ADD_FLAG{
+process ADD_FLAG {
     tag "$meta.id"
     label "process_single"
 

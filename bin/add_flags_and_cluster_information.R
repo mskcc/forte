@@ -163,7 +163,7 @@ library(data.table)
 
     filtered_cff <- rbind(filtered_cff,weird_chromosomes)
     write.table(
-    filtered_cff[,c(header_filtered,"Metafusion_flag","cluster"],
+    filtered_cff[,c(header_filtered,"Metafusion_flag","cluster")],
     paste0(sample_name, "_metafusion_cluster.cff"),
     row.names = F,
     append = F,

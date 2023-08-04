@@ -9,7 +9,7 @@ process ONCOKB_FUSIONANNOTATOR {
         'cmopipeline/oncokb-annotator:0.0.1' }"
 
     input:
-    tuple val(meta), path(cluster)
+    tuple val(meta), path(cff)
 
     output:
     tuple val(meta), path("*.oncokb.tsv")        , emit: oncokb_fusions
@@ -23,10 +23,10 @@ process ONCOKB_FUSIONANNOTATOR {
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    awk 'BEGIN { FS = "\\t"; OFS = "\\t"} {print \$18,\$19"-"\$21}' ${cluster} | tail -n+2 > ${cluster}.reformat
-    echo -e "Tumor_Sample_Barcode\tFusion" | cat - ${cluster}.reformat  > ${cluster}.1reformat
+    awk 'BEGIN { FS = "\\t"; OFS = "\\t"} {print \$31,\$19"-"\$21}' ${cff} | tail -n+2 > ${cff}.reformat
+    echo -e "Tumor_Sample_Barcode\tFusion" | cat - ${cff}.reformat  > ${cff}.1reformat
     FusionAnnotator.py \\
-        -i ${cluster}.1reformat \\
+        -i ${cff}.1reformat \\
         -o ${prefix}.oncokb.tsv \\
         ${args}
 
