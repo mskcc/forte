@@ -29,7 +29,6 @@ workflow FUSION {
     gene_bed = params.metafusion_gene_bed
     gene_info = params.metafusion_gene_info
     blocklist = params.metafusion_blocklist
-    numtools = params.numtools
 
     STAR_FOR_ARRIBA(
         reads,
@@ -104,8 +103,7 @@ workflow FUSION {
         gene_bed,
         gene_info,
         fasta,
-        blocklist,
-        numtools
+        blocklist
     )
 
     ADD_FLAG(

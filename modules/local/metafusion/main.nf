@@ -12,12 +12,10 @@ process METAFUSION {
     path info
     path fasta
     path blocklist
-    val numtools
 
     output:
     tuple val(meta), path("*final*cluster")             , emit: cluster
     tuple val(meta), path("*.filtered.cff")             , emit: filtered
-    tuple val(meta), path("*reformat*")                 , emit: all
     tuple val(meta), path("cis-sage.cluster")           , emit: cis
     tuple val(meta), path("problematic_chromosomes.cff"), emit: problem_chrom
     path "versions.yml"                                 , emit: versions
@@ -26,9 +24,17 @@ process METAFUSION {
     task.ext.when == null || task.ext.when
 
     script:
+    args = task.ext.args ?: ""
     def sample = "${meta.sample}"
     """
-    Metafusion_forte.sh  --cff $cff --outdir .  --gene_bed $genebed --gene_info $info  --genome_fasta $fasta --recurrent_bedpe $blocklist --num_tools=$numtools
+    Metafusion_forte.sh \\
+        --cff $cff \\
+        --outdir . \\
+        --gene_bed $genebed \\
+        --gene_info $info \\
+        --genome_fasta $fasta \\
+        --recurrent_bedpe $blocklist \\
+        ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
