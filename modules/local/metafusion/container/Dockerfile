@@ -1,4 +1,9 @@
 FROM mapostolides/metafusion
+
+LABEL author="Alexandria Dymun (pintoa1@mskcc.org)" \
+    maintainer="Anne Marie Noronha (noronhaa@mskcc.org)" \
+    version.image="0.0.1"
+
 ENV METAFUSION_TAG="v1.0.1"
 ENV PATH="${PATH}:/MetaFusion/scripts"
 
