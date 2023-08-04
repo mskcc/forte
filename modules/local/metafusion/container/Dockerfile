@@ -7,7 +7,7 @@ LABEL author="Alexandria Dymun (pintoa1@mskcc.org)" \
 ENV METAFUSION_TAG="v1.0.1"
 ENV PATH="${PATH}:/MetaFusion/scripts"
 
-RUN git clone -b `echo $METAFUSION_TAG` https://github.com/pintoa1-mskcc/MetaFusion.git && \
+RUN git clone -b $METAFUSION_TAG https://github.com/pintoa1-mskcc/MetaFusion.git --single-branch && \
     cd /MetaFusion/ && \
     git pull
 RUN chmod -R +x /MetaFusion/scripts
