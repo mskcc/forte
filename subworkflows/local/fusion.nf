@@ -26,9 +26,9 @@ workflow FUSION {
     main:
     ch_versions = Channel.empty()
     fasta = params.fasta
-    genebed = params.genebed
-    info = params.info
-    blocklist = params.blocklist
+    gene_bed = params.metafusion_gene_bed
+    gene_info = params.metafusion_gene_info
+    blocklist = params.metafusion_blocklist
 
     STAR_FOR_ARRIBA(
         reads,
@@ -100,8 +100,8 @@ workflow FUSION {
 
     METAFUSION(
         MERGE_CFF.out.csv,
-        genebed,
-        info,
+        gene_bed,
+        gene_info,
         fasta,
         blocklist
     )
