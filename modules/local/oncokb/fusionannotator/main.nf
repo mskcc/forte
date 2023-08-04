@@ -23,7 +23,7 @@ process ONCOKB_FUSIONANNOTATOR {
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    awk 'BEGIN { FS = "\\t"; OFS = "\\t"} {print \$18,\$20"-"\$22}' ${cluster} | tail -n+2 > ${cluster}.reformat
+    awk 'BEGIN { FS = "\\t"; OFS = "\\t"} {print \$1,\$20"-"\$22}' ${cluster} | tail -n+2 > ${cluster}.reformat
     echo -e "Tumor_Sample_Barcode\tFusion" | cat - ${cluster}.reformat  > ${cluster}.1reformat
     FusionAnnotator.py \\
         -i ${cluster}.1reformat \\
