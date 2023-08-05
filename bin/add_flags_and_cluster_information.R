@@ -80,75 +80,50 @@ library(data.table)
         "FID"
     )
     colnames(cluster) <- header_cluster
-    cis_sage <- fread(args[3],data.table = F )
-    header_cis <-
-    c(
-        "test",
-        "gene5_renamed_symbol",
-        "gene3_renamed_symbol",
-        "max_split_cnt",
-        "max_span_cnt",
-        "T_N",
-        "disease",
-        "tool",
-        "FusionType",
-        "reann_gene5_on_bndry",
-        "reann_gene5_close_to_bndry",
-        "reann_gene3_on_bndry",
-        "reann_gene3_close_to_bndry",
-        "is_inframe",
-        "sample",
-        "gene5_chr",
-        "gene5_breakpoint",
-        "gene3_chr",
-        "gene3_breakpoint",
-        "closest_exons5",
-        "closest_exons3",
-        "FID"
-    )
-    colnames(cis_sage) <- header_cis
-
-    weird_chromosomes <- fread(args[4],data.table = F)
-    colnames(weird_chromosomes) <-
-    c(
-        "gene5_chr",
-        "gene5_breakpoint",
-        "gene5_strand",
-        "gene3_chr",
-        "gene3_breakpoint",
-        "gene3_strand",
-        "library",
-        "sample",
-        "T_N",
-        "disease",
-        "tool",
-        "max_split_cnt",
-        "max_span_cnt",
-        "gene5_renamed_symbol",
-        "gene5_tool_annotation",
-        "gene3_renamed_symbol",
-        "gene3_tool_annotation"
-    )
 
     sample_name <- args[5]
 
-    cis_fids <- strsplit(cis_sage$FID, ",")
     cluster_fids <- strsplit(cluster$FID, ",")
     df_cluster <- data.frame(FID = unlist(cluster_fids),
                             cluster = rep(seq_along(cluster_fids), lapply(cluster_fids, length)))
 
-    df_cis <- data.frame(FID = unlist(cis_fids),
+    cis_sage <- tryCatch({fread(args[3],data.table = F)},warning = function(cond){return( NA)})
+    if(!is.na(cis_sage)){
+        header_cis <-
+        c(
+            "test",
+            "gene5_renamed_symbol",
+            "gene3_renamed_symbol",
+            "max_split_cnt",
+            "max_span_cnt",
+            "T_N",
+            "disease",
+            "tool",
+            "FusionType",
+            "reann_gene5_on_bndry",
+            "reann_gene5_close_to_bndry",
+            "reann_gene3_on_bndry",
+            "reann_gene3_close_to_bndry",
+            "is_inframe",
+            "sample",
+            "gene5_chr",
+            "gene5_breakpoint",
+            "gene3_chr",
+            "gene3_breakpoint",
+            "closest_exons5",
+            "closest_exons3",
+            "FID"
+            cis_fids <- strsplit(cis_sage$FID, ",")
+        )
+        colnames(cis_sage) <- header_cis
+        df_cis <- data.frame(FID = unlist(cis_fids),
                         cluster = paste0("cis_sage_", rep(
                         seq_along(cis_fids), lapply(cis_fids, length)
                         )))
+        df_cluster <- rbind(df_cluster, df_cis)
+        filtered_cff <- merge(filtered_cff, df_cluster)
+    }
 
-    df_cluster <- rbind(df_cluster, df_cis)
-    filtered_cff <- merge(filtered_cff, df_cluster)
-
-
-    weird_chromosomes[, colnames(filtered_cff)[!colnames(filtered_cff) %in% colnames(weird_chromosomes)]] <-
-    NA
-    weird_chromosomes$Metafusion_flag <- "Chromosome_not_in_bed"
     filtered_cff$Metafusion_flag <- apply(filtered_cff, 1, function(row) {
     if (is.na(row["reann_gene5_symbol"]) ||
         is.na(row["reann_gene3_symbol"])) {
@@ -161,7 +136,32 @@ library(data.table)
     }
     })
 
-    filtered_cff <- rbind(filtered_cff,weird_chromosomes)
+    weird_chromosomes <- tryCatch({fread(args[4],data.table = F)},warning = function(cond){return( NA)})
+    if(!is.na(weird_chromosomes)){
+        colnames(weird_chromosomes) <-
+        c(
+            "gene5_chr",
+            "gene5_breakpoint",
+            "gene5_strand",
+            "gene3_chr",
+            "gene3_breakpoint",
+            "gene3_strand",
+            "library",
+            "sample",
+            "T_N",
+            "disease",
+            "tool",
+            "max_split_cnt",
+            "max_span_cnt",
+            "gene5_renamed_symbol",
+            "gene5_tool_annotation",
+            "gene3_renamed_symbol",
+            "gene3_tool_annotation"
+        )
+        weird_chromosomes[, colnames(filtered_cff)[!colnames(filtered_cff) %in% colnames(weird_chromosomes)]] <- NA
+        weird_chromosomes$Metafusion_flag <- "Chromosome_not_in_bed"
+        filtered_cff <- rbind(filtered_cff,weird_chromosomes)
+    }
     write.table(
     filtered_cff[,c(header_filtered,"Metafusion_flag","cluster")],
     paste0(sample_name, "_metafusion_cluster.cff"),
