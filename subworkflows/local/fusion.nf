@@ -4,11 +4,10 @@ include { STAR_ALIGN as STAR_FOR_STARFUSION } from '../../modules/nf-core/star/a
 include { STARFUSION                        } from '../../modules/local/starfusion/detect/main'
 include { FUSIONCATCHER_DETECT              } from '../../modules/local/fusioncatcher/detect/main'
 include { ONCOKB_FUSIONANNOTATOR            } from '../../modules/local/oncokb/fusionannotator/main'
-include { CSVTK_CONCAT as CSV_TO_TSV        } from '../../modules/nf-core/csvtk/concat/main'
 include { TO_CFF as ARRIBA_TO_CFF           } from '../../modules/local/convert_to_cff/main'
 include { TO_CFF as FUSIONCATCHER_TO_CFF    } from '../../modules/local/convert_to_cff/main'
 include { TO_CFF as STARFUSION_TO_CFF       } from '../../modules/local/convert_to_cff/main'
-include { CSVTK_CONCAT as MERGE_CFF         } from '../../modules/nf-core/csvtk/concat/main'
+include { CAT_CAT as MERGE_CFF              } from '../../modules/nf-core/cat/cat/main'
 include { METAFUSION                        } from '../../modules/local/metafusion/main'
 include { ADD_FLAG                          } from '../../modules/local/add_flags/main'
 
@@ -86,20 +85,20 @@ workflow FUSION {
                     .map{ meta, file -> [ meta, "fusioncatcher", file ] } )
     STARFUSION_TO_CFF(STARFUSION.out.abridged
                     .map{ meta, file -> [ meta, "starfusion", file ] })
-    MERGE_CFF(ARRIBA_TO_CFF.out.cff
+    MERGE_CFF(
+        ARRIBA_TO_CFF.out.cff
             .map{ meta, file -> [meta, file]}
             .mix(
                 FUSIONCATCHER_TO_CFF.out.cff
-                .map{ meta, file -> [meta, file]}
+                    .map{ meta, file -> [meta, file]}
             ).mix(
                 STARFUSION_TO_CFF.out.cff
-                .map{ meta, file -> [meta, file]}
+                    .map{ meta, file -> [meta, file]}
             ).groupTuple(by:[0]),
-        'tsv',
-        'tsv')
+    )
 
     METAFUSION(
-        MERGE_CFF.out.csv,
+        MERGE_CFF.out.file_out,
         gene_bed,
         gene_info,
         fasta,
