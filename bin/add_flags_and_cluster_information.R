@@ -87,8 +87,8 @@ library(data.table)
     df_cluster <- data.frame(FID = unlist(cluster_fids),
                             cluster = rep(seq_along(cluster_fids), lapply(cluster_fids, length)))
 
-    cis_sage <- tryCatch({fread(args[3],data.table = F)},warning = function(cond){return( NA)})
-    if(!is.na(cis_sage)){
+    cis_sage <- tryCatch({fread(args[3],data.table = F)},warning = function(cond){return( NULL)})
+    if(!is.null(cis_sage)){
         header_cis <-
         c(
             "test",
@@ -113,9 +113,10 @@ library(data.table)
             "closest_exons5",
             "closest_exons3",
             "FID"
-            cis_fids <- strsplit(cis_sage$FID, ",")
         )
+        
         colnames(cis_sage) <- header_cis
+        cis_fids <- strsplit(cis_sage$FID, ",")
         df_cis <- data.frame(FID = unlist(cis_fids),
                         cluster = paste0("cis_sage_", rep(
                         seq_along(cis_fids), lapply(cis_fids, length)
@@ -136,8 +137,8 @@ library(data.table)
     }
     })
 
-    weird_chromosomes <- tryCatch({fread(args[4],data.table = F)},warning = function(cond){return( NA)})
-    if(!is.na(weird_chromosomes)){
+    weird_chromosomes <- tryCatch({fread(args[4],data.table = F)},warning = function(cond){return( NULL)})
+    if(!is.null(weird_chromosomes)){
         colnames(weird_chromosomes) <-
         c(
             "gene5_chr",
