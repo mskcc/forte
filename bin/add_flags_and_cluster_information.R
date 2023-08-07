@@ -114,7 +114,7 @@ library(data.table)
             "closest_exons3",
             "FID"
         )
-        
+
         colnames(cis_sage) <- header_cis
         cis_fids <- strsplit(cis_sage$FID, ",")
         df_cis <- data.frame(FID = unlist(cis_fids),
