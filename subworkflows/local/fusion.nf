@@ -85,6 +85,9 @@ workflow FUSION {
                     .map{ meta, file -> [ meta, "fusioncatcher", file ] } )
     STARFUSION_TO_CFF(STARFUSION.out.abridged
                     .map{ meta, file -> [ meta, "starfusion", file ] })
+    // get expected number of callers for groupTuple
+    numcallers = 1 + ( params.starfusion_url ? 1 : 0 ) + ( ["GRCh37","GRCh38"].contains(params.genome) ? 1 : 0 )
+
     MERGE_CFF(
         ARRIBA_TO_CFF.out.cff
             .map{ meta, file -> [meta, file]}
@@ -94,7 +97,7 @@ workflow FUSION {
             ).mix(
                 STARFUSION_TO_CFF.out.cff
                     .map{ meta, file -> [meta, file]}
-            ).groupTuple(by:[0]),
+            ).groupTuple(by:[0],size:numcallers),
     )
 
     METAFUSION(
