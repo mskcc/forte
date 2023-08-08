@@ -121,7 +121,13 @@ library(data.table)
                         cluster = paste0("cis_sage_", rep(
                         seq_along(cis_fids), lapply(cis_fids, length)
                         )))
-        df_cluster <- rbind(df_cluster, df_cis)
+        if(any(df_cis$FID %in% df_cluster$FID)) {
+            df_cluster <- merge(df_cluster, df_cis, by = "FID")
+            df_cluster$cluster <- ifelse(!is.na(df_cluster$cluster.y),paste0(df_cluster$cluster.x,';',df_cluster$cluster.y) ,df_cluster$cluster.x )
+            df_cluster <- df_cluster[,c("FID","cluster")]
+        } else {
+            df_cluster <- rbind(df_cluster,df_cis)
+        }
         filtered_cff <- merge(filtered_cff, df_cluster)
     }
 
