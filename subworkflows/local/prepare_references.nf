@@ -40,7 +40,7 @@ workflow PREPARE_REFERENCES {
         GUNZIP_METAFUSIONGENEBED([[:],params.metafusion_gene_bed])
         metafusion_gene_bed = GUNZIP_METAFUSIONGENEBED.out.gunzip.map{ it[1] }.first()
     } else {
-        metafusion_gene_bed = GUNZIP_METAFUSIONGENEBED.out.gunzip.map{ it[1] }.first()
+        metafusion_gene_bed = params.metafusion_gene_bed
     }
 
     STAR_GENOMEGENERATE(params.fasta,gtf)
