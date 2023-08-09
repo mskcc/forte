@@ -5,7 +5,11 @@ include { GATK4_CREATESEQUENCEDICTIONARY } from '../../modules/nf-core/gatk4/cre
 include { SAMTOOLS_FAIDX                 } from '../../modules/nf-core/samtools/faidx/main'
 include { GATK4_BEDTOINTERVALLIST        } from '../../modules/nf-core/gatk4/bedtointervallist/main'
 include { PREPARE_RRNA                   } from '../../modules/local/prepare_rrna/main'
-include { GUNZIP                         } from '../../modules/nf-core/gunzip/main'
+include {
+    GUNZIP as GUNZIP_GTF ;
+    GUNZIP as GUNZIP_METAFUSIONGENEBED ;
+    GUNZIP as GUNZIP_METAFUSIONBLOCKLIST
+} from '../../modules/nf-core/gunzip/main'
 include { STARFUSION_DOWNLOAD            } from '../../modules/local/starfusion/download/main'
 include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatcher/download/main'
 include { FUSIONREPORT_DOWNLOAD          } from '../../modules/local/fusionreport/download/main'
@@ -19,10 +23,24 @@ workflow PREPARE_REFERENCES {
     ch_versions = Channel.empty()
 
     if (params.gtf.endsWith(".gz")){
-        GUNZIP([[:],params.gtf])
-        gtf = GUNZIP.out.gunzip.map{ it[1] }.first()
+        GUNZIP_GTF([[:],params.gtf])
+        gtf = GUNZIP_GTF.out.gunzip.map{ it[1] }.first()
     } else {
         gtf = params.gtf
+    }
+
+    if (params.metafusion_blocklist.endsWith(".gz")){
+        GUNZIP_METAFUSIONBLOCKLIST([[:],params.metafusion_blocklist])
+        metafusion_blocklist = GUNZIP_METAFUSIONBLOCKLIST.out.gunzip.map{ it[1] }.first()
+    } else {
+        metafusion_blocklist = params.metafusion_blocklist
+    }
+
+    if (params.metafusion_gene_bed.endsWith(".gz")){
+        GUNZIP_METAFUSIONGENEBED([[:],params.metafusion_gene_bed])
+        metafusion_gene_bed = GUNZIP_METAFUSIONGENEBED.out.gunzip.map{ it[1] }.first()
+    } else {
+        metafusion_gene_bed = GUNZIP_METAFUSIONGENEBED.out.gunzip.map{ it[1] }.first()
     }
 
     STAR_GENOMEGENERATE(params.fasta,gtf)
@@ -99,6 +117,8 @@ workflow PREPARE_REFERENCES {
     kallisto_index     = KALLISTO_INDEX.out.idx
     agfusion_db        = AGFUSION_DOWNLOAD.out.agfusion_db
     pyensembl_cache    = AGFUSION_DOWNLOAD.out.pyensembl_cache
+    metafusion_blocklist = metafusion_blocklist
+    metafusion_gene_bed = metafusion_gene_bed
     ch_versions        = ch_versions
 
 }
