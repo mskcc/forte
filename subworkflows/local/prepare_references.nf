@@ -10,6 +10,7 @@ include { STARFUSION_DOWNLOAD            } from '../../modules/local/starfusion/
 include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatcher/download/main'
 include { FUSIONREPORT_DOWNLOAD          } from '../../modules/local/fusionreport/download/main'
 include { KALLISTO_INDEX                 } from '../../modules/nf-core/kallisto/index/main'
+include { AGFUSION_DOWNLOAD              } from '../../modules/local/agfusion/download/main'
 
 
 workflow PREPARE_REFERENCES {
@@ -72,6 +73,12 @@ workflow PREPARE_REFERENCES {
     //cosmic_passwd = params.cosmic_passwd ?: ""
     FUSIONREPORT_DOWNLOAD()
 
+    AGFUSION_DOWNLOAD(
+        params.ensembl_version,
+        params.genome
+    )
+    ch_versions = ch_versions.mix(AGFUSION_DOWNLOAD.out.versions)
+
     KALLISTO_INDEX(params.cdna)
     ch_versions = ch_versions.mix(KALLISTO_INDEX.out.versions)
 
@@ -90,6 +97,8 @@ workflow PREPARE_REFERENCES {
     fusion_report_db   = FUSIONREPORT_DOWNLOAD.out.reference
     rseqc_bed          = UCSC_GENEPREDTOBED.out.bed.map{it[1]}.first()
     kallisto_index     = KALLISTO_INDEX.out.idx
+    agfusion_db        = AGFUSION_DOWNLOAD.out.agfusion_db
+    pyensembl_cache    = AGFUSION_DOWNLOAD.out.pyensembl_cache
     ch_versions        = ch_versions
 
 }

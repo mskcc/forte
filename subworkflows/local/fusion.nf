@@ -4,6 +4,7 @@ include { STAR_ALIGN as STAR_FOR_STARFUSION } from '../../modules/nf-core/star/a
 include { STARFUSION                        } from '../../modules/local/starfusion/detect/main'
 include { FUSIONCATCHER_DETECT              } from '../../modules/local/fusioncatcher/detect/main'
 include { ONCOKB_FUSIONANNOTATOR            } from '../../modules/local/oncokb/fusionannotator/main'
+include { AGFUSION_BATCH                    } from '../../modules/local/agfusion/batch/main'
 include { TO_CFF as ARRIBA_TO_CFF           } from '../../modules/local/convert_to_cff/main'
 include { TO_CFF as FUSIONCATCHER_TO_CFF    } from '../../modules/local/convert_to_cff/main'
 include { TO_CFF as STARFUSION_TO_CFF       } from '../../modules/local/convert_to_cff/main'
@@ -21,6 +22,8 @@ workflow FUSION {
     starfusion_ref
     fusioncatcher_ref
     fusion_report_db
+    agfusion_db
+    pyensembl_cache
 
     main:
     ch_versions = Channel.empty()
@@ -117,6 +120,13 @@ workflow FUSION {
 
     ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.cff)
     ch_versions = ch_versions.mix(ONCOKB_FUSIONANNOTATOR.out.versions.first())
+
+    AGFUSION_BATCH(
+        ADD_FLAG.out.cff,
+        agfusion_db,
+        pyensembl_cache
+    )
+    ch_versions = ch_versions.mix(AGFUSION_BATCH.out.versions.first())
     ch_versions = ch_versions.mix(ADD_FLAG.out.versions.first())
     ch_versions = ch_versions.mix(METAFUSION.out.versions.first())
     ch_versions = ch_versions.mix(ARRIBA_TO_CFF.out.versions.first())

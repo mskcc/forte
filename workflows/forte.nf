@@ -130,7 +130,9 @@ workflow FORTE {
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
         PREPARE_REFERENCES.out.fusioncatcher_ref,
-        PREPARE_REFERENCES.out.fusion_report_db
+        PREPARE_REFERENCES.out.fusion_report_db,
+        PREPARE_REFERENCES.out.agfusion_db,
+        PREPARE_REFERENCES.out.pyensembl_cache
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 

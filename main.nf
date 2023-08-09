@@ -27,6 +27,7 @@ params.arriba_protein_domains = WorkflowMain.getGenomeAttribute(params, 'arriba_
 params.metafusion_blocklist = WorkflowMain.getGenomeAttribute(params, 'metafusion_blocklist')
 params.metafusion_gene_bed  = WorkflowMain.getGenomeAttribute(params, 'metafusion_gene_bed')
 params.metafusion_gene_info = WorkflowMain.getGenomeAttribute(params, 'metafusion_gene_info')
+params.ensembl_version      = WorkflowMain.getGenomeAttribute(params, 'ensembl_version')
 
 WorkflowMain.initialise(workflow, params, log)
 
