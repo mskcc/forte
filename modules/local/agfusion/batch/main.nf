@@ -24,7 +24,7 @@ process AGFUSION_BATCH {
 
     script:
     def args   = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     export PYENSEMBL_CACHE_DIR=\$PWD/${pyensembl_cache}
 
@@ -36,8 +36,8 @@ process AGFUSION_BATCH {
         -o ${prefix} \\
         ${args}
 
-    cat ${prefix}/*/*.fusion_transcripts.csv | awk -F"," -v OFS="\\t" 'NR != 1 && FNR == 1 {next;}{print}' > fusion_transcripts.csv
-    awk -F"\\t" -v OFS="," '{print \$0}' fusion_transcripts.csv > fusion_transcripts.tsv
+    cat ${prefix}/*/*.fusion_transcripts.csv | awk -F"," -v OFS="\\t" 'NR != 1 && FNR == 1 {next;}{print}' > ${prefix}.fusion_transcripts.csv
+    awk -F"\\t" -v OFS="," '{print \$0}' ${prefix}.fusion_transcripts.csv > ${prefix}.fusion_transcripts.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
