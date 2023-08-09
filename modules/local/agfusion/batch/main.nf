@@ -15,7 +15,8 @@ process AGFUSION_BATCH {
 
     output:
     tuple val(meta), path("${prefix}")                       , emit: fusions_annotated
-    tuple val(meta), path("${prefix}.fusion_transcripts.csv"), emit: fusion_transcripts
+    tuple val(meta), path("${prefix}.fusion_transcripts.csv"), emit: fusion_transcripts_csv
+    tuple val(meta), path("${prefix}.fusion_transcripts.tsv"), emit: fusion_transcripts_tsv
     path "versions.yml"                                      , emit: versions
 
     when:
@@ -27,13 +28,16 @@ process AGFUSION_BATCH {
     """
     export PYENSEMBL_CACHE_DIR=\$PWD/${pyensembl_cache}
 
+    awk -F"\\t" 'NR == 1 && \$1 ~ /gene5_chr/ {next;}{print}' ${fusions} > ${fusions}.no_header
+
     agfusion batch \\
-        -f ${fusions} \\
+        -f ${fusions}.no_header \\
         -db ${agfusion_db} \\
         -o ${prefix} \\
         ${args}
 
     cat ${prefix}/*/*.fusion_transcripts.csv | awk -F"," -v OFS="\\t" 'NR != 1 && FNR == 1 {next;}{print}' > fusion_transcripts.csv
+    awk -F"\\t" -v OFS="," '{print \$0}' fusion_transcripts.csv > fusion_transcripts.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
