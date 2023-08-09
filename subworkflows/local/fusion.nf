@@ -114,10 +114,10 @@ workflow FUSION {
     )
 
     ADD_FLAG(
-        METAFUSION.out.cluster,
-        METAFUSION.out.cis,
-        METAFUSION.out.filtered,
-        METAFUSION.out.problem_chrom
+        METAFUSION.out.cluster
+	    .join(METAFUSION.out.cis, by:0)
+	    .join(METAFUSION.out.filtered, by:0)
+	    .join(METAFUSION.out.problem_chrom, by:0)
     )
 
     ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.cff)

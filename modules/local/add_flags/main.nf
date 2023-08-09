@@ -8,10 +8,7 @@ process ADD_FLAG {
         'ghcr.io/rocker-org/devcontainer/tidyverse:4' }"
 
     input:
-    tuple val(meta), path(cluster)
-    tuple val(meta), path(cis)
-    tuple val(meta), path(filtered)
-    tuple val(meta), path(problem_chrom)
+    tuple val(meta), path(cluster), path(cis), path(filtered), path(problem_chrom)
 
     output:
     tuple val(meta), path("*_metafusion_cluster.cff"), emit: cff
