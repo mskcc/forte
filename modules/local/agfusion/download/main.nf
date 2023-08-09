@@ -23,7 +23,7 @@ process AGFUSION_DOWNLOAD {
     def args = task.ext.args ?: ''
     def agfusion_genome = ['GRCh37','smallGRCh37','hg19'].contains(genome) ? 'hg19' :
         ['GRCh38','hg38'].contains(genome) ? 'hg38' :
-        ['GRCm38','mm10'].contains(genome) ? 'mm10' :
+        ['GRCm38','mm10'].contains(genome) ? 'mm10' : ''
     def pyensembl_species = ['GRCm38','mm10'].contains(genome) ? 'mus_musculus' : 'homo_sapiens'
     if (ensembl_release < 93) {
         """
