@@ -11,7 +11,7 @@ include { TO_CFF as STARFUSION_TO_CFF       } from '../../modules/local/convert_
 include { CAT_CAT as MERGE_CFF              } from '../../modules/nf-core/cat/cat/main'
 include { METAFUSION                        } from '../../modules/local/metafusion/main'
 include { ADD_FLAG                          } from '../../modules/local/add_flags/main'
-
+include { CFF_ANNOTATE as CFF_FINALIZE      } from '../../modules/local/cff_annotate/main'
 
 workflow FUSION {
 
@@ -115,9 +115,9 @@ workflow FUSION {
 
     ADD_FLAG(
         METAFUSION.out.cluster
-	    .join(METAFUSION.out.cis, by:0)
-	    .join(METAFUSION.out.filtered, by:0)
-	    .join(METAFUSION.out.problem_chrom, by:0)
+            .join(METAFUSION.out.cis, by:0)
+            .join(METAFUSION.out.filtered, by:0)
+            .join(METAFUSION.out.problem_chrom, by:0)
     )
 
     ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.cff)
@@ -129,6 +129,12 @@ workflow FUSION {
         pyensembl_cache
     )
     ch_versions = ch_versions.mix(AGFUSION_BATCH.out.versions.first())
+
+    CFF_FINALIZE(
+        ADD_FLAG.out.cff
+            .join(ONCOKB_FUSIONANNOTATOR.out.oncokb_fusions, by:0)
+            .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
+    )
     ch_versions = ch_versions.mix(ADD_FLAG.out.versions.first())
     ch_versions = ch_versions.mix(METAFUSION.out.versions.first())
     ch_versions = ch_versions.mix(ARRIBA_TO_CFF.out.versions.first())
