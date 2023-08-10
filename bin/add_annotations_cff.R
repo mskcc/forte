@@ -5,19 +5,19 @@
 
 
 suppressPackageStartupMessages({
-	library(dplyr)
-	library(data.table)
+    library(dplyr)
+    library(data.table)
 })
 
 usage <- function() {
-	message("Usage:")
-	message("add_annotations_cff.R --cff-file <file.cff> --agfusion-file <agfusion.tsv> --oncokb-file <oncokb.tsv> --out-prefix <prefix>")
+    message("Usage:")
+    message("add_annotations_cff.R --cff-file <file.cff> --agfusion-file <agfusion.tsv> --oncokb-file <oncokb.tsv> --out-prefix <prefix>")
 }
 
 args = commandArgs(TRUE)
 
 if (is.null(args) | length(args)<1) {
-	    usage()
+        usage()
     quit()
 }
 
@@ -52,7 +52,6 @@ if (length(setdiff(possible_args,names(args_opt))) > 0) {
     quit()
 }
 
-
 oncokb_file = args_opt$oncokb
 agfusion_file = args_opt$agfusion
 cff_file = args_opt$cff
@@ -61,32 +60,32 @@ out_prefix = args_opt$out_prefix
 cff = fread(cff_file)
 agfusion_tab = fread(agfusion_file) %>% select(c(`5'_transcript`,`3'_transcript`,`5'_breakpoint`,`3'_breakpoint`,Fusion_effect))
 if (!is.null(oncokb_file)){
-	oncokb_tab = fread(oncokb_file) %>% select(-Fusion)
-	cff <- merge(
-		cff, 
-		oncokb_tab, 
-		by.x ="FID", 
-		by.y = "Tumor_Sample_Barcode",
-		all.x = T,
-		all.y=F
-	)
+    oncokb_tab = fread(oncokb_file) %>% select(-Fusion)
+    cff <- merge(
+        cff,
+        oncokb_tab,
+        by.x ="FID",
+        by.y = "Tumor_Sample_Barcode",
+        all.x = T,
+        all.y=F
+    )
 }
 
 
 cff <- merge(
-	cff, 
-	agfusion_tab, 
-	by.x = c("gene5_transcript_id","gene3_transcript_id","gene5_breakpoint","gene3_breakpoint"), 
-	by.y = c("5'_transcript","3'_transcript","5'_breakpoint","3'_breakpoint"),
-	all.x = T,
-	all.y = T
+    cff,
+    agfusion_tab,
+    by.x = c("gene5_transcript_id","gene3_transcript_id","gene5_breakpoint","gene3_breakpoint"),
+    by.y = c("5'_transcript","3'_transcript","5'_breakpoint","3'_breakpoint"),
+    all.x = T,
+    all.y = T
 )
 
 write.table(
-	cff,
-	paste0(out_prefix, ".cff"),
-	row.names = F,
-	quote = F,
-	sep = "\t"
+    cff,
+    paste0(out_prefix, ".cff"),
+    row.names = F,
+    quote = F,
+    sep = "\t"
 )
 
