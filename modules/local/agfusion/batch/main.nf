@@ -36,8 +36,8 @@ process AGFUSION_BATCH {
         -o ${prefix} \\
         ${args}
 
-    cat ${prefix}/*/*.fusion_transcripts.csv | awk -F"," -v OFS="\\t" 'NR != 1 && FNR == 1 {next;}{print}' > ${prefix}.fusion_transcripts.csv
-    awk -F"\\t" -v OFS="," '{print \$0}' ${prefix}.fusion_transcripts.csv > ${prefix}.fusion_transcripts.tsv
+    cat ${prefix}/*/*.fusion_transcripts.csv | awk -F"," 'NR != 1 && FNR == 1 {next;}{print}' > ${prefix}.fusion_transcripts.csv
+    cat ${prefix}.fusion_transcripts.csv | tr "," "\\t" > ${prefix}.fusion_transcripts.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
