@@ -1,7 +1,7 @@
 FROM ubuntu:bionic-20230530
 
 LABEL maintainer="Anne Marie Noronha (noronhaa@mskcc.org)" \
-    version.image="0.0.3"
+    version.image="0.0.5"
 
 # INSTALL DEPENDENCIES
 

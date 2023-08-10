@@ -5,8 +5,8 @@ process AGFUSION_BATCH {
     // Note: 2.7X indices incompatible with AWS iGenomes.
     conda 'bioconda::agfusion=1.252'
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'cmopipeline/agfusion:0.0.3' :
-        'cmopipeline/agfusion:0.0.3' }"
+        'cmopipeline/agfusion:0.0.5' :
+        'cmopipeline/agfusion:0.0.5' }"
 
     input:
     tuple val(meta), path(fusions)
@@ -36,7 +36,7 @@ process AGFUSION_BATCH {
         -o ${prefix} \\
         ${args}
 
-    cat ${prefix}/*/*.fusion_transcripts.csv | awk -F"," 'NR != 1 && FNR == 1 {next;}{print}' > ${prefix}.fusion_transcripts.csv
+    awk -F"," 'NR != 1 && FNR == 1 {next;}{print}' ${prefix}/*/*.fusion_transcripts.csv > ${prefix}.fusion_transcripts.csv
     cat ${prefix}.fusion_transcripts.csv | tr "," "\\t" > ${prefix}.fusion_transcripts.tsv
 
     cat <<-END_VERSIONS > versions.yml

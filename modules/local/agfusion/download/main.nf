@@ -4,8 +4,8 @@ process AGFUSION_DOWNLOAD {
     // Note: 2.7X indices incompatible with AWS iGenomes.
     conda 'bioconda::agfusion=1.252'
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'cmopipeline/agfusion:0.0.3' :
-        'cmopipeline/agfusion:0.0.3' }"
+        'cmopipeline/agfusion:0.0.5' :
+        'cmopipeline/agfusion:0.0.5' }"
 
     input:
     val(ensembl_release)
