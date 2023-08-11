@@ -128,12 +128,13 @@ library(data.table)
         } else {
             df_cluster <- rbind(df_cluster,df_cis)
         }
-        filtered_cff <- merge(filtered_cff, df_cluster)
+        filtered_cff <- merge(filtered_cff, df_cluster, by = "FID", all.x = T)
     }
 
     filtered_cff$Metafusion_flag <- apply(filtered_cff, 1, function(row) {
-    if (is.na(row["reann_gene5_symbol"]) ||
-        is.na(row["reann_gene3_symbol"])) {
+    if ((is.na(row["reann_gene5_symbol"]) ||
+        is.na(row["reann_gene3_symbol"]))  & (row["gene5_renamed_symbol"] != "." ||
+        row["gene3_renamed_symbol"]  != ".") ) {
         return("Gene_or_loc_not_in_bed")
     } else if (row["gene3_renamed_symbol"] != row["reann_gene3_symbol"] ||
                 row["gene5_renamed_symbol"] != row["reann_gene5_symbol"]) {

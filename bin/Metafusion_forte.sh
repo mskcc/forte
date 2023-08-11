@@ -76,12 +76,6 @@ echo Rename cff
 rename_cff_file_genes.MetaFusion.py $cff $gene_info > $outdir/$(basename $cff).renamed
 cff=$outdir/$(basename $cff).renamed
 
-### remove any chromosomes that do not exist in genebed
-all_gene_bed_chrs=`awk -F '\t' '{print $1}' $gene_bed | sort | uniq `
-#awk -F " " -v arr="${all_gene_bed_chrs[*]}" 'BEGIN{OFS = "\t"; split(arr,arr1); for(i in arr1) dict[arr1[i]]=""} $1 in dict && $4 in dict' $cff >  $outdir/$(basename $cff).cleaned_chr
-#grep -v -f $outdir/$(basename $cff).cleaned_chr $cff > problematic_chromosomes.cff
-#cff=$outdir/$(basename $cff).cleaned_chr
-
 #Annotate cff
 if [ $genome_fasta ]; then
     echo Annotate cff, extract sequence surrounding breakpoint
@@ -147,6 +141,6 @@ cluster=$outdir/final.n$num_tools.cluster
 ### Generate filtered FID file
 out=`awk -F '\t' '{print $15}' $cluster  | tail -n +2`
 out2=`awk -F '\t' '{print $22}' $outdir/cis-sage.cluster | tail -n +2`
-out3=`echo $out $out2`
+out3=`echo $out $out2 | sort | uniq`
 
 for this in echo ${out3//,/ }; do grep $this $cff; done >> $outdir/$(basename $cff).filtered.cff
