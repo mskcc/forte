@@ -22,7 +22,19 @@ jobs:
     env:
       NXF_ANSI_LOG: false
     steps:
-      - uses: actions/checkout@v3
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Check space
+        run: |
+          echo "Free space:"
+          df -h
 
       - name: Set up Python
         uses: actions/setup-python@v2
