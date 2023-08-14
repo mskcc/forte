@@ -141,6 +141,8 @@ cluster=$outdir/final.n$num_tools.cluster
 ### Generate filtered FID file
 out=`awk -F '\t' '{print $15}' $cluster  | tail -n +2`
 out2=`awk -F '\t' '{print $22}' $outdir/cis-sage.cluster | tail -n +2`
-out3=`echo $out $out2 | sort | uniq`
+out3=`echo $out $out2`
+echo ${out3//,/ } > out4
+out5=`tr ' ' '\n' < out4 | sort | uniq`
 
-for this in echo ${out3//,/ }; do grep $this $cff; done >> $outdir/$(basename $cff).filtered.cff
+for this in $(echo $out5); do grep $this $cff; done >> $outdir/$(basename $cff).filtered.cff
