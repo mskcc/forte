@@ -17,7 +17,7 @@ usage <- function() {
 args = commandArgs(TRUE)
 
 if (is.null(args) | length(args)<1) {
-        usage()
+    usage()
     quit()
 }
 
@@ -58,9 +58,12 @@ cff_file = args_opt$cff
 out_prefix = args_opt$out_prefix
 
 cff = fread(cff_file)
+final_cff_cols <- c(names(cff))
 agfusion_tab = fread(agfusion_file) %>% select(c(`5'_transcript`,`3'_transcript`,`5'_breakpoint`,`3'_breakpoint`,Fusion_effect))
+final_cff_cols <- c(final_cff_cols,"Fusion_effect")
 if (!is.null(oncokb_file)){
     oncokb_tab = fread(oncokb_file) %>% select(-Fusion)
+    final_cff_cols = c(final_cff_cols,names(oncokb_tab %>% select(-Tumor_Sample_Barcode)))
     cff <- merge(
         cff,
         oncokb_tab,
@@ -71,7 +74,6 @@ if (!is.null(oncokb_file)){
     )
 }
 
-
 cff <- merge(
     cff,
     agfusion_tab,
@@ -81,11 +83,15 @@ cff <- merge(
     all.y = T
 )
 
+cff <- as.data.frame(cff)[,c(final_cff_cols)]
+#cff <- cff %>% mutate(!!final_cff_cols[34] := Fusion_effect) %>% select(-c(Fusion_effect))
+
 write.table(
     cff,
     paste0(out_prefix, ".cff"),
     row.names = F,
     quote = F,
-    sep = "\t"
+    sep = "\t",
+    col.names = ! "V1" %in% final_cff_cols
 )
 
