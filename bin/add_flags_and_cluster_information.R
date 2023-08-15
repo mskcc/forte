@@ -122,7 +122,6 @@ library(data.table)
             mutate(CID=paste0("cis_sage_",row_number())) %>%
             select(c(FID,CID)) %>%
             tidyr::separate_rows(FID,sep=",")
-	print(head(cis_sage))
 
         df_cluster <- cluster %>%
             bind_rows(cis_sage) %>%
