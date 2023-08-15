@@ -117,13 +117,17 @@ fi
 if [ $RT_call_filter -eq 1 ]; then
     echo ReadThrough, callerfilter $num_tools
     cat $cluster | grep ReadThrough > $outdir/$(basename $cluster).ReadThrough
-    callerfilter_num.py --cluster $cluster  --num_tools $num_tools | grep -v ReadThrough  > $outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools
+    callerfilter_num.py --cluster $cluster  --num_tools $num_tools > $outdir/$(basename $cluster).callerfilter.$num_tools
+    callerfilter_excluded=$(comm -13 <(cut -f 22 $outdir/$(basename $cluster).callerfilter.$num_tools | sort | uniq) <(cut -f 22 $cluster | sort | uniq))
+    grep -v ReadThrough $outdir/$(basename $cluster).callerfilter.$num_tools > $outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools
     cluster_RT_call=$outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools
 fi
 # Blocklist Filter
 if [ $recurrent_bedpe ]; then
     echo blocklist filter
     blocklist_filter_recurrent_breakpoints.sh $cff $cluster_RT_call $outdir $recurrent_bedpe > $outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools.blck_filter
+
+    blocklist_cluster=$outdir/$(basename $cluster_RT_call).BLOCKLIST
 
     cluster=$outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools.blck_filter
 fi
@@ -139,10 +143,17 @@ echo Rank and generate final.cluster
 rank_cluster_file.py $cluster > $outdir/final.n$num_tools.cluster
 cluster=$outdir/final.n$num_tools.cluster
 ### Generate filtered FID file
-out=`awk -F '\t' '{print $15}' $cluster  | tail -n +2`
-out2=`awk -F '\t' '{print $22}' $outdir/cis-sage.cluster | tail -n +2`
-out3=`echo $out $out2`
-echo ${out3//,/ } > out4
-out5=`tr ' ' '\n' < out4 | sort | uniq`
+#out=`awk -F '\t' '{print $15}' $cluster  | tail -n +2`
+#out2=`awk -F '\t' '{print $22}' $outdir/cis-sage.cluster | tail -n +2`
+#out3=`echo $out $out2`
+#echo ${out3//,/ } > out4
+#out5=`tr ' ' '\n' < out4 | sort | uniq`
 
-for this in $(echo $out5); do grep $this $cff; done >> $outdir/$(basename $cff).filtered.cff
+#for this in $(echo $out5); do grep $this $cff; done >> $outdir/$(basename $cff).filtered.cff
+
+rm -f filters.txt
+cut -f 22 *.BLOCKLIST | tr "," "\n" | sort | uniq | sed "s/$/\tblocklist/g" > filters.txt
+cut -f 22 *.ANC_filter | tr "," "\n" | sort | uniq | sed "s/$/\tadjacent_noncoding/g" >> filters.txt
+cut -f 22 *.ReadThrough | tr "," "\n" | sort | uniq | sed "s/$/\tread_through/g" >> filters.txt
+echo -en "$callerfilter_excluded" | tr "," "\n" | sort | uniq | sed "s/$/\tcaller_filter/g" >> filters.txt
+

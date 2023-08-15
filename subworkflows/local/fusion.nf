@@ -116,22 +116,23 @@ workflow FUSION {
     ADD_FLAG(
         METAFUSION.out.cluster
             .join(METAFUSION.out.cis, by:0)
-            .join(METAFUSION.out.filtered, by:0)
+            .join(METAFUSION.out.cff, by:0)
             .join(METAFUSION.out.problem_chrom, by:0)
+            .join(METAFUSION.out.filters, by:0)
     )
 
-    ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.cff)
+    ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.unfiltered_cff)
     ch_versions = ch_versions.mix(ONCOKB_FUSIONANNOTATOR.out.versions.first())
 
     AGFUSION_BATCH(
-        ADD_FLAG.out.cff,
+        ADD_FLAG.out.unfiltered_cff,
         agfusion_db,
         pyensembl_cache
     )
     ch_versions = ch_versions.mix(AGFUSION_BATCH.out.versions.first())
 
     CFF_FINALIZE(
-        ADD_FLAG.out.cff
+        ADD_FLAG.out.unfiltered_cff
             .join(ONCOKB_FUSIONANNOTATOR.out.oncokb_fusions, by:0)
             .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
     )

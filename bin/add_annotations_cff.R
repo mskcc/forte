@@ -88,10 +88,22 @@ cff <- as.data.frame(cff)[,c(final_cff_cols)]
 
 write.table(
     cff,
-    paste0(out_prefix, ".cff"),
+    paste0(out_prefix, ".unfiltered.cff"),
     row.names = F,
     quote = F,
     sep = "\t",
     col.names = ! "V1" %in% final_cff_cols
 )
+
+filtered_cff <- cff %>% filter(! (is.na(cluster) | is.null(cluster) | cluster == ""))
+write.table(
+    filtered_cff,
+    paste0(out_prefix, ".final.cff"),
+    row.names = F,
+    append = F,
+    quote = F,
+    sep = "\t",
+    col.names = ! "V1" %in% final_cff_cols
+)
+
 

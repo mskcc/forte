@@ -10,14 +10,14 @@
 library(dplyr)
 library(data.table)
     args <- commandArgs(TRUE)
-    if (length(args) != 5) {
+    if (length(args) != 6) {
         stop(
-            "5 arguments are required as input in the following order: filtered_cff cluster_file cis_sage_file problematic_chromosomes_file sample_name"
+            "6 arguments are required as input in the following order: unfiltered_cff cluster_file cis_sage_file problematic_chromosomes_file filters_table sample_name"
         )
     }
 
-    filtered_cff <- fread(args[1],data.table = F)
-    header_filtered <-
+    unfiltered_cff <- fread(args[1],data.table = F)
+    header_cff <-
         c(
             "gene5_chr",
             "gene5_breakpoint",
@@ -59,7 +59,7 @@ library(data.table)
             "gene5_transcript_id",
             "gene3_transcript_id"
         )
-    colnames(filtered_cff) <- header_filtered
+    colnames(unfiltered_cff) <- header_cff
     cluster <- fread(args[2],data.table = F)
     header_cluster <-
     c(
@@ -81,7 +81,7 @@ library(data.table)
     )
     colnames(cluster) <- header_cluster
 
-    sample_name <- args[5]
+    sample_name <- args[6]
 
     cluster_fids <- strsplit(cluster$FID, ",")
     df_cluster <- data.frame(FID = unlist(cluster_fids),
@@ -128,10 +128,10 @@ library(data.table)
         } else {
             df_cluster <- rbind(df_cluster,df_cis)
         }
-        filtered_cff <- merge(filtered_cff, df_cluster, by = "FID", all.x = T)
+        unfiltered_cff <- merge(unfiltered_cff, df_cluster, by = "FID", all.x = T)
     }
 
-    filtered_cff$Metafusion_flag <- apply(filtered_cff, 1, function(row) {
+    unfiltered_cff$Metafusion_flag <- apply(unfiltered_cff, 1, function(row) {
     if ((is.na(row["reann_gene5_symbol"]) ||
         is.na(row["reann_gene3_symbol"]))  & (row["gene5_renamed_symbol"] != "." ||
         row["gene3_renamed_symbol"]  != ".") ) {
@@ -166,15 +166,34 @@ library(data.table)
             "gene3_renamed_symbol",
             "gene3_tool_annotation"
         )
-        weird_chromosomes[, colnames(filtered_cff)[!colnames(filtered_cff) %in% colnames(weird_chromosomes)]] <- NA
+        weird_chromosomes[, colnames(unfiltered_cff)[!colnames(unfiltered_cff) %in% colnames(weird_chromosomes)]] <- NA
         weird_chromosomes$Metafusion_flag <- "Chromosome_not_in_bed"
-        filtered_cff <- rbind(filtered_cff,weird_chromosomes)
+        unfiltered_cff <- rbind(unfiltered_cff,weird_chromosomes)
     }
+
+
+    filters <- tryCatch(
+        {
+                fread(
+                      args[5],
+                      data.table = F,
+                      col.names=c("FID","tmpflag")
+                ) %>% group_by(FID) %>% summarise(tmpflag=paste(tmpflag,collapse=''))
+        },
+        warning = function(cond){return( NULL)}
+    )
+    if (!is.null(filters)){
+        unfiltered_cff <- merge(unfiltered_cff,filters, by="FID", all.x = T, all.y = F) %>%
+            mutate(Metafusion_flag=ifelse(is.null(Metafusion_flag) | is.na(Metafusion_flag) | Metafusion_flag=="", tmpflag, paste(Metafusion_flag,tmpflag,sep=","))) %>%
+            select(-c(tmpflag))
+    }
+
     write.table(
-    filtered_cff[,c(header_filtered,"Metafusion_flag","cluster")],
-    paste0(sample_name, "_metafusion_cluster.cff"),
+    unfiltered_cff[,c(header_cff,"Metafusion_flag","cluster")],
+    paste0(sample_name, "_metafusion_cluster.unfiltered.cff"),
     row.names = F,
     append = F,
     quote = F,
     sep = "\t"
     )
+

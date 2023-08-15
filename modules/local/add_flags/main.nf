@@ -8,11 +8,11 @@ process ADD_FLAG {
         'ghcr.io/rocker-org/devcontainer/tidyverse:4' }"
 
     input:
-    tuple val(meta), path(cluster), path(cis), path(filtered), path(problem_chrom)
+    tuple val(meta), path(cluster), path(cis), path(cff), path(problem_chrom), path(filters)
 
     output:
-    tuple val(meta), path("*_metafusion_cluster.cff"), emit: cff
-    path "versions.yml"                              , emit: versions
+    tuple val(meta), path("*_metafusion_cluster.unfiltered.cff"), emit: unfiltered_cff
+    path "versions.yml"                                         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,7 +20,13 @@ process ADD_FLAG {
     script:
     def sample = "${meta.sample}"
     """
-    add_flags_and_cluster_information.R $filtered $cluster $cis $problem_chrom $sample
+    add_flags_and_cluster_information.R \\
+        $cff \\
+        $cluster \\
+        $cis \\
+        $problem_chrom \\
+        $filters \\
+        $sample
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

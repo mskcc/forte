@@ -10,8 +10,9 @@ process CFF_ANNOTATE {
     tuple val(meta), path(cff), path(oncokb), path(agfusion)
 
     output:
-    tuple val(meta), path("${prefix}.cff"), emit: cff
-    path "versions.yml"                   , emit: versions
+    tuple val(meta), path("${prefix}.unfiltered.cff"), emit: unfiltered_cff
+    tuple val(meta), path("${prefix}.final.cff")     , emit: filtered_cff
+    path "versions.yml"                              , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
