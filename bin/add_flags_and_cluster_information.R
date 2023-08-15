@@ -174,11 +174,11 @@ library(data.table)
 
     filters <- tryCatch(
         {
-                fread(
-                      args[5],
-                      data.table = F,
-                      col.names=c("FID","tmpflag")
-                ) %>% group_by(FID) %>% summarise(tmpflag=paste(tmpflag,collapse=''))
+            fread(
+                args[5],
+                data.table = F,
+                col.names=c("FID","tmpflag")
+            ) %>% group_by(FID) %>% summarise(tmpflag=paste(tmpflag,collapse=''))
         },
         warning = function(cond){return( NULL)}
     )
