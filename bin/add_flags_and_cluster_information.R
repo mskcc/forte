@@ -80,12 +80,13 @@ library(data.table)
         "FID"
     )
     colnames(cluster) <- header_cluster
+    cluster <- cluster %>%
+        mutate(CID=as.character(row_number())) %>%
+        select(c(FID,CID)) %>%
+        tidyr::separate_rows(FID,sep=",")
+
 
     sample_name <- args[6]
-
-    cluster_fids <- strsplit(cluster$FID, ",")
-    df_cluster <- data.frame(FID = unlist(cluster_fids),
-                            cluster = rep(seq_along(cluster_fids), lapply(cluster_fids, length)))
 
     cis_sage <- tryCatch({fread(args[3],data.table = F)},warning = function(cond){return( NULL)})
     if(!is.null(cis_sage)){
@@ -116,18 +117,18 @@ library(data.table)
         )
 
         colnames(cis_sage) <- header_cis
-        cis_fids <- strsplit(cis_sage$FID, ",")
-        df_cis <- data.frame(FID = unlist(cis_fids),
-                        cluster = paste0("cis_sage_", rep(
-                        seq_along(cis_fids), lapply(cis_fids, length)
-                        )))
-        if(any(df_cis$FID %in% df_cluster$FID)) {
-            df_cluster <- merge(df_cluster, df_cis, by = "FID")
-            df_cluster$cluster <- ifelse(!is.na(df_cluster$cluster.y),paste0(df_cluster$cluster.x,';',df_cluster$cluster.y) ,df_cluster$cluster.x )
-            df_cluster <- df_cluster[,c("FID","cluster")]
-        } else {
-            df_cluster <- rbind(df_cluster,df_cis)
-        }
+
+        cis_sage <- cis_sage %>%
+            mutate(CID=paste0("cis_sage_",row_number())) %>%
+            select(c(FID,CID)) %>%
+            tidyr::separate_rows(FID,sep=",")
+	print(head(cis_sage))
+
+        df_cluster <- cluster %>%
+            bind_rows(cis_sage) %>%
+            group_by(FID) %>%
+            summarise(cluster=paste(CID,collapse=';'))
+
         unfiltered_cff <- merge(unfiltered_cff, df_cluster, by = "FID", all.x = T)
     }
 
