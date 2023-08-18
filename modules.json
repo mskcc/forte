@@ -57,7 +57,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "ee80d14721e76e2e079103b8dcd5d57129e584ba",
+                        "git_sha": "a6e11ac655e744f7ebc724be669dd568ffdc0e80",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/multiqc/multiqc.diff"
                     },
