@@ -65,5 +65,6 @@ workflow ALIGN_READS {
     bai_dedup       = SAMTOOLS_INDEX_DEDUP.out.bai
     bai_withdup     = SAMTOOLS_INDEX.out.bai
     star_log_final  = STAR_ALIGN.out.log_final
+    umitools_dedup_log = UMITOOLS_DEDUP.out.log
     ch_versions     = ch_versions
 }
