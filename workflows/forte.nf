@@ -10,7 +10,7 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 WorkflowForte.initialise(params, log)
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.gtf, params.refflat, params.starfusion_url ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.gtf, params.refflat, params.starfusion_url, params.metafusion_gene_bed, params.metafusion_blocklist, params.metafusion_gene_info ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -130,7 +130,11 @@ workflow FORTE {
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
         PREPARE_REFERENCES.out.fusioncatcher_ref,
-        PREPARE_REFERENCES.out.fusion_report_db
+        PREPARE_REFERENCES.out.fusion_report_db,
+        PREPARE_REFERENCES.out.agfusion_db,
+        PREPARE_REFERENCES.out.pyensembl_cache,
+        PREPARE_REFERENCES.out.metafusion_gene_bed,
+        PREPARE_REFERENCES.out.metafusion_blocklist
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
