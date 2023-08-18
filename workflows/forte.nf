@@ -144,7 +144,7 @@ workflow FORTE {
         QUANTIFICATION.out.kallisto_log
             .filter{meta, log ->
                 meta.has_umi && params.dedup_umi_for_kallisto
-            }.mix(ALIGN_READS.umitools_dedup_log)
+            }.mix(ALIGN_READS.out.umitools_dedup_log)
             .mix(
                 QUANTIFICATION.out.htseq_counts
                     .filter{ meta, counts -> meta.has_umi }
