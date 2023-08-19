@@ -147,7 +147,8 @@ workflow FORTE {
             }.mix(ALIGN_READS.out.umitools_dedup_log)
             .mix(
                 QUANTIFICATION.out.htseq_counts
-                    .filter{ meta, counts -> meta.has_umi }
+                    .mix(QUANTIFICATION.out.htseq_summary)
+                    .filter{ meta, htseq_file -> meta.has_umi }
             ),
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
@@ -164,7 +165,8 @@ workflow FORTE {
         PREPROCESS_READS.out.fastp_json
             .mix(
                 QUANTIFICATION.out.htseq_counts
-                    .filter{ meta, counts -> ! meta.has_umi }
+                    .mix(QUANTIFICATION.out.htseq_summary)
+                    .filter{ meta, htseq_file -> ! meta.has_umi }
             ).mix(ALIGN_READS.out.star_log_final)
             .mix(
                 QUANTIFICATION.out.kallisto_log

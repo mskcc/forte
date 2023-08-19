@@ -12,8 +12,9 @@ process HTSEQ_COUNT {
     path gff
 
     output:
-    tuple val(meta), path("*.htseq.count.txt"), emit: counts
-    path "versions.yml"                       , emit: versions
+    tuple val(meta), path("*.htseq.count.txt")  , emit: counts
+    tuple val(meta), path("*.htseq.summary.txt"), emit: summary
+    path "versions.yml"                         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -29,6 +30,9 @@ process HTSEQ_COUNT {
         ${prefix}.htseq.count.txt
 
     sed -i '1{h;s/.*/'"${prefix}"'/;G}' ${prefix}.htseq.count.txt
+
+    echo -en "Sample\\tGeneCount\\n${prefix}\\t" > ${prefix}.htseq.summary.txt
+    cat ${prefix}.htseq.count.txt | grep -v ^__ | awk -F"\t" '\$2 > 0' | wc -l >> ${prefix}.htseq.summary.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
