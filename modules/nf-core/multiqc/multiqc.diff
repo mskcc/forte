@@ -1,24 +1,42 @@
 Changes in module 'nf-core/multiqc'
---- modules/nf-core/multiqc/meta.yml
-+++ modules/nf-core/multiqc/meta.yml
-@@ -14,6 +14,12 @@
-       licence: ["GPL-3.0-or-later"]
- 
- input:
-+  - meta:
-+      type: 
-+      type: map
-+      description: |
-+        Groovy Map containing meta information
-+        e.g. [ id:'test' ]
-   - multiqc_files:
-       type: file
-       description: |
+--- /dev/null
++++ modules/nf-core/multiqc/stash_multiqc.diff
+@@ -0,0 +1,30 @@
++Changes in module 'nf-core/multiqc'
++--- modules/nf-core/multiqc/meta.yml
+++++ modules/nf-core/multiqc/meta.yml
++@@ -14,6 +14,12 @@
++       licence: ["GPL-3.0-or-later"]
++ 
++ input:
+++  - meta:
+++      type: 
+++      type: map
+++      description: |
+++        Groovy Map containing meta information
+++        e.g. [ id:'test' ]
++   - multiqc_files:
++       type: file
++       description: |
++
++--- modules/nf-core/multiqc/main.nf
+++++ modules/nf-core/multiqc/main.nf
++@@ -7,7 +7,7 @@
++         'quay.io/biocontainers/multiqc:1.14--pyhdfd78af_0' }"
++ 
++     input:
++-    path  multiqc_files, stageAs: "?/*"
+++    tuple val(meta), path(multiqc_files, stageAs: "?/*")
++     path(multiqc_config)
++     path(extra_multiqc_config)
++     path(multiqc_logo)
++
++************************************************************
 
 --- modules/nf-core/multiqc/main.nf
 +++ modules/nf-core/multiqc/main.nf
 @@ -7,7 +7,7 @@
-         'quay.io/biocontainers/multiqc:1.14--pyhdfd78af_0' }"
+         'biocontainers/multiqc:1.15--pyhdfd78af_0' }"
  
      input:
 -    path  multiqc_files, stageAs: "?/*"
