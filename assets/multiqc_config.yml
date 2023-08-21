@@ -5,3 +5,16 @@ export_plots: true
 
 use_filename_as_sample_name:
   - kallisto
+
+custom_data:
+  my_genstats:
+    plot_type: "generalstats"
+    pconfig:
+      - GeneCount:
+          title: "Gene Count"
+          format: "{:,.0f}"
+          description: "HTSeq: Number of genes with detected expression"
+
+sp:
+  my_genstats:
+    fn: "*.htseq.summary.txt"
