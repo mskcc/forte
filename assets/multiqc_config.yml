@@ -1,20 +1,20 @@
 show_analysis_paths: False
 extra_fn_clean_trim:
-    - "htseq.count"
+  - "htseq.count"
 export_plots: true
 
 use_filename_as_sample_name:
-    - kallisto
+  - kallisto
 
 custom_data:
-    my_genstats:
-        plot_type: "generalstats"
-        pconfig:
-            - GeneCount:
-                title: 'Gene Count'
-                format: '{:,.0f}'
-                description: 'HTSeq: Number of genes with detected expression'
+  my_genstats:
+    plot_type: "generalstats"
+    pconfig:
+      - GeneCount:
+          title: "Gene Count"
+          format: "{:,.0f}"
+          description: "HTSeq: Number of genes with detected expression"
 
 sp:
-    my_genstats:
-        fn: "*.htseq.summary.txt"
+  my_genstats:
+    fn: "*.htseq.summary.txt"
