@@ -14,6 +14,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Alignment](#alignment)
 - [Quantification](#quantification)
 - [Fusion Calling](#fusion-calling)
+- [Fusion Merging and Annotation](#fusion-merging-and-annotation)
 - [QC](#qc)
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
@@ -91,15 +92,18 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - `analysis/<sample>/arriba/`
   - `*.fusions.discarded.tsv`
   - `*.fusions.tsv`
+  - `*_arriba.cff`
 - `analysis/<sample>/fusioncatcher/`
   - `*.fusioncatcher.fusion-genes.hg19.txt`
   - `*.fusioncatcher.fusion-genes.txt`
   - `*.fusioncatcher.log`
   - `*.fusioncatcher.summary.txt`
+  - `*_fusioncatcher.cff`
 - `analysis/<sample>/starfusion/`
   - `*.starfusion.abridged.coding_effect.tsv`
   - `*.starfusion.abridged.tsv`
   - `*.starfusion.fusion_predictions.tsv`
+  - `*_starfusion.cff`
   - `STAR/`
     - `*.Chimeric.out.junction`
     - `log/`
@@ -116,7 +120,30 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 [STAR-Fusion](https://github.com/STAR-Fusion/STAR-Fusion) uses the STAR aligner to identify candidate fusion transcripts supported by Illumina reads.
 
-_More coming soon..._
+[CommonFusionFormat (CFF)](https://github.com/ccmbioinfo/MetaFusion/wiki/metafusion-file-formats) file is originally created by the developers of the [MetaFusion](https://github.com/mskcc/MetaFusion) tool. Forte generates `*.cff` files that can be used with MetaFusion.
+
+### Fusion Merging and Annotation
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `analysis/<sample>/metafusion`
+  - `*.final.cff`
+  - `*.unfiltered.cff`
+  - `intermediates/`
+    - `cis-sage.cluster`
+    - `*.cff.cleaned_chr.renamed.reann.WITH_SEQ.exons`
+    - `*_metafusion_cluster.unfiltered.cff`
+    - `final.n1.cluster`
+    - `problematic_chromosomes.cff`
+
+</details>
+
+FORTE uses a custom fork of [Metafusion](https://github.com/mskcc/MetaFusion) to filter, cluster and annotate the fusion calls. Several `intermediate` files are included in the output.
+
+`Fusion_effect` information is added using a custom fork of [AGFusion](https://github.com/anoronh4/AGFusion).
+
+[FusionAnnotator.py from the oncokb-annotator](https://github.com/oncokb/oncokb-annotator/blob/master/FusionAnnotator.py) is also run and added to the final cff file.
 
 ### QC
 
