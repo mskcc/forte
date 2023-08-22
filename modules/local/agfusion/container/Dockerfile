@@ -1,7 +1,7 @@
 FROM ubuntu:bionic-20230530
 
 LABEL maintainer="Anne Marie Noronha (noronhaa@mskcc.org)" \
-    version.image="0.0.5"
+    version.image="0.0.6"
 
 # INSTALL DEPENDENCIES
 
@@ -18,7 +18,7 @@ RUN pip3 install mysqlclient
 
 # INSTALL AGFUSION & DATABASE FILES
 WORKDIR /usr/local/bin
-RUN git clone https://github.com/anoronh4/AGFusion.git --branch feature/metafusion_parser
+RUN git clone https://github.com/mskcc/AGFusion.git --branch v1.4.1-fork1 --single-branch
 WORKDIR /usr/local/bin/AGFusion
 RUN pip3 install .
 
