@@ -165,6 +165,13 @@ if (nrow(tool_cff) > 0) {
 }
 tool_cff$strand1[tool_cff$strand1 == "."] <- NA
 tool_cff$strand2[tool_cff$strand2 == "."] <- NA
+
+chr_name_map <- c("M"="MT","chrM"="chrMT")
+
+tool_cff <- tool_cff %>%
+    mutate(chr1=ifelse(chr1 %in% names(chr_name_map), unname(chr_name_map[chr1]), chr1)) %>%
+    mutate(chr2=ifelse(chr2 %in% names(chr_name_map), unname(chr_name_map[chr2]), chr2))
+
 tool_cff <- tool_cff[, cff_format]
 write.table(
     tool_cff,
