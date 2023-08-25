@@ -1,10 +1,9 @@
 process STARFUSION {
     tag "$meta.id"
     label 'process_medium'
-    label 'process_long'
 
-    conda "bioconda::dfam=3.3 bioconda::hmmer=3.3.2 bioconda::star-fusion=1.10.0 bioconda::trinity=date.2011_11_2 bioconda::samtools=1.9 bioconda::star=2.7.8a"
-    container "docker.io/trinityctat/starfusion:1.10.1"
+    conda "bioconda::dfam=3.3 bioconda::hmmer=3.3.2 bioconda::star-fusion=1.12.0 bioconda::trinity=date.2011_11_2 bioconda::samtools=1.9 bioconda::star=2.7.8a"
+    container "docker.io/trinityctat/starfusion:1.12.0"
 
     input:
     tuple val(meta), path(reads), path(junction)
