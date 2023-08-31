@@ -1,0 +1,15 @@
+Changes in module 'nf-core/subread/featurecounts'
+--- modules/nf-core/subread/featurecounts/main.nf
++++ modules/nf-core/subread/featurecounts/main.nf
+@@ -8,7 +8,8 @@
+         'biocontainers/subread:2.0.1--hed695b0_0' }"
+ 
+     input:
+-    tuple val(meta), path(bams), path(annotation)
++    tuple val(meta), path(bams)
++    path(annotation)
+ 
+     output:
+     tuple val(meta), path("*featureCounts.txt")        , emit: counts
+
+************************************************************
