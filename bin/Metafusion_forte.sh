@@ -153,7 +153,7 @@ cluster=$outdir/final.n$num_tools.cluster
 
 rm -f filters.txt
 cut -f 22 *.BLOCKLIST | tr "," "\n" | sort | uniq | sed "s/$/\tblocklist/g" > filters.txt
-cut -f 22 *.ANC_filter | tr "," "\n" | sort | uniq | sed "s/$/\tadjacent_noncoding/g" >> filters.txt
+comm -23 <(cut -f 22 *.blck_filter | tr "," "\n" | sort | uniq) <(cut -f 22 *.ANC_filter | tr "," "\n" | sort | uniq) | sed "s/$/\tadjacent_noncoding/g" >> filters.txt
 cut -f 22 *.ReadThrough | tr "," "\n" | sort | uniq | sed "s/$/\tread_through/g" >> filters.txt
 echo -en "$callerfilter_excluded" | tr "," "\n" | sort | uniq | sed "s/$/\tcaller_filter/g" >> filters.txt
 
