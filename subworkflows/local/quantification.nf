@@ -1,7 +1,6 @@
 include { HTSEQ_COUNT                                 } from '../../modules/local/htseq/count/main'
 include { KALLISTO_QUANT                              } from '../../modules/nf-core/kallisto/quant/main'
 include { SUBREAD_FEATURECOUNTS as FEATURECOUNTS_GENE } from '../../modules/nf-core/subread/featurecounts/main'
-include { SUBREAD_FEATURECOUNTS as FEATURECOUNTS_EXON } from '../../modules/nf-core/subread/featurecounts/main'
 include { COUNT_FEATURES                              } from '../../modules/local/count_features/main'
 
 
