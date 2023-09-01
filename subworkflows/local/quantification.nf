@@ -31,13 +31,6 @@ workflow QUANTIFICATION {
     )
     ch_versions = ch_versions.mix(FEATURECOUNTS_GENE.out.versions)
 
-    FEATURECOUNTS_EXON(
-        bam,
-        gtf
-    )
-    ch_versions = ch_versions.mix(FEATURECOUNTS_EXON.out.versions)
-
-
     KALLISTO_QUANT(
         reads,
         kallisto_idx,
@@ -57,8 +50,6 @@ workflow QUANTIFICATION {
     htseq_summary              = HTSEQ_COUNT.out.summary
     featurecounts_gene_counts  = FEATURECOUNTS_GENE.out.counts
     featurecounts_gene_summary = FEATURECOUNTS_GENE.out.summary
-    featurecounts_exon_counts  = FEATURECOUNTS_EXON.out.counts
-    featurecounts_exon_summary = FEATURECOUNTS_EXON.out.summary
     kallisto_log               = KALLISTO_QUANT.out.log
     kallisto_count_feature     = COUNT_FEATURES.out.kallisto_count_feature
     ch_versions                = ch_versions
