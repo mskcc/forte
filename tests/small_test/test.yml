@@ -12,4 +12,4 @@
     - path: output/analysis/SAMPLE_SINGLE_END/arriba/SAMPLE_SINGLE_END.fusions.tsv
       md5sum: 7c3383f7eb6d79b84b0bd30a7ef02d70
     - path: output/pipeline_info/software_versions.yml
-    - path: output/analysis/SAMPLE_PAIRED_END_UMI/subread/SAMPLE_PAIRED_END_UMI.featureCounts.txt
+    - path: output/analysis/SAMPLE_PAIRED_END_UMI/subread/SAMPLE_PAIRED_END_UMI.gene.featureCounts.txt
