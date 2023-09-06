@@ -131,11 +131,20 @@ workflow FUSION {
     )
     ch_versions = ch_versions.mix(AGFUSION_BATCH.out.versions.first())
 
-    CFF_FINALIZE(
-        ADD_FLAG.out.unfiltered_cff
-            .join(ONCOKB_FUSIONANNOTATOR.out.oncokb_fusions, by:0)
-            .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
-    )
+    if (params.run_oncokb_fusionannotator) {
+        CFF_FINALIZE(
+            ADD_FLAG.out.unfiltered_cff
+                .join(ONCOKB_FUSIONANNOTATOR.out.oncokb_fusions, by:0)
+                .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
+        )
+    } else {
+        CFF_FINALIZE(
+            ADD_FLAG.out.unfiltered_cff
+                .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
+                .map{ meta, cff, agfusion_file ->
+                    [ meta, cff, [], agfusion_file ]
+                }
+    }
     ch_versions = ch_versions.mix(ADD_FLAG.out.versions.first())
     ch_versions = ch_versions.mix(METAFUSION.out.versions.first())
     ch_versions = ch_versions.mix(ARRIBA_TO_CFF.out.versions.first())

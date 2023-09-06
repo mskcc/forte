@@ -19,10 +19,11 @@ process CFF_ANNOTATE {
 
     script:
     prefix = task.ext.prefix ?: "${cff}"
+    def oncokb_param = oncokb ? --oncokb ${oncokb} : ""
     """
     add_annotations_cff.R \\
         --cff ${cff} \\
-        --oncokb ${oncokb} \\
+        ${oncokb_param} \\
         --agfusion ${agfusion} \\
         --out-prefix ${prefix}
 
