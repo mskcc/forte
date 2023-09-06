@@ -142,14 +142,10 @@ workflow FORTE {
         ALIGN_READS.out.bam_dedup,
         ALIGN_READS.out.bai_dedup,
         QUANTIFICATION.out.kallisto_log
+            .mix(QUANTIFICATION.out.kallisto_count_feature)
             .filter{meta, log ->
                 meta.has_umi && params.dedup_umi_for_kallisto
-            }.mix(ALIGN_READS.out.umitools_dedup_log)
-            .mix(
-                QUANTIFICATION.out.htseq_counts
-                    .mix(QUANTIFICATION.out.htseq_summary)
-                    .filter{ meta, htseq_file -> meta.has_umi }
-            ),
+            }.mix(ALIGN_READS.out.umitools_dedup_log),
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
@@ -163,13 +159,10 @@ workflow FORTE {
         ALIGN_READS.out.bam_withdup,
         ALIGN_READS.out.bai_withdup,
         PREPROCESS_READS.out.fastp_json
-            .mix(
-                QUANTIFICATION.out.htseq_counts
-                    .mix(QUANTIFICATION.out.htseq_summary)
-                    .filter{ meta, htseq_file -> ! meta.has_umi }
-            ).mix(ALIGN_READS.out.star_log_final)
+            .mix(ALIGN_READS.out.star_log_final)
             .mix(
                 QUANTIFICATION.out.kallisto_log
+                    .mix(QUANTIFICATION.out.kallisto_count_feature)
                     .filter{meta, log ->
                         ! (meta.has_umi && params.dedup_umi_for_kallisto)
                     }
