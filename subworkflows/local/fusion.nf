@@ -144,6 +144,7 @@ workflow FUSION {
                 .map{ meta, cff, agfusion_file ->
                     [ meta, cff, [], agfusion_file ]
                 }
+        )
     }
     ch_versions = ch_versions.mix(ADD_FLAG.out.versions.first())
     ch_versions = ch_versions.mix(METAFUSION.out.versions.first())
