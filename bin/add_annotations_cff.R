@@ -46,7 +46,8 @@ if (length(setdiff(names(args_opt),possible_args)) > 0){
     quit()
 }
 
-if (length(setdiff(possible_args,names(args_opt))) > 0) {
+required_args <- c("cff","agfusion","out_prefix")
+if (length(setdiff(required_args,names(args_opt))) > 0) {
     message("Missing required arguments")
     usage()
     quit()
