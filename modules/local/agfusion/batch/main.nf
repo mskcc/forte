@@ -14,7 +14,7 @@ process AGFUSION_BATCH {
     path(pyensembl_cache)
 
     output:
-    tuple val(meta), path("${prefix}")                       , emit: fusions_annotated
+    tuple val(meta), path("${prefix}/**")                    , emit: fusions_annotated
     tuple val(meta), path("${prefix}.fusion_transcripts.csv"), emit: fusion_transcripts_csv
     tuple val(meta), path("${prefix}.fusion_transcripts.tsv"), emit: fusion_transcripts_tsv
     path "versions.yml"                                      , emit: versions
