@@ -21,11 +21,13 @@ workflow FUSION {
     gtf
     starfusion_ref
     fusioncatcher_ref
-    fusion_report_db
     agfusion_db
     pyensembl_cache
     gene_bed
     blocklist
+    arriba_blacklist
+    arriba_known_fusions
+    arriba_protein_domains
 
     main:
     ch_versions = Channel.empty()
@@ -48,11 +50,11 @@ workflow FUSION {
         STAR_FOR_ARRIBA.out.bam,
         fasta,
         gtf,
+        arriba_blacklist,
+        arriba_known_fusions,
         [],
         [],
-        [],
-        [],
-        []
+        arriba_protein_domains
     )
     ch_versions = ch_versions.mix(ARRIBA.out.versions.first())
 
