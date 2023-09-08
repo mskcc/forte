@@ -12,7 +12,7 @@ include {
 } from '../../modules/nf-core/gunzip/main'
 include { STARFUSION_DOWNLOAD            } from '../../modules/local/starfusion/download/main'
 include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatcher/download/main'
-include { FUSIONREPORT_DOWNLOAD          } from '../../modules/local/fusionreport/download/main'
+include { ARRIBA_DOWNLOAD                } from '../../modules/local/arriba/download/main'
 include { KALLISTO_INDEX                 } from '../../modules/nf-core/kallisto/index/main'
 include { AGFUSION_DOWNLOAD              } from '../../modules/local/agfusion/download/main'
 
@@ -89,7 +89,8 @@ workflow PREPARE_REFERENCES {
 
     //cosmic_usr = params.cosmic_usr ?: ""
     //cosmic_passwd = params.cosmic_passwd ?: ""
-    FUSIONREPORT_DOWNLOAD()
+
+    ARRIBA_DOWNLOAD()
 
     AGFUSION_DOWNLOAD(
         params.ensembl_version,
@@ -112,13 +113,15 @@ workflow PREPARE_REFERENCES {
     gtf                = gtf
     starfusion_ref     = starfusion_ref
     fusioncatcher_ref  = fusioncatcher_ref
-    fusion_report_db   = FUSIONREPORT_DOWNLOAD.out.reference
     rseqc_bed          = UCSC_GENEPREDTOBED.out.bed.map{it[1]}.first()
     kallisto_index     = KALLISTO_INDEX.out.idx
     agfusion_db        = AGFUSION_DOWNLOAD.out.agfusion_db
     pyensembl_cache    = AGFUSION_DOWNLOAD.out.pyensembl_cache
     metafusion_blocklist = metafusion_blocklist
     metafusion_gene_bed = metafusion_gene_bed
+    arriba_blacklist   = ARRIBA_DOWNLOAD.out.blacklist
+    arriba_known_fusions = ARRIBA_DOWNLOAD.out.known_fusions
+    arriba_protein_domains = ARRIBA_DOWNLOAD.out.protein_domains
     ch_versions        = ch_versions
 
 }
