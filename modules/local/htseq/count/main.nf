@@ -1,19 +1,20 @@
 process HTSEQ_COUNT {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::htseq=2.0.2" : null)
+    conda "bioconda::htseq=2.0.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/htseq:2.0.2--py39h919a90d_0' :
         'quay.io/biocontainers/htseq:2.0.2--py39h919a90d_0' }"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(bam), path(bai)
     path gff
 
     output:
-    tuple val(meta), path("*.htseq.count.txt"), emit: counts
-    path "versions.yml"                       , emit: versions
+    tuple val(meta), path("*.htseq.count.txt")  , emit: counts
+    tuple val(meta), path("*.htseq.summary.txt"), emit: summary
+    path "versions.yml"                         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -29,6 +30,9 @@ process HTSEQ_COUNT {
         ${prefix}.htseq.count.txt
 
     sed -i '1{h;s/.*/'"${prefix}"'/;G}' ${prefix}.htseq.count.txt
+
+    echo -en "Sample\\tGeneCount\\n${prefix}\\t" > ${prefix}.htseq.summary.txt
+    cat ${prefix}.htseq.count.txt | grep -v ^__ | awk -F"\t" '\$2 > 0' | wc -l >> ${prefix}.htseq.summary.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

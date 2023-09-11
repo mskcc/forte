@@ -3,7 +3,7 @@ process FUSIONREPORT_DOWNLOAD {
     label 'process_medium'
 
     // Note: 2.7X indices incompatible with AWS iGenomes.
-    conda (params.enable_conda ? 'bioconda::star=2.7.9a' : null)
+    conda 'bioconda::star=2.7.9a'
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'cmopipeline/fusion-report:0.0.1' :
         'cmopipeline/fusion-report:0.0.1' }"
@@ -13,6 +13,9 @@ process FUSIONREPORT_DOWNLOAD {
     output:
     path "db"                , emit: reference
     path "versions.yml"      , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

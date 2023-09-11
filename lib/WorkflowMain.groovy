@@ -1,5 +1,5 @@
 //
-// This file holds several functions specific to the main.nf workflow in the anoronh4/forte pipeline
+// This file holds several functions specific to the main.nf workflow in the mskcc/forte pipeline
 //
 
 class WorkflowMain {

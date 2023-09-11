@@ -1,10 +1,10 @@
-# anoronh4/forte: Usage
+# mskcc/forte: Usage
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+This document details specific command-line options and how to arrange input data.
 
 ## Samplesheet input
 
@@ -45,22 +45,23 @@ TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
 
 the following is a description of each field that can be used. Fields that do not have a default value are required; those that do are not.
 
-| Header     | Type        | Values               | Defaults |
-| :--------- | :---------- | :------------------- | :------- |
-| sample     | `str`       |                      | (none)   |
-| single_end | `bool`      | `true`/`false`       | `false`  |
-| umi        | `str`/`int` | `NNNXX`/`3`          | `''`     |
-| umi2       | `str`/`int` | `NNNXX`/`3`          | `''`     |
-| strand     | `str`       | `yes`/`no`/`reverse` | `no`     |
-| fastq_1    | `str`       | `/path/to/*fastq.gz` | (none)   |
-| fastq_1    | `str`       | `/path/to/*fastq.gz` | (none)   |
+| Header     | Type        | Values                  | Defaults |
+| :--------- | :---------- | :---------------------- | :------- |
+| sample     | `str`       |                         | (none)   |
+| single_end | `bool`      | `true`/`false`          | `false`  |
+| umi        | `str`/`int` | `NNNXX`/`3`             | `''`     |
+| umi2       | `str`/`int` | `NNNXX`/`3`             | `''`     |
+| strand     | `str`       | `yes`/`no`/`reverse`    | `no`     |
+| bait       | `str`       | `idt_v2/idt_v1/agilent` | `''`     |
+| fastq_1    | `str`       | `/path/to/*fastq.gz`    | (none)   |
+| fastq_2    | `str`       | `/path/to/*fastq.gz`    | (none)   |
 
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run anoronh4/forte --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile singularity
+nextflow run mskcc/forte --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile singularity
 ```
 
 This will launch the pipeline with the `singularity` configuration profile. See below for more information about profiles.
@@ -79,7 +80,7 @@ work                # Directory containing the nextflow working files
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
-nextflow pull anoronh4/forte
+nextflow pull mskcc/forte
 ```
 
 ### Fusion-report annotation
@@ -100,11 +101,15 @@ nextflow secrets set ONCOKB_TOKEN 'mytokenstr'
 
 The token will be saved to a hidden folder in your home directory: `~/.nextflow/secrets`. Once `ONCOKB_TOKEN` is configured, you can turn on the annotation process by adding the parameter `--run_oncokb_fusionannotator` on the command line.
 
+### Baits
+
+Forte performs QC analysis on targeted assays using Picard's `CollectHsMetrics` tool. Currently, `idt_v1`, `idt_v2` and `agilent` are supported when using the `GRCh37` genome (default). For other baitsets, `conf/igenomes.config` should be customized. Multiple baitsets can be used in the same run.
+
 ### Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [anoronh4/forte releases page](https://github.com/anoronh4/forte/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
+First, go to the [mskcc/forte releases page](https://github.com/mskcc/forte/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 

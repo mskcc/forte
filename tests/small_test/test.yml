@@ -1,0 +1,15 @@
+- name: run_test_profile
+  command: nextflow run ./main.nf -profile test,singularity -c ./tests/nextflow.config
+  tags:
+    - test_profile
+  files:
+    - path: output/analysis/SAMPLE_PAIRED_END/STAR/SAMPLE_PAIRED_END.Aligned.sortedByCoord.out.bam
+      md5sum: 781acdb8d313482de17a2933e18bb97a
+    - path: output/analysis/SAMPLE_PAIRED_END_UMI/STAR/SAMPLE_PAIRED_END_UMI.Aligned.sortedByCoord.out.bam
+    - path: output/analysis/SAMPLE_SINGLE_END/STAR/SAMPLE_SINGLE_END.Aligned.sortedByCoord.out.bam
+    - path: output/analysis/SAMPLE_SINGLE_END/arriba/SAMPLE_SINGLE_END.fusions.discarded.tsv
+      md5sum: da3e17e01697fe9990fd545e1e26b822
+    - path: output/analysis/SAMPLE_SINGLE_END/arriba/SAMPLE_SINGLE_END.fusions.tsv
+      md5sum: 7c3383f7eb6d79b84b0bd30a7ef02d70
+    - path: output/pipeline_info/software_versions.yml
+    - path: output/analysis/SAMPLE_PAIRED_END_UMI/featurecounts/SAMPLE_PAIRED_END_UMI.gene.featureCounts.txt

@@ -9,9 +9,8 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 // Validate input parameters
 WorkflowForte.initialise(params, log)
 
-// TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.gtf ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.gtf, params.refflat, params.starfusion_url, params.metafusion_gene_bed, params.metafusion_blocklist, params.metafusion_gene_info ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -38,6 +37,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { BAIT_INPUTS } from '../subworkflows/local/baits'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,9 +52,12 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS       } from '../modules/nf-core/custom/du
 include { PREPARE_REFERENCES                } from '../subworkflows/local/prepare_references'
 include { PREPROCESS_READS                  } from '../subworkflows/local/preprocess_reads'
 include { ALIGN_READS                       } from '../subworkflows/local/align_reads'
-include { MERGE_READS                       } from '../subworkflows/local/merge_reads'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
-include { QC                                } from '../subworkflows/local/qc'
+include {
+    QC as QC_DUP ;
+    QC as QC_DEDUP
+} from '../subworkflows/local/qc'
+include { EXTRACT_DEDUP_FQ                  } from '../subworkflows/local/extract_dedup_fq'
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
 include { FUSION                            } from '../subworkflows/local/fusion'
 
@@ -70,6 +73,11 @@ def multiqc_report = []
 workflow FORTE {
 
     ch_versions = Channel.empty()
+
+    //
+    // SUBWORKFLOW: If baitsets are available, they will be added to the channel
+    //
+    BAIT_INPUTS ()
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
@@ -95,35 +103,79 @@ workflow FORTE {
     )
     ch_versions = ch_versions.mix(ALIGN_READS.out.ch_versions)
 
+    EXTRACT_DEDUP_FQ(
+        ALIGN_READS.out.bam
+            .filter{ meta, bam ->
+                meta.has_umi && params.dedup_umi_for_kallisto
+            }
+    )
+    ch_versions = ch_versions.mix(EXTRACT_DEDUP_FQ.out.ch_versions)
+
     QUANTIFICATION(
         ALIGN_READS.out.bam,
-        PREPARE_REFERENCES.out.gtf
+        ALIGN_READS.out.bai,
+        PREPARE_REFERENCES.out.gtf,
+        EXTRACT_DEDUP_FQ.out.dedup_reads
+            .mix(
+                PREPROCESS_READS.out.reads
+                    .filter{ meta, reads -> ! ( meta.has_umi && params.dedup_umi_for_kallisto ) }
+            ),
+        PREPARE_REFERENCES.out.kallisto_index
     )
     ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
 
-
-    MERGE_READS(
-        PREPROCESS_READS.out.reads,
-        ALIGN_READS.out.bam
-    )
-
     FUSION(
-        MERGE_READS.out.dedup_reads,
+        PREPROCESS_READS.out.reads,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
         PREPARE_REFERENCES.out.fusioncatcher_ref,
-        PREPARE_REFERENCES.out.fusion_report_db
+        PREPARE_REFERENCES.out.agfusion_db,
+        PREPARE_REFERENCES.out.pyensembl_cache,
+        PREPARE_REFERENCES.out.metafusion_gene_bed,
+        PREPARE_REFERENCES.out.metafusion_blocklist,
+        workflow.profile.toString().split(",").contains("test") ? [] : PREPARE_REFERENCES.out.arriba_blacklist,
+        workflow.profile.toString().split(",").contains("test") ? [] : PREPARE_REFERENCES.out.arriba_known_fusions,
+        workflow.profile.toString().split(",").contains("test") ? [] : PREPARE_REFERENCES.out.arriba_protein_domains
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
-    QC(
-        ALIGN_READS.out.bam,
+    QC_DEDUP(
+        ALIGN_READS.out.bam_dedup,
+        ALIGN_READS.out.bai_dedup,
+        QUANTIFICATION.out.kallisto_log
+            .mix(QUANTIFICATION.out.kallisto_count_feature)
+            .filter{meta, log ->
+                meta.has_umi && params.dedup_umi_for_kallisto
+            }.mix(ALIGN_READS.out.umitools_dedup_log),
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
-        PREPROCESS_READS.out.fastp_json
+        PREPARE_REFERENCES.out.rseqc_bed,
+        PREPARE_REFERENCES.out.fasta_fai,
+        PREPARE_REFERENCES.out.fasta_dict,
+        BAIT_INPUTS.out.baits
     )
-    ch_versions = ch_versions.mix(QC.out.ch_versions)
+    ch_versions = ch_versions.mix(QC_DEDUP.out.ch_versions)
+
+    QC_DUP(
+        ALIGN_READS.out.bam_withdup,
+        ALIGN_READS.out.bai_withdup,
+        PREPROCESS_READS.out.fastp_json
+            .mix(ALIGN_READS.out.star_log_final)
+            .mix(
+                QUANTIFICATION.out.kallisto_log
+                    .mix(QUANTIFICATION.out.kallisto_count_feature)
+                    .filter{meta, log ->
+                        ! (meta.has_umi && params.dedup_umi_for_kallisto)
+                    }
+            ),
+        PREPARE_REFERENCES.out.refflat,
+        PREPARE_REFERENCES.out.rrna_interval_list,
+        PREPARE_REFERENCES.out.rseqc_bed,
+        PREPARE_REFERENCES.out.fasta_fai,
+        PREPARE_REFERENCES.out.fasta_dict,
+        BAIT_INPUTS.out.baits
+    )
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
@@ -143,10 +195,10 @@ workflow FORTE {
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
-    ch_multiqc_files.collect()
+    ch_multiqc_files = ch_multiqc_files.collect().map{ files -> [[:], files] }
 
     MULTIQC (
-        ch_multiqc_files.collect(),
+        ch_multiqc_files,
         ch_multiqc_config.collect().ifEmpty([]),
         ch_multiqc_custom_config.collect().ifEmpty([]),
         ch_multiqc_logo.collect().ifEmpty([])

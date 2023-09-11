@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/anoronh4/forte/master/nextflow_schema.json",
-    "title": "anoronh4/forte pipeline parameters",
+    "$id": "https://raw.githubusercontent.com/mskcc/forte/master/nextflow_schema.json",
+    "title": "mskcc/forte pipeline parameters",
     "description": "RNAseq pipeline",
     "type": "object",
     "definitions": {
@@ -41,21 +41,6 @@
                     "fa_icon": "fas fa-file-signature"
                 }
             }
-        },
-        "reference_genome_options": {
-            "title": "Reference genome options",
-            "type": "object",
-            "fa_icon": "fas fa-dna",
-            "description": "Reference genome related files and options required for the workflow.",
-            "properties": {}
-        },
-        "institutional_config_options": {
-            "title": "Institutional config options",
-            "type": "object",
-            "fa_icon": "fas fa-university",
-            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
-            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
-            "properties": {}
         },
         "max_job_request_options": {
             "title": "Max job request options",
@@ -186,12 +171,6 @@
                     "description": "Show all params when using `--help`",
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "enable_conda": {
-                    "type": "boolean",
-                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-bacon"
                 }
             }
         }
@@ -201,16 +180,84 @@
             "$ref": "#/definitions/input_output_options"
         },
         {
-            "$ref": "#/definitions/reference_genome_options"
-        },
-        {
-            "$ref": "#/definitions/institutional_config_options"
-        },
-        {
             "$ref": "#/definitions/max_job_request_options"
         },
         {
             "$ref": "#/definitions/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "extract_fq_read_group": {
+            "type": "boolean",
+            "default": true
+        },
+        "genome": {
+            "type": "string",
+            "default": "GRCh37"
+        },
+        "igenomes_base": {
+            "type": "string",
+            "default": "s3://ngi-igenomes/igenomes"
+        },
+        "targets_base": {
+            "type": "string",
+            "default": "None"
+        },
+        "skip_trimming": {
+            "type": "boolean",
+            "default": false
+        },
+        "ignore_read_pair_suffixes": {
+            "type": "boolean",
+            "default": false
+        },
+        "save_unaligned": {
+            "type": "boolean",
+            "default": false
+        },
+        "save_align_intermeds": {
+            "type": "boolean",
+            "default": false
+        },
+        "dedup_umi_for_fusions": {
+            "type": "boolean",
+            "default": false
+        },
+        "run_oncokb_fusionannotator": {
+            "type": "boolean",
+            "default": false
+        },
+        "cosmic_usr": {
+            "type": "string",
+            "default": "None"
+        },
+        "fusion_report_cutoff": {
+            "type": "integer",
+            "default": 1
+        },
+        "reference_base": {
+            "type": "string",
+            "default": "null/forte_references"
+        },
+        "fasta": {
+            "type": "string",
+            "default": "None"
+        },
+        "gtf": {
+            "type": "string",
+            "default": "None"
+        },
+        "starfusion_url": {
+            "type": "string",
+            "default": "None"
+        },
+        "refflat": {
+            "type": "string",
+            "default": "None"
+        },
+        "skip_fusion_report": {
+            "type": "boolean",
+            "default": false
+        }
+    }
 }

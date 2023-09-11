@@ -1,5 +1,5 @@
 //
-// This file holds several functions specific to the workflow/forte.nf in the anoronh4/forte pipeline
+// This file holds several functions specific to the workflow/forte.nf in the mskcc/forte pipeline
 //
 
 import groovy.text.SimpleTemplateEngine
