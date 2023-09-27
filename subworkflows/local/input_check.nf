@@ -77,7 +77,9 @@ workflow MAF_INPUT_CHECK {
     samplesheet // file: /path/to/samplesheet.csv
 
     main:
-    Channel.fromPath(samplesheet)
+
+    input = samplesheet ? Channel.fromPath(samplesheet) : Channel.empty()
+    input
         //.csv
         .splitCsv ( header:true, sep:',' )
         .map { create_maf_channel(it) }
