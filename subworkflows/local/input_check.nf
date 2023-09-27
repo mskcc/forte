@@ -71,3 +71,31 @@ def create_fastq_channel(LinkedHashMap row) {
     }
     return fastq_meta
 }
+
+workflow MAF_INPUT_CHECK {
+    take:
+    samplesheet // file: /path/to/samplesheet.csv
+
+    main:
+    Channel.fromPath(samplesheet)
+        //.csv
+        .splitCsv ( header:true, sep:',' )
+        .map { create_maf_channel(it) }
+        .set { mafs }
+
+    emit:
+    mafs                                      // channel: [ val(meta), [ reads ] ]
+    //versions = SAMPLESHEET_CHECK.out.versions // channel: [ versions.yml ]
+}
+
+def create_maf_channel(LinkedHashMap row) {
+    // create meta map
+    def meta = [:]
+    meta.sample = row.sample.trim()
+    meta.maf_id = row.maf_id.trim()
+    def maf_file = file(row.maf)
+    if (!file(maf_file).exists()){
+        exit 1, "ERROR: Please check fillout input samplesheet -> MAF file does not exist!\n${row.maf}"
+    }
+    return [meta,maf_file]
+}

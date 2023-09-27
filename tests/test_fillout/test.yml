@@ -1,0 +1,5 @@
+- name: run_test_fillouts
+  command: nextflow run ./tests/test_fillout/main.nf -profile test,singularity -entry test_rna_fillout -c ./tests/nextflow.config -c ./tests/test_fillout/nextflow.config
+  tags:
+    - test_fillouts
+  exit_code: 0
