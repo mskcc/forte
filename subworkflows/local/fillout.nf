@@ -12,6 +12,7 @@ workflow FILLOUT {
         fai
 
     main:
+    ch_versions = Channel.empty()
     gbcms_ch = bam
         .combine(bai,by:[0])
         .combine(maf)
@@ -24,6 +25,7 @@ workflow FILLOUT {
         }
 
     GETBASECOUNTSMULTISAMPLE(gbcms_ch, fasta, fai)
+    ch_versions = ch_versions.mix(GETBASECOUNTSMULTISAMPLE.out.versions.first())
 
     COMBINE_FILLOUTS(
         GETBASECOUNTSMULTISAMPLE.out.maf
@@ -33,8 +35,10 @@ workflow FILLOUT {
                 [meta,fillout_maf,maf]
             }
     )
+    ch_versions = ch_versions.mix(COMBINE_FILLOUTS.out.versions.first())
 
     emit:
     combined_fillout_maf = COMBINE_FILLOUTS.out.maf
+    ch_versions          = ch_versions
 
 }
