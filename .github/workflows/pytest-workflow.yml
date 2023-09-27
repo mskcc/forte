@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tags: ["test_profile","test_fillouts"]
+        tags: ["test_profile", "test_fillouts"]
         profile: ["singularity"]
     env:
       NXF_ANSI_LOG: false
