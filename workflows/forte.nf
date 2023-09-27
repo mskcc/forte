@@ -36,8 +36,9 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK } from '../subworkflows/local/input_check'
-include { BAIT_INPUTS } from '../subworkflows/local/baits'
+include { INPUT_CHECK     } from '../subworkflows/local/input_check'
+include { MAF_INPUT_CHECK } from '../subworkflows/local/input_check'
+include { BAIT_INPUTS     } from '../subworkflows/local/baits'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -60,6 +61,7 @@ include {
 include { EXTRACT_DEDUP_FQ                  } from '../subworkflows/local/extract_dedup_fq'
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
 include { FUSION                            } from '../subworkflows/local/fusion'
+include { FILLOUT                           } from '../subworkflows/local/fillout'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,6 +141,19 @@ workflow FORTE {
         workflow.profile.toString().split(",").contains("test") ? [] : PREPARE_REFERENCES.out.arriba_protein_domains
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
+
+    MAF_INPUT_CHECK(
+        params.maf_input
+    )
+
+    FILLOUT(
+        ALIGN_READS.out.bam,
+        ALIGN_READS.out.bai,
+        MAF_INPUT_CHECK.out.mafs,
+        params.fasta,
+        PREPARE_REFERENCES.out.fasta_fai.map{ it[1] }.first()
+    )
+    ch_versions = ch_versions.mix(FILLOUT.out.ch_versions)
 
     QC_DEDUP(
         ALIGN_READS.out.bam_dedup,
