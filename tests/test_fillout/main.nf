@@ -6,11 +6,11 @@ workflow test_rna_fillout {
 
     // chr22 bam
     input_bam = [
-        ['sample':'test','id':'test'],
+        ['sample':'SAMPLE_PAIRED_END','id':'SAMPLE_PAIRED_END'],
         file("https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/test.rna.paired_end.sorted.bam")
     ]
     input_bai = [
-        ['sample':'test','id':'test'],
+        ['sample':'SAMPLE_PAIRED_END','id':'SAMPLE_PAIRED_END'],
         file("https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/test.rna.paired_end.sorted.bam.bai")
     ]
 
