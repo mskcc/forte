@@ -1,0 +1,4 @@
+repository_type: pipeline
+template:
+  skip:
+  - github
