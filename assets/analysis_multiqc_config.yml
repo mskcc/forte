@@ -27,4 +27,3 @@ sp:
     fn: "*.htseq.summary.txt"
   kallisto_expression_genstats:
     fn: "*.kallisto.customsummary.txt"
-

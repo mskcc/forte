@@ -15,6 +15,7 @@ You will need to create a samplesheet with information about the samples you wou
 ```
 
 Minimal example:
+
 ```console
 sample,fastq_1
 sampleA,/path/to/sampleA_R1.fastq.gz

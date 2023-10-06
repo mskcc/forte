@@ -69,7 +69,6 @@ We also thank the following contributors:
 - Mark Donoghue <donoghum@mskcc.org>
 - Helen Won
 
-
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
