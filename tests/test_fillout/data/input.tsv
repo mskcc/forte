@@ -1,2 +1,2 @@
-sample,maf_id,maf
-SAMPLE_PAIRED_END,s_XXXXXX_T001_d,tests/test_fillout/data/dna.maf
+sample,maf
+SAMPLE_PAIRED_END,tests/test_fillout/data/dna.maf
