@@ -25,7 +25,7 @@ process COMBINE_FILLOUTS {
     rna_fillout_combine.R \\
         --fillout_maf ${fillout_maf}\\
         --maf ${original_maf} \\
-        --output_maf ${original_maf.getBaseName()}.combined.maf\\
+        --output_maf ${original_maf.getBaseName()}.fillout.maf\\
         --rna_sample_id ${prefix}
 
     cat <<-END_VERSIONS > versions.yml

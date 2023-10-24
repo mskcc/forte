@@ -4,5 +4,5 @@
     - test_fillouts
   exit_code: 0
   files:
-    - path: output/analysis/SAMPLE_PAIRED_END/fillouts/dna.combined.maf
+    - path: output/analysis/SAMPLE_PAIRED_END/fillouts/dna.fillout.maf
       md5sum: 35793211ad0462e1618418dd1ef90ae1
