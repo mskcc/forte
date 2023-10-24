@@ -21,6 +21,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 3. Transcript quantification
 4. Fusion calling and annotation
 5. FASTQ and BAM QC
+6. Fillouts
 
 ## Quick Start
 

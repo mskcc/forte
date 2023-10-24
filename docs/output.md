@@ -16,6 +16,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Fusion Calling](#fusion-calling)
 - [Fusion Merging and Annotation](#fusion-merging-and-annotation)
 - [QC](#qc)
+- [Fillouts](#fillouts)
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ### Read Preprocessing
@@ -204,6 +205,21 @@ FORTE uses a custom fork of [Metafusion](https://github.com/mskcc/MetaFusion) to
 [RSeQC](https://rseqc.sourceforge.net/) provides a number of useful modules that can comprehensively evaluate high throughput RNAseq data.
 
 [MultiQC](https://multiqc.info/) is a visualization tool that searches a given directory for analysis/qc logs and compiles a HTML report. Most of the pipeline QC results are visualized in the report and further statistics are available in the report data directory. FORTE produces a second MultiQC report for each sample that has UMI. FORTE also produces 1-2 reports under the `multiqc/` folder where all samples are aggregated together, one for non-deduplicated results and the other for deduplicated results.
+
+### Fillouts
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `analysis/<sample>/fillouts`
+  - `*.fillout.maf`
+
+</details>
+
+[GetBaseCountsMultiSample (GBCMS)](https://github.com/zengzheng123/GetBaseCountsMultiSample) calculates the base counts in a given BAM file for all the sites in a given MAF file
+
+FORTE uses a custom script to output a MAF file that combines all original columns and new columns from GBCMS.
+
 
 ### Pipeline information
 
