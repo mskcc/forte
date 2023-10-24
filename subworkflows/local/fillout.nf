@@ -19,9 +19,7 @@ workflow FILLOUT {
         .filter{ meta, bam, bai, meta2, maf ->
             meta.sample == meta2.sample
         }.map{ meta, bam, bai, meta2, maf ->
-            def new_meta = meta
-            new_meta.maf_id = meta2.maf_id
-            [new_meta, bam, bai, maf]
+            [ meta, bam, bai, maf ]
         }
 
     GETBASECOUNTSMULTISAMPLE(gbcms_ch, fasta, fai)

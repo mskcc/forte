@@ -20,7 +20,10 @@ workflow test_rna_fillout {
     fai   = file("https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta.fai")
 
     // extract from input_maf_samplesheet
-    MAF_INPUT_CHECK( input_maf_samplesheet )
+    MAF_INPUT_CHECK(
+        input_maf_samplesheet,
+        Channel.empty()
+    )
 
     // run fillouts
     FILLOUT(

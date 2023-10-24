@@ -143,7 +143,8 @@ workflow FORTE {
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
     MAF_INPUT_CHECK(
-        params.maf_input
+        params.maf_input,
+        INPUT_CHECK.out.reads.map{ meta, reads -> meta.sample }.unique()
     )
 
     FILLOUT(
