@@ -23,7 +23,6 @@ process GETBASECOUNTSMULTISAMPLE {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def maf_id = meta.maf_id ?: prefix
     def extension = args.contains("--omaf") ? "maf" : "vcf"
     def variant_input = variants.getExtension() == "maf" ? "--maf ${variants}" : "--vcf ${variants}"
     """
@@ -31,7 +30,7 @@ process GETBASECOUNTSMULTISAMPLE {
         --thread ${task.cpus} \\
         --fasta ${fasta} \\
         ${variant_input} \\
-        --bam ${maf_id}:${bam} \\
+        --bam ${prefix}:${bam} \\
         --output ${variants.getBaseName()}.gbcms.${extension} \\
         ${args}
 

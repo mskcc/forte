@@ -1,5 +1,10 @@
 #!/usr/local/bin/Rscript
 
+# __author__      = "Alexandria Dymun"
+# __maintainer__  = "Anne Marie Noronha"
+# __email__       = "pintoa1@mskcc.org;noronhaa@mskcc.org"
+# __version__     = "0.0.1"
+
 suppressPackageStartupMessages({
     library(data.table)
     library(dplyr)
@@ -44,24 +49,21 @@ rna_fillout_formatting <- function(opt){
     fillout_maf <- fread(opt$fillout_maf, data.table=FALSE)
 
     fillout_maf$rna_genotyped_variant_frequency <- fillout_maf$t_variant_frequency
-    #fillout_maf$t_variant_frequency <- NULL
     for(col in colnames(fillout_maf)[grepl('^t_',colnames(fillout_maf))]){
         new_col <- paste0('rna_',col)
         fillout_maf[new_col] <- fillout_maf[col]
-        #fillout_maf[col] <- NULL # why are we editing the old column? isn't it just dropped anyway?
     }
 
-    #fillout_maf <- fillout_maf  %>% mutate(loc_spec = str_c(Chromosome,':',Start_Position,':',End_Position,':',Reference_Allele,':',Tumor_Seq_Allele1))
     merge_cols <- c("Chromosome", "Start_Position", "End_Position", "Reference_Allele", "Tumor_Seq_Allele1")
     fillout_maf <- fillout_maf[,c(merge_cols,colnames(fillout_maf)[grepl("^rna_",colnames(fillout_maf))])]
 
     maf <- fread(opt$maf, data.table = FALSE)
-    merged_maf <- merge(maf,fillout_maf, by = merge_cols, all = T) # merged on multiple columns instead of loc_spec. wouldn't this work?
+    merged_maf <- merge(maf,fillout_maf, by = merge_cols, all = T)
     merged_maf$RNA_ID <- opt$rna_sample_id
     return(merged_maf)
 
 }
 
-fillex<- rna_fillout_formatting(opt)
+fillex <- rna_fillout_formatting(opt)
 
 write.table(fillex,opt$output_maf,quote = FALSE, row.names = FALSE,sep = "\t")
