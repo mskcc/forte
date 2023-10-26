@@ -17,7 +17,7 @@ process MAF_SAMPLESHEET_CHECK {
     """
     check_maf_samplesheet.py \\
         $samplesheet \\
-        samplesheet.valid.csv
+        samplesheet.maf.valid.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
