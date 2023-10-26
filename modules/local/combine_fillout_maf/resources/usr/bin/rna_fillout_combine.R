@@ -46,7 +46,9 @@ if (length(setdiff(required_args,names(opt))) > 0) {
 }
 
 rna_fillout_formatting <- function(opt){
-    fillout_maf <- fread(opt$fillout_maf, data.table=FALSE)
+    fillout_maf <- fread(opt$fillout_maf, data.table=FALSE) %>%
+        rename(loc_spec = Hugo_Symbol)
+
 
     fillout_maf$rna_genotyped_variant_frequency <- fillout_maf$t_variant_frequency
     for(col in colnames(fillout_maf)[grepl('^t_',colnames(fillout_maf))]){
@@ -54,12 +56,16 @@ rna_fillout_formatting <- function(opt){
         fillout_maf[new_col] <- fillout_maf[col]
     }
 
-    merge_cols <- c("Chromosome", "Start_Position", "End_Position", "Reference_Allele", "Tumor_Seq_Allele1")
-    fillout_maf <- fillout_maf[,c(merge_cols,colnames(fillout_maf)[grepl("^rna_",colnames(fillout_maf))])]
 
-    maf <- fread(opt$maf, data.table = FALSE)
-    merged_maf <- merge(maf,fillout_maf, by = merge_cols, all = T)
+    fillout_maf <- fillout_maf[,c('loc_spec',colnames(fillout_maf)[grepl("^rna_",colnames(fillout_maf))])]
+
+    maf <- fread(opt$maf, data.table = FALSE) %>%
+        mutate(
+            loc_spec = str_c(Chromosome,':',Start_Position,':',End_Position,':',Reference_Allele,':',Tumor_Seq_Allele2)
+        )
+    merged_maf <- merge(maf, fillout_maf, by = c("loc_spec"), all = T)
     merged_maf$RNA_ID <- opt$rna_sample_id
+    merged_maf <- merged_maf %>% select(-c(loc_spec))
     return(merged_maf)
 
 }

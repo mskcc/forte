@@ -1,6 +1,7 @@
 
 include { GETBASECOUNTSMULTISAMPLE } from '../../modules/local/getbasecountsmultisample/main'
 include { COMBINE_FILLOUTS         } from '../../modules/local/combine_fillout_maf/main'
+include { MAF_REFORMAT             } from '../../modules/local/reformat_fillout_maf/main'
 
 workflow FILLOUT {
 
@@ -13,25 +14,30 @@ workflow FILLOUT {
 
     main:
     ch_versions = Channel.empty()
-    gbcms_ch = bam
-        .combine(bai,by:[0])
+
+    maf_ch = bam
         .combine(maf)
-        .filter{ meta, bam, bai, meta2, maf ->
+        .filter{ meta, bam, meta2, maf ->
             meta.sample == meta2.sample
-        }.map{ meta, bam, bai, meta2, maf ->
-            [ meta, bam, bai, maf ]
+        }.map{ meta, bam, meta2, maf ->
+            [ meta, maf ]
         }
 
-    GETBASECOUNTSMULTISAMPLE(gbcms_ch, fasta, fai)
+    MAF_REFORMAT(maf_ch)
+    ch_versions = ch_versions.mix(MAF_REFORMAT.out.versions.first())
+
+    GETBASECOUNTSMULTISAMPLE(
+        bam
+            .combine(bai,by:[0])
+            .combine(MAF_REFORMAT.out.maf,by:[0]),
+        fasta,
+        fai
+    )
     ch_versions = ch_versions.mix(GETBASECOUNTSMULTISAMPLE.out.versions.first())
 
     COMBINE_FILLOUTS(
         GETBASECOUNTSMULTISAMPLE.out.maf
-            .combine(gbcms_ch, by:0)
-            .view()
-            .map{meta,fillout_maf,bam,bai,maf ->
-                [meta,fillout_maf,maf]
-            }
+            .combine(maf_ch,by:[0])
     )
     ch_versions = ch_versions.mix(COMBINE_FILLOUTS.out.versions.first())
 

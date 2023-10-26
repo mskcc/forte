@@ -1,4 +1,4 @@
-process COMBINE_FILLOUTS {
+process MAF_REFORMAT {
     tag "$meta.id"
     label 'process_single'
 
@@ -8,30 +8,27 @@ process COMBINE_FILLOUTS {
             'ghcr.io/rocker-org/devcontainer/tidyverse:4' }"
 
     input:
-    tuple val(meta), path(fillout_maf), path(original_maf)
+    tuple val(meta), path(maf)
 
     output:
-    tuple val(meta), path("*.maf"), emit: maf
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path("*.reformat.maf"), emit: maf
+    path "versions.yml"                    , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.sample}"
     """
-    echo \$PATH
-    rna_fillout_combine.R \\
-        --fillout_maf ${fillout_maf} \\
-        --maf ${original_maf} \\
-        --output_maf ${fillout_maf.getBaseName()}.combined.maf \\
-        --rna_sample_id ${prefix}
+    maf_reformat.R \\
+        --maf ${maf}  \\
+        --output_maf ${prefix}.reformat.maf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -n1)
-        rna_fillout_combine.R: 0.0.1
+        maf_reformat.R: 0.0.1
     END_VERSIONS
     """
 
@@ -39,12 +36,12 @@ process COMBINE_FILLOUTS {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.combined.maf
+    touch ${prefix}.reformat.maf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -n1)
-        rna_fillout_combine.R: 0.0.1
+        maf_reformat.R: 0.0.1
     END_VERSIONS
     """
 }
