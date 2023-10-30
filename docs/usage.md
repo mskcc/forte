@@ -56,6 +56,17 @@ the following is a description of each field that can be used. Fields that do no
 | fastq_1    | `str`       | `/path/to/*fastq.gz`    | (none)   |
 | fastq_2    | `str`       | `/path/to/*fastq.gz`    | (none)   |
 
+### MAF Samplesheet
+
+You can optionally supply a secondary samplesheet with information for performing MAF fillouts, using the option `--maf_input`. Each row in this file requires a sample name that matches a sample name in the input samplesheet, and a path to relevant maf file. For example:
+
+| sample  | maf                  |
+| :------ | :------------------- |
+| sampleA | /path/to/sampleA.maf |
+| sampleB | /path/to/sampleB.maf |
+
+For each sample in this input, FORTE will use the corresponding RNA bam to calculate base counts at each site in the MAF and output a new MAF with the extra information.
+
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
