@@ -99,7 +99,7 @@ workflow FORTE {
     ch_versions = ch_versions.mix(PREPROCESS_READS.out.ch_versions)
 
     ALIGN_READS(
-        PREPROCESS_READS.out.reads,
+        params.skip_trimming ? PREPROCESS_READS.out.reads_untrimmed : PREPROCESS_READS.out.reads_trimmed,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf
     )
@@ -119,7 +119,7 @@ workflow FORTE {
         PREPARE_REFERENCES.out.gtf,
         EXTRACT_DEDUP_FQ.out.dedup_reads
             .mix(
-                PREPROCESS_READS.out.reads
+                params.skip_trimming ? PREPROCESS_READS.out.reads_untrimmed : PREPROCESS_READS.out.reads_trimmed
                     .filter{ meta, reads -> ! ( meta.has_umi && params.dedup_umi_for_kallisto ) }
             ),
         PREPARE_REFERENCES.out.kallisto_index
@@ -127,7 +127,8 @@ workflow FORTE {
     ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
 
     FUSION(
-        PREPROCESS_READS.out.reads,
+        PREPROCESS_READS.out.reads_trimmed,
+        PREPROCESS_READS.out.reads_untrimmed,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
