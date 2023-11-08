@@ -69,7 +69,7 @@ The fusion workflows of FORTE will use UMI-extracted reads, where applicable, bu
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run mskcc/forte --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile singularity
+nextflow run /path/to/clonedrepo/main.nf --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile singularity
 ```
 
 This will launch the pipeline with the `singularity` configuration profile. See below for more information about profiles.
