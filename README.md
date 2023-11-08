@@ -28,10 +28,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) (you can follow [this tutorial](https://singularity-tutorial.github.io/01-installation/)), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(you can use [`Conda`](https://conda.io/miniconda.html) both to install Nextflow itself and also to manage software within pipelines. Please only use it within pipelines as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_.
 
-3. Download the pipeline and test it on a minimal dataset with a single command:
+3. Clone the pipeline repository and test it on a minimal dataset with the following steps:
 
    ```bash
-   nextflow run mskcc/forte -profile test,singularity --outdir <OUTDIR>
+   nextflow run /path/to/clonedrepo/main.nf -profile test,singularity --outdir <OUTDIR>
    ```
 
    Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
@@ -44,7 +44,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 4. Start running your own analysis!
 
    ```bash
-   nextflow run mskcc/forte --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile singularity
+   nextflow run /path/to/clonedrepo/main.nf --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile singularity
    ```
 
    The input file should contain IDs, paths and meta-data pertaining to each sample. The following is a description of each field that can be used. Fields that do not have a default value are required; those that do are not.
