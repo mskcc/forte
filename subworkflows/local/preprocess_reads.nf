@@ -1,5 +1,9 @@
 include { FASTP            } from '../../modules/nf-core/fastp/main'
 include { UMITOOLS_EXTRACT } from '../../modules/nf-core/umitools/extract/main'
+include {
+    GROUP_READS as GROUP_READS_TRIMMED ;
+    GROUP_READS as GROUP_READS_UNTRIMMED
+} from './group_reads'
 
 workflow PREPROCESS_READS {
 
@@ -43,33 +47,18 @@ workflow PREPROCESS_READS {
     )
     ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
-    reads_untrimmed = UMITOOLS_EXTRACT.out.reads
-        .mix(
-            reads.filter{ meta, reads -> ! meta.has_umi }
-        ).map{ meta, reads ->
-            def read_group = meta.read_group
-            def fastq_pair_id = meta.fastq_pair_id
-            def meta_clone = meta.clone().findAll { !["read_group","fastq_pair_id"].contains(it.key) }
-            meta_clone.id = meta.sample
-            [groupKey(meta_clone,meta.fq_num), reads, read_group, fastq_pair_id]
-        }.groupTuple(by:[0])
-        .map{ meta, reads, read_group, fastq_pair_id ->
-            meta = meta + [read_group:read_group.join(','), fastq_pair_id:fastq_pair_id.join(',')]
-            [meta, reads.flatten()]
-        }
+    GROUP_READS_UNTRIMMED(
+        UMITOOLS_EXTRACT.out.reads
+            .mix(
+                reads.filter{ meta, reads -> ! meta.has_umi }
+            )
+    )
+    reads_untrimmed = GROUP_READS_UNTRIMMED.out.grouped_reads
 
-    reads_trimmed = FASTP.out.reads
-        .map{ meta, reads ->
-            def read_group = meta.read_group
-            def fastq_pair_id = meta.fastq_pair_id
-            def meta_clone = meta.clone().findAll { !["read_group","fastq_pair_id"].contains(it.key) }
-            meta_clone.id = meta.sample
-            [groupKey(meta_clone,meta.fq_num), reads, read_group, fastq_pair_id]
-        }.groupTuple(by:[0])
-        .map{ meta, reads, read_group, fastq_pair_id ->
-            meta = meta + [read_group:read_group.join(','), fastq_pair_id:fastq_pair_id.join(',')]
-            [meta, reads.flatten()]
-        }
+    GROUP_READS_TRIMMED(
+        FASTP.out.reads
+    )
+    reads_trimmed = GROUP_READS_TRIMMED.out.grouped_reads
 
     emit:
     reads_trimmed   = reads_trimmed
