@@ -31,6 +31,18 @@ workflow PREPROCESS_READS {
     )
     ch_versions = ch_versions.mix(UMITOOLS_EXTRACT.out.versions.first())
 
+    // once FASTP can run without producing reads then fix this logic.
+    FASTP(
+        UMITOOLS_EXTRACT.out.reads
+            .mix(
+                reads.filter{ meta, reads -> ! meta.has_umi }
+            ),
+        adapter_fasta,
+        false,
+        false
+    )
+    ch_versions = ch_versions.mix(FASTP.out.versions.first())
+
     reads_untrimmed = UMITOOLS_EXTRACT.out.reads
         .mix(
             reads.filter{ meta, reads -> ! meta.has_umi }
@@ -45,15 +57,6 @@ workflow PREPROCESS_READS {
             meta = meta + [read_group:read_group.join(','), fastq_pair_id:fastq_pair_id.join(',')]
             [meta, reads.flatten()]
         }
-
-    // once FASTP can run without producing reads then fix this logic.
-    FASTP(
-        reads_untrimmed,
-        adapter_fasta,
-        false,
-        false
-    )
-    ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
     reads_trimmed = FASTP.out.reads
         .map{ meta, reads ->
