@@ -62,6 +62,12 @@ include { EXTRACT_DEDUP_FQ                  } from '../subworkflows/local/extrac
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
 include { FUSION                            } from '../subworkflows/local/fusion'
 include { FILLOUT                           } from '../subworkflows/local/fillout'
+include {
+    AMEND_STRAND as AMEND_STRAND_TRIMMED_READS ;
+    AMEND_STRAND as AMEND_STRAND_UNTRIMMED_READS ;
+    AMEND_STRAND as AMEND_STRAND_FASTP
+} from '../subworkflows/local/infer_strand'
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -101,9 +107,30 @@ workflow FORTE {
     ALIGN_READS(
         params.skip_trimming ? PREPROCESS_READS.out.reads_untrimmed : PREPROCESS_READS.out.reads_trimmed,
         PREPARE_REFERENCES.out.star_index,
-        PREPARE_REFERENCES.out.gtf
+        PREPARE_REFERENCES.out.gtf,
+        PREPARE_REFERENCES.out.refflat,
+        params.fasta
+
     )
     ch_versions = ch_versions.mix(ALIGN_READS.out.ch_versions)
+
+    AMEND_STRAND_TRIMMED_READS(
+        PREPROCESS_READS.out.reads_trimmed,
+        ALIGN_READS.out.inferred_strand
+    )
+    reads_trimmed = AMEND_STRAND_TRIMMED_READS.out.amended_ch
+
+    AMEND_STRAND_UNTRIMMED_READS(
+        PREPROCESS_READS.out.reads_untrimmed,
+        ALIGN_READS.out.inferred_strand
+    )
+    reads_untrimmed = AMEND_STRAND_UNTRIMMED_READS.out.amended_ch
+
+    AMEND_STRAND_FASTP(
+        PREPROCESS_READS.out.fastp_json,
+        ALIGN_READS.out.inferred_strand
+    )
+    fastp_json = AMEND_STRAND_FASTP.out.amended_ch
 
     EXTRACT_DEDUP_FQ(
         ALIGN_READS.out.bam
@@ -119,7 +146,7 @@ workflow FORTE {
         PREPARE_REFERENCES.out.gtf,
         EXTRACT_DEDUP_FQ.out.dedup_reads
             .mix(
-                params.skip_trimming ? PREPROCESS_READS.out.reads_untrimmed : PREPROCESS_READS.out.reads_trimmed
+                params.skip_trimming ? reads_untrimmed : reads_trimmed
                     .filter{ meta, reads -> ! ( meta.has_umi && params.dedup_umi_for_kallisto ) }
             ),
         PREPARE_REFERENCES.out.kallisto_index
@@ -127,8 +154,8 @@ workflow FORTE {
     ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
 
     FUSION(
-        PREPROCESS_READS.out.reads_trimmed,
-        PREPROCESS_READS.out.reads_untrimmed,
+        reads_trimmed,
+        reads_untrimmed,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
@@ -177,7 +204,7 @@ workflow FORTE {
     QC_DUP(
         ALIGN_READS.out.bam_withdup,
         ALIGN_READS.out.bai_withdup,
-        PREPROCESS_READS.out.fastp_json
+        fastp_json
             .mix(ALIGN_READS.out.star_log_final)
             .mix(
                 QUANTIFICATION.out.kallisto_log
