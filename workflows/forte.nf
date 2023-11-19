@@ -35,8 +35,9 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK } from '../subworkflows/local/input_check'
-include { BAIT_INPUTS } from '../subworkflows/local/baits'
+include { INPUT_CHECK     } from '../subworkflows/local/input_check'
+include { MAF_INPUT_CHECK } from '../subworkflows/local/input_check'
+include { BAIT_INPUTS     } from '../subworkflows/local/baits'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -59,6 +60,7 @@ include {
 include { EXTRACT_DEDUP_FQ                  } from '../subworkflows/local/extract_dedup_fq'
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
 include { FUSION                            } from '../subworkflows/local/fusion'
+include { FILLOUT                           } from '../subworkflows/local/fillout'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,7 +98,7 @@ workflow FORTE {
     ch_versions = ch_versions.mix(PREPROCESS_READS.out.ch_versions)
 
     ALIGN_READS(
-        PREPROCESS_READS.out.reads,
+        params.skip_trimming ? PREPROCESS_READS.out.reads_untrimmed : PREPROCESS_READS.out.reads_trimmed,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf
     )
@@ -116,7 +118,7 @@ workflow FORTE {
         PREPARE_REFERENCES.out.gtf,
         EXTRACT_DEDUP_FQ.out.dedup_reads
             .mix(
-                PREPROCESS_READS.out.reads
+                params.skip_trimming ? PREPROCESS_READS.out.reads_untrimmed : PREPROCESS_READS.out.reads_trimmed
                     .filter{ meta, reads -> ! ( meta.has_umi && params.dedup_umi_for_kallisto ) }
             ),
         PREPARE_REFERENCES.out.kallisto_index
@@ -124,7 +126,8 @@ workflow FORTE {
     ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
 
     FUSION(
-        PREPROCESS_READS.out.reads,
+        PREPROCESS_READS.out.reads_trimmed,
+        PREPROCESS_READS.out.reads_untrimmed,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
@@ -138,6 +141,20 @@ workflow FORTE {
         workflow.profile.toString().split(",").contains("test") ? [] : PREPARE_REFERENCES.out.arriba_protein_domains
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
+
+    MAF_INPUT_CHECK(
+        params.maf_input,
+        INPUT_CHECK.out.reads.map{ meta, reads -> meta.sample }.unique()
+    )
+
+    FILLOUT(
+        ALIGN_READS.out.bam,
+        ALIGN_READS.out.bai,
+        MAF_INPUT_CHECK.out.mafs,
+        params.fasta,
+        PREPARE_REFERENCES.out.fasta_fai.map{ it[1] }.first()
+    )
+    ch_versions = ch_versions.mix(FILLOUT.out.ch_versions)
 
     QC_DEDUP(
         ALIGN_READS.out.bam_dedup,

@@ -17,6 +17,7 @@ workflow FUSION {
 
     take:
     reads
+    reads_untrimmed
     star_index
     gtf
     starfusion_ref
@@ -78,7 +79,7 @@ workflow FUSION {
     ch_versions = ch_versions.mix(STARFUSION.out.versions.first())
 
     FUSIONCATCHER_DETECT(
-        reads,
+        reads_untrimmed,
         fusioncatcher_ref
     )
     ch_versions = ch_versions.mix(FUSIONCATCHER_DETECT.out.versions.first())
