@@ -7,7 +7,7 @@ on:
 jobs:
   run-tower:
     name: Run AWS tests
-    if: github.repository == 'nf-core/stuffy'
+    if: github.repository == 'mskcc/forte'
     runs-on: ubuntu-latest
     steps:
       # Launch workflow using Tower CLI tool action
@@ -18,10 +18,10 @@ jobs:
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
           revision: ${{ github.sha }}
-          workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/stuffy/work-${{ github.sha }}
+          workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/forte/work-${{ github.sha }}
           parameters: |
             {
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/stuffy/results-test-${{ github.sha }}"
+              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/forte/results-test-${{ github.sha }}"
             }
           profiles: test
 

@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an idea for the nf-core/stuffy pipeline
+description: Suggest an idea for the mskcc/forte pipeline
 labels: enhancement
 body:
   - type: textarea
