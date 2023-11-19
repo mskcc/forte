@@ -19,7 +19,7 @@ workflow INFER_STRAND {
     }
 
     SAMTOOLS_VIEW(
-        bam.small.join(bai,by:[0]),
+        bam.other.join(bai,by:[0]),
         [[:],[]],
         []
     )
