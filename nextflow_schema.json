@@ -254,10 +254,6 @@
         "refflat": {
             "type": "string",
             "default": "None"
-        },
-        "skip_fusion_report": {
-            "type": "boolean",
-            "default": false
         }
     }
 }
