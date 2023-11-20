@@ -9,12 +9,12 @@ Content-Type: text/html; charset=utf-8
 $email_html
 
 --nfcoremimeboundary
-Content-Type: image/png;name="anoronh4-forte_logo.png"
+Content-Type: image/png;name="mskcc-forte_logo.png"
 Content-Transfer-Encoding: base64
 Content-ID: <nfcorepipelinelogo>
-Content-Disposition: inline; filename="anoronh4-forte_logo_light.png"
+Content-Disposition: inline; filename="mskcc-forte_logo_light.png"
 
-<% out << new File("$projectDir/assets/anoronh4-forte_logo_light.png").
+<% out << new File("$projectDir/assets/mskcc-forte_logo_light.png").
     bytes.
     encodeBase64().
     toString().
