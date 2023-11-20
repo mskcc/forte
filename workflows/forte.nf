@@ -51,6 +51,7 @@ include { BAIT_INPUTS     } from '../subworkflows/local/baits'
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS       } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { PREPARE_REFERENCES                } from '../subworkflows/local/prepare_references'
+include { INFER_STRAND                      } from '../subworkflows/local/infer_strand'
 include { PREPROCESS_READS                  } from '../subworkflows/local/preprocess_reads'
 include { ALIGN_READS                       } from '../subworkflows/local/align_reads'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
@@ -92,9 +93,16 @@ workflow FORTE {
     PREPARE_REFERENCES()
     ch_versions = ch_versions.mix(PREPARE_REFERENCES.out.ch_versions)
 
+    INFER_STRAND(
+        INPUT_CHECK.out.reads,
+        PREPARE_REFERENCES.out.star_index,
+        PREPARE_REFERENCES.out.gtf,
+        PREPARE_REFERENCES.out.refflat,
+        params.fasta
+    )
 
     PREPROCESS_READS(
-        INPUT_CHECK.out.reads
+        INFER_STRAND.out.reads
     )
     ch_versions = ch_versions.mix(PREPROCESS_READS.out.ch_versions)
 
