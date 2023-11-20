@@ -21,9 +21,23 @@ custom_data:
           title: "Gene Count"
           format: "{:,.0f}"
           description: "Kallisto: Number of genes with detected expression"
+  assess_strandedness:
+    plot_type: "generalstats"
+    pconfig:
+      - input_strandedness:
+          title: "Input Strandedness"
+          description: "Strandedness entered in input samplesheet"
+      - inferred_strandedness:
+          title: "Inferred Strandedness"
+          description: "Strandedness determined from PICARD_COLLECTRNASEQMETRICS results"
+      - input_strand_correct:
+          title: "Strandedness Correct"
+          description: "Correctness of input strandedness"
 
 sp:
   htseq_expression_genstats:
     fn: "*.htseq.summary.txt"
   kallisto_expression_genstats:
     fn: "*.kallisto.customsummary.txt"
+  assess_strandedness:
+    fn: "*.strandedness.txt"

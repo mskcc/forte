@@ -20,7 +20,7 @@ workflow INFER_STRAND {
 
     reads_branch = reads
         .branch{meta, reads ->
-            auto: meta.strandedness == "auto"
+            auto: meta.auto_strandedness
             other: true
         }
 
@@ -66,7 +66,6 @@ workflow INFER_STRAND {
             }, by:[0]
         ).map{ sample, strand_txt, meta, reads ->
             def new_meta = meta.clone()
-            new_meta["input_strandedness"] = new_meta["strandedness"]
             new_meta["strandedness"] = strand_txt.text.split("\\t")[2]
             [new_meta, reads]
         }.mix( reads_branch.other )

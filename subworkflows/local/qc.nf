@@ -7,6 +7,8 @@ include {
     MULTIQC as MULTIQC_COLLECT
 } from '../../modules/nf-core/multiqc/main'
 include { BAM_RSEQC                   } from '../nf-core/bam_rseqc/main'
+include { EXTRACTSTRAND               } from '../../modules/local/extractstrand/main'
+
 
 workflow QC {
 
@@ -40,6 +42,11 @@ workflow QC {
     )
     ch_versions = ch_versions.mix(PICARD_COLLECTRNASEQMETRICS.out.versions.first())
 
+    EXTRACTSTRAND(
+        PICARD_COLLECTRNASEQMETRICS.out.metrics
+    )
+    ch_versions = ch_versions.mix(EXTRACTSTRAND.out.versions.first())
+
     PICARD_COLLECTHSMETRICS(
         bam
             .filter{ meta, bam ->
@@ -58,6 +65,7 @@ workflow QC {
 
     multiqc_files = multiqc_files
         .mix(PICARD_COLLECTRNASEQMETRICS.out.metrics)
+        .mix(EXTRACTSTRAND.out.strand)
         .mix(PICARD_COLLECTHSMETRICS.out.metrics)
         .mix(BAM_RSEQC.out.bamstat_txt)
         .mix(BAM_RSEQC.out.innerdistance_freq)

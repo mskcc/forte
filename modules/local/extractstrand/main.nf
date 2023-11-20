@@ -11,7 +11,7 @@ process EXTRACTSTRAND {
     tuple val(meta), path(metrics)
 
     output:
-    tuple val(meta), path("*.determination.txt"), emit: strand
+    tuple val(meta), path("*.strandedness.txt"), emit: strand
     path "versions.yml"                       , emit: versions
 
     when:
@@ -36,16 +36,16 @@ process EXTRACTSTRAND {
         determination = "no"
 
     strandedness_correct = True
-    if "${meta.strandedness}" != "auto":
-        if determination == "${meta.strandedness}":
-            strandedness_correct = False
+    if "${meta.strandedness}" == determination:
+        strandedness_correct = False
 
-    with open("${prefix}.determination.txt",'w') as f:
-        f.write("${meta.id}\\t${meta.strandedness}\\t" + determination + "\\t" + str(strandedness_correct) + "\\n")
+    with open("${prefix}.strandedness.txt",'w') as f:
+        f.write("\\tinput_strandedness\\tinferred_strandedness\\tinput_strand_correct\\n")
+        f.write("${meta.id}\\t${meta.auto_strandedness ? "auto" : meta.strandedness}\\t" + determination + "\\t" + str(strandedness_correct) + "\\n")
 
     with open("versions.yml", 'w') as f:
-        f.write("${task.process}:")
-        f.write("    pandas:1.5.2")
+        f.write("${task.process}:\\n")
+        f.write("    pandas: 1.5.2\\n")
     """
 
     stub:
@@ -53,11 +53,11 @@ process EXTRACTSTRAND {
     """
     #!/usr/bin/python
 
-    with open("${prefix}.determination.txt", 'w') as f:
+    with open("${prefix}.strandedness.txt", 'w') as f:
         pass
 
     with open("versions.yml", 'w') as f:
-        f.write("${task.process}:")
-        f.write("    pandas:1.5.2")
+        f.write("${task.process}:\\n")
+        f.write("    pandas:1.5.2\\n")
     """
 }

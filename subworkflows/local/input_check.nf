@@ -53,6 +53,7 @@ def create_fastq_channel(LinkedHashMap row) {
         meta.umi2 = meta.umi2.toInteger() * "N"
     } catch(Exception e) { }
     meta.strandedness = row.strand ? (row.strand.trim() == "" ? "auto" : row.strand.trim()) : "auto"
+    meta.auto_strandedness = meta.strandedness == "auto" ? true : false
     if (! ["yes","no","reverse","auto"].contains(meta.strandedness)){
         exit 1, "ERROR: Please check input samplesheet -> strand value is invalid!\n${row.strand ? row.strand : ""}"
     }
