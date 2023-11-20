@@ -4,8 +4,8 @@ process GETBASECOUNTSMULTISAMPLE {
 
     conda "bioconda::bamtools=2.5.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'cmopipeline/getbasecountsmultisample:1.2.4' :
-        'cmopipeline/getbasecountsmultisample:1.2.4' }"
+        'docker://cmopipeline/getbasecountsmultisample:1.2.4' :
+        'docker://cmopipeline/getbasecountsmultisample:1.2.4' }"
 
     input:
     tuple val(meta), path(bam), path(bai), path(variants)
