@@ -286,6 +286,10 @@
         }
     ],
     "properties": {
+        "maf_input": {
+            "type": "string",
+            "default": null
+        },
         "extract_fq_read_group": {
             "type": "boolean",
             "default": true
@@ -351,7 +355,7 @@
             "default": 1
         },
         "rseqc_modules": {
-            "type": "array",
+            "type": "string",
             "default": "['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication']"
         },
         "dedup_umi_for_kallisto": {
