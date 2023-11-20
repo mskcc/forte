@@ -355,8 +355,8 @@
             "default": 1
         },
         "rseqc_modules": {
-            "type": "string",
-            "default": "['bam_stat', 'inner_distance', 'infer_experiment', 'junction_annotation', 'junction_saturation', 'read_distribution', 'read_duplication']"
+            "type": "array",
+            "default": ["bam_stat", "inner_distance", "infer_experiment", "junction_annotation", "junction_saturation", "read_distribution", "read_duplication"]
         },
         "dedup_umi_for_kallisto": {
             "type": "boolean",
