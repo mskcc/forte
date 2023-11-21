@@ -22,13 +22,13 @@ custom_data:
           format: "{:,.0f}"
           description: "Kallisto: Number of genes with detected expression"
   assess_strandedness:
-    file_format: 'tsv'
-    section_name: 'Strandedness'
+    file_format: "tsv"
+    section_name: "Strandedness"
     description: "Pass/Fail status of sample strandedness based on the input file"
-    plot_type: 'table'
+    plot_type: "table"
     pconfig:
-      id: 'strandedness'
-      namespace: 'strandedness_table'
+      id: "strandedness"
+      namespace: "strandedness_table"
 
 sp:
   htseq_expression_genstats:
