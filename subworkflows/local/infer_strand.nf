@@ -66,7 +66,8 @@ workflow INFER_STRAND {
             }, by:[0]
         ).map{ sample, strand_txt, meta, reads ->
             def new_meta = meta.clone()
-            new_meta["strandedness"] = strand_txt.text.split("\\t")[2]
+            new_meta["strandedness"] = strand_txt.readLines()[1].split("\\t")[2]
+
             [new_meta, reads]
         }.mix( reads_branch.other )
 

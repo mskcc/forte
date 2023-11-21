@@ -11,7 +11,7 @@ process EXTRACTSTRAND {
     tuple val(meta), path(metrics)
 
     output:
-    tuple val(meta), path("*.strandedness.txt"), emit: strand
+    tuple val(meta), path("*.strandedness.tsv"), emit: strand
     path "versions.yml"                       , emit: versions
 
     when:
@@ -25,23 +25,17 @@ process EXTRACTSTRAND {
     import pandas as pd
 
     df = pd.read_csv("${metrics}", skiprows=(lambda x: x not in [6, 7]), sep="\\t")
-    r1_transcript_strand_reads = int(df.iloc[0]['NUM_R1_TRANSCRIPT_STRAND_READS'])
-    r2_transcript_strand_reads = int(df.iloc[0]['NUM_R2_TRANSCRIPT_STRAND_READS'])
+    df = df.drop(columns = [col for col in list(df) if col not in ['NUM_R1_TRANSCRIPT_STRAND_READS','NUM_R2_TRANSCRIPT_STRAND_READS']])
 
-    if r1_transcript_strand_reads/3 > r2_transcript_strand_reads:
-        determination = "yes"
-    elif r2_transcript_strand_reads/3 > r1_transcript_strand_reads:
-        determination = "reverse"
-    else:
-        determination = "no"
+    df['input_strandedness']    = "${meta.auto_strandedness ? "auto" : meta.strandedness}"
+    df['inferred_strandedness'] = df.apply(lambda row: "yes" if row['NUM_R1_TRANSCRIPT_STRAND_READS']/3 >= row['NUM_R2_TRANSCRIPT_STRAND_READS'] else "reverse" if row['NUM_R2_TRANSCRIPT_STRAND_READS']/3 >= row['NUM_R1_TRANSCRIPT_STRAND_READS'] else "no", axis=1)
+    df['input_strand_correct']  = df.apply(lambda row: True if "${meta.strandedness}" == row["inferred_strandedness"] else False, axis=1)
+    df.index                    = ['${meta.id}']
 
-    strandedness_correct = True
-    if "${meta.strandedness}" == determination:
-        strandedness_correct = False
+    desired_column_order = ['input_strandedness', 'inferred_strandedness', 'input_strand_correct','NUM_R1_TRANSCRIPT_STRAND_READS','NUM_R2_TRANSCRIPT_STRAND_READS']
+    df = df[desired_column_order]
 
-    with open("${prefix}.strandedness.txt",'w') as f:
-        f.write("\\tinput_strandedness\\tinferred_strandedness\\tinput_strand_correct\\n")
-        f.write("${meta.id}\\t${meta.auto_strandedness ? "auto" : meta.strandedness}\\t" + determination + "\\t" + str(strandedness_correct) + "\\n")
+    df.to_csv("${prefix}.strandedness.tsv",sep="\\t", index=True)
 
     with open("versions.yml", 'w') as f:
         f.write("${task.process}:\\n")
