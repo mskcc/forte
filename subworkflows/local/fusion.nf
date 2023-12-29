@@ -9,7 +9,7 @@ include { TO_CFF as ARRIBA_TO_CFF           } from '../../modules/local/convert_
 include { TO_CFF as FUSIONCATCHER_TO_CFF    } from '../../modules/local/convert_to_cff/main'
 include { TO_CFF as STARFUSION_TO_CFF       } from '../../modules/local/convert_to_cff/main'
 include { CAT_CAT as MERGE_CFF              } from '../../modules/nf-core/cat/cat/main'
-include { METAFUSION                        } from '../../modules/local/metafusion/main'
+include { METAFUSION_RUN                    } from '../../modules/local/metafusion/run/main'
 include { ADD_FLAG                          } from '../../modules/local/add_flags/main'
 include { CFF_ANNOTATE as CFF_FINALIZE      } from '../../modules/local/cff_annotate/main'
 
@@ -25,6 +25,7 @@ workflow FUSION {
     agfusion_db
     pyensembl_cache
     gene_bed
+    gene_info
     blocklist
     arriba_blacklist
     arriba_known_fusions
@@ -34,7 +35,7 @@ workflow FUSION {
     ch_versions = Channel.empty()
     fasta = params.fasta
     //gene_bed = params.metafusion_gene_bed
-    gene_info = params.metafusion_gene_info
+    //gene_info = params.metafusion_gene_info
     //blocklist = params.metafusion_blocklist
 
     STAR_FOR_ARRIBA(

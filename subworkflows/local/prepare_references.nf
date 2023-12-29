@@ -15,7 +15,9 @@ include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatch
 include { ARRIBA_DOWNLOAD                } from '../../modules/local/arriba/download/main'
 include { KALLISTO_INDEX                 } from '../../modules/nf-core/kallisto/index/main'
 include { AGFUSION_DOWNLOAD              } from '../../modules/local/agfusion/download/main'
-
+include { AGAT_SPADDINTRONS              } from '../../modules/local/agat/spaddintrons/main'
+include { METAFUSION_GENEBED             } from '../../modules/local/metafusion/genebed/main'
+include { METAFUSION_GENEINFO            } from '../../modules/local/metafusion/geneinfo/main'
 
 workflow PREPARE_REFERENCES {
 
@@ -34,13 +36,6 @@ workflow PREPARE_REFERENCES {
         metafusion_blocklist = GUNZIP_METAFUSIONBLOCKLIST.out.gunzip.map{ it[1] }.first()
     } else {
         metafusion_blocklist = params.metafusion_blocklist
-    }
-
-    if (params.metafusion_gene_bed.endsWith(".gz")){
-        GUNZIP_METAFUSIONGENEBED([[:],params.metafusion_gene_bed])
-        metafusion_gene_bed = GUNZIP_METAFUSIONGENEBED.out.gunzip.map{ it[1] }.first()
-    } else {
-        metafusion_gene_bed = params.metafusion_gene_bed
     }
 
     STAR_GENOMEGENERATE(params.fasta,gtf)
@@ -87,10 +82,20 @@ workflow PREPARE_REFERENCES {
         fusioncatcher_ref = Channel.empty()
     }
 
-    //cosmic_usr = params.cosmic_usr ?: ""
-    //cosmic_passwd = params.cosmic_passwd ?: ""
-
     ARRIBA_DOWNLOAD()
+
+    AGAT_SPADDINTRONS(
+        [[:],gtf],
+        []
+    )
+
+    METAFUSION_GENEBED(
+        AGAT_SPADDINTRONS.out.gff
+    )
+
+    METAFUSION_GENEINFO(
+        [[:],gtf, starfusion_ref,fusioncatcher_ref]
+    )
 
     AGFUSION_DOWNLOAD(
         params.ensembl_version,
@@ -118,7 +123,8 @@ workflow PREPARE_REFERENCES {
     agfusion_db        = AGFUSION_DOWNLOAD.out.agfusion_db
     pyensembl_cache    = AGFUSION_DOWNLOAD.out.pyensembl_cache
     metafusion_blocklist = metafusion_blocklist
-    metafusion_gene_bed = metafusion_gene_bed
+    metafusion_gene_bed = METAFUSION_GENEBED.out.metafusion_gene_bed
+    metafusion_gene_info = METAFUSION_GENEINFO.out.metafusion_gene_info
     arriba_blacklist   = ARRIBA_DOWNLOAD.out.blacklist
     arriba_known_fusions = ARRIBA_DOWNLOAD.out.known_fusions
     arriba_protein_domains = ARRIBA_DOWNLOAD.out.protein_domains
