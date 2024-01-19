@@ -28,6 +28,7 @@ params.metafusion_blocklist   = WorkflowMain.getGenomeAttribute(params, 'metafus
 params.metafusion_gene_bed    = WorkflowMain.getGenomeAttribute(params, 'metafusion_gene_bed')
 params.metafusion_gene_info   = WorkflowMain.getGenomeAttribute(params, 'metafusion_gene_info')
 params.ensembl_version        = WorkflowMain.getGenomeAttribute(params, 'ensembl_version')
+params.clinicalgenes      = WorkflowMain.getGenomeAttribute(params, 'clinicalgenes')
 
 
 /*

@@ -12,6 +12,7 @@ process METAFUSION {
     path info
     path fasta
     path blocklist
+    path clinicalgenes
 
     output:
     tuple val(meta), path("*final*cluster")             , emit: cluster
@@ -36,6 +37,7 @@ process METAFUSION {
         --gene_info $info \\
         --genome_fasta $fasta \\
         --recurrent_bedpe $blocklist \\
+        --clinical_genes $clinicalgenes \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
