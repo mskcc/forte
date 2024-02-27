@@ -5,8 +5,8 @@ process ONCOKB_FUSIONANNOTATOR {
     // Note: 2.7X indices incompatible with AWS iGenomes.
     //conda "shahcompbio::oncokb-annotator=2.3.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'cmopipeline/oncokb-annotator:0.0.1' :
-        'cmopipeline/oncokb-annotator:0.0.1' }"
+        'docker://cmopipeline/oncokb-annotator:0.0.1' :
+        'docker://cmopipeline/oncokb-annotator:0.0.1' }"
 
     input:
     tuple val(meta), path(cff)
