@@ -5,7 +5,7 @@ process AGFUSION_DOWNLOAD {
     conda 'bioconda::agfusion=1.252'
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'docker://cmopipeline/agfusion:0.0.6' :
-        'docker://cmopipeline/agfusion:0.0.6' }"
+        'docker.io/cmopipeline/agfusion:0.0.6' }"
 
     input:
     val(ensembl_release)
