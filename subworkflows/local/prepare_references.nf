@@ -15,7 +15,7 @@ include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatch
 include { ARRIBA_DOWNLOAD                } from '../../modules/local/arriba/download/main'
 include { KALLISTO_INDEX                 } from '../../modules/nf-core/kallisto/index/main'
 include { AGFUSION_DOWNLOAD              } from '../../modules/local/agfusion/download/main'
-include { AGAT_SPADDINTRONS              } from '../../modules/local/agat/spaddintrons/main'
+include { AGAT_SPADDINTRONS              } from '../../modules/nf-core/agat/spaddintrons/main'
 include { METAFUSION_GENEBED             } from '../../modules/local/metafusion/genebed/main'
 include { METAFUSION_GENEINFO            } from '../../modules/local/metafusion/geneinfo/main'
 
