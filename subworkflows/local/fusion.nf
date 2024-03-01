@@ -109,7 +109,7 @@ workflow FUSION {
             ).groupTuple(by:[0],size:numcallers),
     )
 
-    METAFUSION(
+    METAFUSION_RUN(
         MERGE_CFF.out.file_out,
         gene_bed,
         gene_info,
@@ -118,11 +118,11 @@ workflow FUSION {
     )
 
     ADD_FLAG(
-        METAFUSION.out.cluster
-            .join(METAFUSION.out.cis, by:0)
-            .join(METAFUSION.out.cff, by:0)
-            .join(METAFUSION.out.problem_chrom, by:0)
-            .join(METAFUSION.out.filters, by:0)
+        METAFUSION_RUN.out.cluster
+            .join(METAFUSION_RUN.out.cis, by:0)
+            .join(METAFUSION_RUN.out.cff, by:0)
+            .join(METAFUSION_RUN.out.problem_chrom, by:0)
+            .join(METAFUSION_RUN.out.filters, by:0)
     )
 
     ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.unfiltered_cff)
