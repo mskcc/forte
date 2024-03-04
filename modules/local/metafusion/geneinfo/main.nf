@@ -8,7 +8,9 @@ process METAFUSION_GENEINFO {
         'ghcr.io/rocker-org/devcontainer/tidyverse:4' }"
 
     input:
-    tuple val(meta), path(gtf), path(starfusion_ref), path(fusioncatcher_ref)
+    tuple val(meta), path(gtf)
+    path(starfusion_ref)
+    path(fusioncatcher_ref)
 
     output:
     tuple val(meta), path("gene.info"), emit: metafusion_gene_info

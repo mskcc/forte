@@ -94,7 +94,7 @@ workflow PREPARE_REFERENCES {
     )
 
     METAFUSION_GENEINFO(
-        [[:],gtf, starfusion_ref,fusioncatcher_ref]
+        [[:],gtf], starfusion_ref,fusioncatcher_ref
     )
 
     AGFUSION_DOWNLOAD(
