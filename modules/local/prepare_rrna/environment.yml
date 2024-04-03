@@ -1,0 +1,8 @@
+name: gawk
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - anaconda::gawk=5.1.0
+  - bioconda::grep=3.4
