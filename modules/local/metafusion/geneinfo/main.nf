@@ -4,8 +4,8 @@ process METAFUSION_GENEINFO {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/rocker-org/devcontainer/tidyverse:4':
-        'ghcr.io/rocker-org/devcontainer/tidyverse:4' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-28e4eeae4055c6901c8218fe9e55d342d59035ef:0b59d552b4c1c8b2845385236f1053a7e1fb80c6-0' :
+        'quay.io/biocontainers/mulled-v2-28e4eeae4055c6901c8218fe9e55d342d59035ef:0b59d552b4c1c8b2845385236f1053a7e1fb80c6-0' }"
 
     input:
     tuple val(meta), path(gtf)
