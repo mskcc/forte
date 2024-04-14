@@ -111,8 +111,8 @@ workflow FUSION {
 
     METAFUSION_RUN(
         MERGE_CFF.out.file_out,
-        gene_bed,
-        gene_info,
+        gene_bed.map{ it[1] }.first(),
+        gene_info.map{ it[1] }.first(),
         fasta,
         blocklist
     )
