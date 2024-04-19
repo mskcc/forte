@@ -1,5 +1,5 @@
 - name: run_test_profile
-  command: nextflow run ./main.nf -profile test,singularity -c ./tests/nextflow.config
+  command: nextflow run ./main.nf -profile test,singularity -c ./tests/nextflow.config -c ./tests/small_test/nextflow.config
   tags:
     - test_profile
   files:

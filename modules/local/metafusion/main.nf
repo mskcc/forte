@@ -3,8 +3,8 @@ process METAFUSION {
     label "process_low"
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'cmopipeline/metafusion:0.0.6' :
-        'cmopipeline/metafusion:0.0.6' }"
+        'docker://cmopipeline/metafusion:0.0.7' :
+        'docker://cmopipeline/metafusion:0.0.7' }"
 
     input:
     tuple val(meta), path(cff)
@@ -12,6 +12,7 @@ process METAFUSION {
     path info
     path fasta
     path blocklist
+    path clinicalgenes
 
     output:
     tuple val(meta), path("*final*cluster")             , emit: cluster
@@ -36,6 +37,7 @@ process METAFUSION {
         --gene_info $info \\
         --genome_fasta $fasta \\
         --recurrent_bedpe $blocklist \\
+        --clinical_genes $clinicalgenes \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml

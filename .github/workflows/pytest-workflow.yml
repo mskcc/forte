@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tags: ["test_profile"]
+        tags: ["test_profile", "test_fillouts"]
         profile: ["singularity"]
     env:
       NXF_ANSI_LOG: false
@@ -59,7 +59,7 @@ jobs:
       # Test the module
       - name: Run pytest-workflow
         # only use one thread for pytest-workflow to avoid race condition on conda cache.
-        run: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.tags }} --symlink --kwdof --git-aware --color=yes
+        run: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.tags }} --kwdof --git-aware --color=yes
 
       - name: Output log on failure
         if: failure()
