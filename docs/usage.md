@@ -55,12 +55,13 @@ the following is a description of each field that can be used. Fields that do no
 | :--------- | :---------- | :---------------------- | :------- |
 | sample     | `str`       |                         | (none)   |
 | single_end | `bool`      | `true`/`false`          | `false`  |
-| umi        | `str`/`int` | `NNNXX`/`3`             | `''`     |
-| umi2       | `str`/`int` | `NNNXX`/`3`             | `''`     |
+| umi        | `str`/`int` |                         | `''`     |
+| umi2       | `str`/`int` |                         | `''`     |
 | strand     | `str`       | `yes`/`no`/`reverse`    | `no`     |
 | bait       | `str`       | `idt_v2/idt_v1/agilent` | `''`     |
 | fastq_1    | `str`       | `/path/to/*fastq.gz`    | (none)   |
 | fastq_2    | `str`       | `/path/to/*fastq.gz`    | (none)   |
+
 
 ### MAF Samplesheet
 
