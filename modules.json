@@ -2,6 +2,17 @@
     "name": "mskcc/forte",
     "homePage": "https://github.com/mskcc/forte",
     "repos": {
+        "git@github.com:mskcc-omics-workflows/modules.git": {
+            "modules": {
+                "msk": {
+                    "gbcms": {
+                        "branch": "develop",
+                        "git_sha": "e70681357ccd39e7a10d328ca696c074750d8163",
+                        "installed_by": ["modules"]
+                    }
+                }
+            }
+        },
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
