@@ -6,8 +6,8 @@
             "modules": {
                 "msk": {
                     "gbcms": {
-                        "branch": "main",
-                        "git_sha": "89a863f0533911134095323ac28ca44d3e3d303d",
+                        "branch": "develop",
+                        "git_sha": "e70681357ccd39e7a10d328ca696c074750d8163",
                         "installed_by": ["modules"]
                     }
                 }
