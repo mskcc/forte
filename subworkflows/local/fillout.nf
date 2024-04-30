@@ -1,7 +1,6 @@
-
-include { GETBASECOUNTSMULTISAMPLE } from '../../modules/local/getbasecountsmultisample/main'
-include { COMBINE_FILLOUTS         } from '../../modules/local/combine_fillout_maf/main'
-include { MAF_REFORMAT             } from '../../modules/local/reformat_fillout_maf/main'
+include { GBCMS            } from '../../modules/msk/gbcms/main'
+include { COMBINE_FILLOUTS } from '../../modules/local/combine_fillout_maf/main'
+include { MAF_REFORMAT     } from '../../modules/local/reformat_fillout_maf/main'
 
 workflow FILLOUT {
 
@@ -26,17 +25,21 @@ workflow FILLOUT {
     MAF_REFORMAT(maf_ch)
     ch_versions = ch_versions.mix(MAF_REFORMAT.out.versions.first())
 
-    GETBASECOUNTSMULTISAMPLE(
+    GBCMS(
         bam
             .combine(bai,by:[0])
-            .combine(MAF_REFORMAT.out.maf,by:[0]),
+            .combine(MAF_REFORMAT.out.maf,by:[0])
+            .map{ meta, bam, bai, variants ->
+                [ meta, bam, bai, variants, "${variants.getBaseName()}.gbcms.maf"]
+            },
         fasta,
         fai
+
     )
-    ch_versions = ch_versions.mix(GETBASECOUNTSMULTISAMPLE.out.versions.first())
+    ch_versions = ch_versions.mix(GBCMS.out.versions.first())
 
     COMBINE_FILLOUTS(
-        GETBASECOUNTSMULTISAMPLE.out.maf
+        GBCMS.out.variant_file
             .combine(maf_ch,by:[0])
     )
     ch_versions = ch_versions.mix(COMBINE_FILLOUTS.out.versions.first())

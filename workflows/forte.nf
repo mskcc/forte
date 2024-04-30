@@ -135,6 +135,7 @@ workflow FORTE {
         PREPARE_REFERENCES.out.agfusion_db,
         PREPARE_REFERENCES.out.pyensembl_cache,
         PREPARE_REFERENCES.out.metafusion_gene_bed,
+        PREPARE_REFERENCES.out.metafusion_gene_info,
         PREPARE_REFERENCES.out.metafusion_blocklist,
         workflow.profile.toString().split(",").contains("test") ? [] : PREPARE_REFERENCES.out.arriba_blacklist,
         workflow.profile.toString().split(",").contains("test") ? [] : PREPARE_REFERENCES.out.arriba_known_fusions,

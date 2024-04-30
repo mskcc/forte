@@ -5,7 +5,7 @@ process COUNT_FEATURES {
 /// must be using singularity 3.7+
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bioconductor-rtracklayer:1.60.0--r43ha9d7317_0' :
-        'https://depot.galaxyproject.org/singularity/bioconductor-rtracklayer:1.60.0--r43ha9d7317_0' }"
+        'biocontainers/bioconductor-rtracklayer:1.60.0--r43ha9d7317_0' }"
 
     input:
     tuple val(meta), path(abundance)
