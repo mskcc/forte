@@ -16,6 +16,11 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "agat/spaddintrons": {
+                        "branch": "master",
+                        "git_sha": "6898156da3604a6bdf26c36036053a970050fea0",
+                        "installed_by": ["modules"]
+                    },
                     "arriba": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",

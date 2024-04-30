@@ -21,3 +21,5 @@ RUN conda clean -afy \
     && find /opt/conda/ -follow -type f -name '*.pyc' -delete \
     && find /opt/conda/ -follow -type f -name '*.js.map' -delete
 
+ENTRYPOINT []
+

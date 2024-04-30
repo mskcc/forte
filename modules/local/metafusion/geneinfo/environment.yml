@@ -1,0 +1,16 @@
+name: metafusion_geneinfo
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+  - r
+dependencies:
+  - "conda-forge::r-base=4.3.3"
+  - "bioconda::bioconductor-rtracklayer=1.62.0"
+  - "conda-forge::r-optparse=1.7.4"
+  - "conda-forge::r-dplyr=1.1.4"
+  - "conda-forge::r-stringr=1.5.1"
+  - "conda-forge::r-plyr=1.8.9"
+  - "conda-forge::r-data.table=1.15.2"
+  - "conda-forge::coreutils=9.5"
+  - "r::r-argparse=2.2.2"

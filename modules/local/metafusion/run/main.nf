@@ -1,4 +1,4 @@
-process METAFUSION {
+process METAFUSION_RUN {
     tag "$meta.id"
     label "process_low"
 

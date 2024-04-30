@@ -1,5 +1,5 @@
-#!/usr/local/bin/Rscript
 
+#!/usr/local/bin/Rscript
 # __author__      = "Alexandria Dymun"
 # __email__       = "pintoa1@mskcc.org"
 # __contributor__ = "Anne Marie Noronha (noronhaa@mskcc.org)"
@@ -8,7 +8,7 @@
 
 
 suppressPackageStartupMessages({
-#    library(plyr)
+    library(plyr)
     library(dplyr)
     library(data.table)
     library(stringr)

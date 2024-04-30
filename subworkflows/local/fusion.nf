@@ -9,7 +9,7 @@ include { TO_CFF as ARRIBA_TO_CFF           } from '../../modules/local/convert_
 include { TO_CFF as FUSIONCATCHER_TO_CFF    } from '../../modules/local/convert_to_cff/main'
 include { TO_CFF as STARFUSION_TO_CFF       } from '../../modules/local/convert_to_cff/main'
 include { CAT_CAT as MERGE_CFF              } from '../../modules/nf-core/cat/cat/main'
-include { METAFUSION                        } from '../../modules/local/metafusion/main'
+include { METAFUSION_RUN                    } from '../../modules/local/metafusion/run/main'
 include { ADD_FLAG                          } from '../../modules/local/add_flags/main'
 include { CFF_ANNOTATE as CFF_FINALIZE      } from '../../modules/local/cff_annotate/main'
 
@@ -25,6 +25,7 @@ workflow FUSION {
     agfusion_db
     pyensembl_cache
     gene_bed
+    gene_info
     blocklist
     arriba_blacklist
     arriba_known_fusions
@@ -34,7 +35,7 @@ workflow FUSION {
     ch_versions = Channel.empty()
     fasta = params.fasta
     //gene_bed = params.metafusion_gene_bed
-    gene_info = params.metafusion_gene_info
+    //gene_info = params.metafusion_gene_info
     //blocklist = params.metafusion_blocklist
 
     STAR_FOR_ARRIBA(
@@ -108,20 +109,20 @@ workflow FUSION {
             ).groupTuple(by:[0],size:numcallers),
     )
 
-    METAFUSION(
+    METAFUSION_RUN(
         MERGE_CFF.out.file_out,
-        gene_bed,
-        gene_info,
+        gene_bed.map{ it[1] }.first(),
+        gene_info.map{ it[1] }.first(),
         fasta,
         blocklist
     )
 
     ADD_FLAG(
-        METAFUSION.out.cluster
-            .join(METAFUSION.out.cis, by:0)
-            .join(METAFUSION.out.cff, by:0)
-            .join(METAFUSION.out.problem_chrom, by:0)
-            .join(METAFUSION.out.filters, by:0)
+        METAFUSION_RUN.out.cluster
+            .join(METAFUSION_RUN.out.cis, by:0)
+            .join(METAFUSION_RUN.out.cff, by:0)
+            .join(METAFUSION_RUN.out.problem_chrom, by:0)
+            .join(METAFUSION_RUN.out.filters, by:0)
     )
 
     ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.unfiltered_cff)
@@ -150,7 +151,7 @@ workflow FUSION {
         )
     }
     ch_versions = ch_versions.mix(ADD_FLAG.out.versions.first())
-    ch_versions = ch_versions.mix(METAFUSION.out.versions.first())
+    ch_versions = ch_versions.mix(METAFUSION_RUN.out.versions.first())
     ch_versions = ch_versions.mix(ARRIBA_TO_CFF.out.versions.first())
     ch_versions = ch_versions.mix(FUSIONCATCHER_TO_CFF.out.versions.first())
     ch_versions = ch_versions.mix(STARFUSION_TO_CFF.out.versions.first())
