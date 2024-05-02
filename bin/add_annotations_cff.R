@@ -80,7 +80,7 @@ if (!is.null(oncokb_file)){
         all.y=F
     )
 }
-### merge 
+### merge
 cff <- merge(
     cff,
     transcripts,
