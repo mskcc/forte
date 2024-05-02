@@ -16,21 +16,12 @@ suppressPackageStartupMessages({
 
 usage <- function() {
     message("Usage:")
-<<<<<<< Updated upstream
-    message("final_generate_v75_gene_bed.R <in.gff> <out.bed>")
-}
-
-args = commandArgs(TRUE)
-
-if (length(args)!=2) {
-=======
     message("final_generate_v75_gene_bed.R <in.gff> <transcripts.txt> <out.bed>")
 }
 
 args = commandArgs(TRUE)
 
 if (length(args)!=3) {
->>>>>>> Stashed changes
     usage()
     quit()
 }

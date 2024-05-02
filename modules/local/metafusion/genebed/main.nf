@@ -9,6 +9,7 @@ process METAFUSION_GENEBED {
 
     input:
     tuple val(meta), path(gff)
+    path(transcripts)
 
     output:
     tuple val(meta), path("*.metafusion.gene.bed"), emit: metafusion_gene_bed
@@ -23,6 +24,7 @@ process METAFUSION_GENEBED {
     """
     final_generate_v75_gene_bed.R \\
         $gff \\
+        $transcripts \\
         ${prefix}.metafusion.gene.bed
 
     cat <<-END_VERSIONS > versions.yml
