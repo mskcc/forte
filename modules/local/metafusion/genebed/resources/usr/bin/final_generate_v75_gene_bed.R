@@ -16,12 +16,12 @@ suppressPackageStartupMessages({
 
 usage <- function() {
     message("Usage:")
-    message("final_generate_v75_gene_bed.R <in.gff> <transcripts.txt> <out.bed>")
+    message("final_generate_v75_gene_bed.R <in.gff> <out.bed>")
 }
 
 args = commandArgs(TRUE)
 
-if (length(args)!=3) {
+if (length(args)!=2) {
     usage()
     quit()
 }
@@ -37,13 +37,8 @@ gtf <- rtracklayer::import(args[1])
 gtf_df <- as.data.frame(gtf)
 #remove incomplete transcripts mRNA_end_NF and mRNA_start_NF (not finished)
 gtf_df <- gtf_df[!grepl("NF",gtf_df$tag),]
-#Add transcript version corresponding to gtf ensembl version
-transcripts <- read.delim(args[2],header = F)
-transcripts <- transcripts[,c("V15","V16")]
-gtf_df <- merge(gtf_df, transcripts, by.x = "transcript_id",by.y = "V15")
-gtf_df$transcript_id <- paste0(gtf_df$transcript_id,".",gtf_df$V16)
 
-file.to_write <- args[3]
+file.to_write <- args[2]
 
 gtf_df <- gtf_df %>%
     rename(
