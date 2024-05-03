@@ -27,7 +27,6 @@
 
 2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) (you can follow [this tutorial](https://singularity-tutorial.github.io/01-installation/)), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(you can use [`Conda`](https://conda.io/miniconda.html) both to install Nextflow itself and also to manage software within pipelines. Please only use it within pipelines as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_.
 
-
 3. Clone the pipeline repository and test it on a minimal dataset with the following steps:
 
    ```bash
@@ -35,7 +34,6 @@
    ```
 
    Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
-
 
 :::note
 If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
@@ -45,7 +43,6 @@ with `-profile test` before running the workflow on actual data.
 
 Now, you can run the pipeline using:
 
-
 ```bash
 git clone git@github.com:mskcc/forte.git
 nextflow run forte/main.nf \
@@ -53,7 +50,6 @@ nextflow run forte/main.nf \
    --input samplesheet.csv \
    --outdir <OUTDIR>
 ```
-
 
 :::warning
 Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
