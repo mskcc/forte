@@ -81,7 +81,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 </details>
 
-[featureCounts]([https://htseq.readthedocs.io/en/master/htseqcount.html](https://subread.sourceforge.net/featureCounts.html)) takes a file with aligned sequencing reads, plus a list of genomic features and counts how many reads map to each feature.
+[featureCounts](<[https://htseq.readthedocs.io/en/master/htseqcount.html](https://subread.sourceforge.net/featureCounts.html)>) takes a file with aligned sequencing reads, plus a list of genomic features and counts how many reads map to each feature.
 
 [Kallisto](http://pachterlab.github.io/kallisto/) quantifies abundances of transcripts from RNA-Seq data using high-throughput sequencing reads.
 
