@@ -80,6 +80,15 @@ if (!is.null(oncokb_file)){
         all.y=F
     )
 }
+
+cff <- merge(
+    cff,
+    agfusion_tab,
+    by.x = c("gene5_transcript_id","gene3_transcript_id","gene5_breakpoint","gene3_breakpoint"),
+    by.y = c("5'_transcript","3'_transcript","5'_breakpoint","3'_breakpoint"),
+    all.x = T,
+    all.y = T
+)
 ### merge
 cff <- merge(
     cff,
@@ -100,15 +109,6 @@ cff <- merge(
 
 cff$gene5_transcript_id <- paste0(cff$gene5_transcript_id,".",cff$V16)
 cff$V16 <- NULL
-
-cff <- merge(
-    cff,
-    agfusion_tab,
-    by.x = c("gene5_transcript_id","gene3_transcript_id","gene5_breakpoint","gene3_breakpoint"),
-    by.y = c("5'_transcript","3'_transcript","5'_breakpoint","3'_breakpoint"),
-    all.x = T,
-    all.y = T
-)
 
 cff <- as.data.frame(cff)[,c(final_cff_cols)]
 #cff <- cff %>% mutate(!!final_cff_cols[34] := Fusion_effect) %>% select(-c(Fusion_effect))
