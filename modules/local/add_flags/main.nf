@@ -9,6 +9,7 @@ process ADD_FLAG {
 
     input:
     tuple val(meta), path(cluster), path(cis), path(cff), path(problem_chrom), path(filters)
+    path(clinicalgenes)
 
     output:
     tuple val(meta), path("*_metafusion_cluster.unfiltered.cff"), emit: unfiltered_cff
@@ -26,7 +27,8 @@ process ADD_FLAG {
         $cis \\
         $problem_chrom \\
         $filters \\
-        $sample
+        $sample \\
+        $clinicalgenes
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

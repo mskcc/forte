@@ -124,7 +124,8 @@ workflow FUSION {
             .join(METAFUSION_RUN.out.cis, by:0)
             .join(METAFUSION_RUN.out.cff, by:0)
             .join(METAFUSION_RUN.out.problem_chrom, by:0)
-            .join(METAFUSION_RUN.out.filters, by:0)
+            .join(METAFUSION_RUN.out.filters, by:0),
+        clinicalgenes
     )
 
     ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.unfiltered_cff)

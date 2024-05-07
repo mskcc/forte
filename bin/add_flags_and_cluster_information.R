@@ -2,7 +2,7 @@
 # __author__      = "Alexandria Dymun"
 # __email__       = "pintoa1@mskcc.org"
 # __contributor__ = "Anne Marie Noronha (noronhaa@mskcc.org)"
-# __version__     = "0.0.1"
+# __version__     = "0.0.2"
 # __status__      = "Dev"
 
 
@@ -10,9 +10,9 @@
 library(dplyr)
 library(data.table)
     args <- commandArgs(TRUE)
-    if (length(args) != 6) {
+    if (length(args) != 7) {
         stop(
-            "6 arguments are required as input in the following order: unfiltered_cff cluster_file cis_sage_file problematic_chromosomes_file filters_table sample_name"
+            "7 arguments are required as input in the following order: unfiltered_cff cluster_file cis_sage_file problematic_chromosomes_file filters_table sample_name clinicalgenes"
         )
     }
 
@@ -198,4 +198,8 @@ library(data.table)
     quote = F,
     sep = "\t"
     )
+
+    clinicalgenes <- fread(args[7], data.table = F)
+
+    clinical_cff <- unfiltered_cff[unfiltered_cff$]
 
