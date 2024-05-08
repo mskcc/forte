@@ -16,6 +16,7 @@ include { ARRIBA_DOWNLOAD                } from '../../modules/local/arriba/down
 include { KALLISTO_INDEX                 } from '../../modules/nf-core/kallisto/index/main'
 include { AGFUSION_DOWNLOAD              } from '../../modules/local/agfusion/download/main'
 include { AGAT_SPADDINTRONS              } from '../../modules/nf-core/agat/spaddintrons/main'
+include { BEDOPS_GFF2BED                 } from '../../modules/local/bedops/gff2bed/main'
 include { METAFUSION_GENEBED             } from '../../modules/local/metafusion/genebed/main'
 include { METAFUSION_GENEINFO            } from '../../modules/local/metafusion/geneinfo/main'
 
@@ -92,8 +93,13 @@ workflow PREPARE_REFERENCES {
         []
     )
 
-    METAFUSION_GENEBED(
+    BEDOPS_GFF2BED(
         AGAT_SPADDINTRONS.out.gff
+    )
+
+    METAFUSION_GENEBED(
+        [[:],gtf],
+        BEDOPS_GFF2BED.out.bed
     )
 
     METAFUSION_GENEINFO(

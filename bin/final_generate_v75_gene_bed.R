@@ -16,12 +16,12 @@ suppressPackageStartupMessages({
 
 usage <- function() {
     message("Usage:")
-    message("final_generate_v75_gene_bed.R <in.gff> <out.bed>")
+    message("final_generate_v75_gene_bed.R <in.gtf> <in.bed> <out.bed>")
 }
 
 args = commandArgs(TRUE)
 
-if (length(args)!=2) {
+if (length(args)!=3) {
     usage()
     quit()
 }
@@ -38,12 +38,15 @@ gtf_df <- as.data.frame(gtf)
 #remove incomplete transcripts mRNA_end_NF and mRNA_start_NF (not finished)
 gtf_df <- gtf_df[!grepl("NF",gtf_df$tag),]
 
-file.to_write <- args[2]
+total.introns.bed <- fread(file=args[2], header = FALSE, stringsAsFactors = F, sep="\t", na.strings = "",data.table = F)
+colnames(total.introns.bed) <- c("chr","start","end","gene_id","tmp","strand","gene_biotype","type","V9","description")
+total.introns.bed$transcript_id <- gsub("\\;.*","",str_split_fixed(total.introns.bed$description,"transcript_id=",n=2)[,2])
+total.introns.bed$gene_name <-gsub("\\;.*","",str_split_fixed(total.introns.bed$description,"gene_name=",n=2)[,2])
+total.introns.bed <- total.introns.bed[total.introns.bed$transcript_id %in% gtf_df$transcript_id,]
 
-gtf_df <- gtf_df %>%
-    rename(
-        chr = seqnames
-    ) %>%
+file.to_write <- args[3]
+
+total.introns.bed <- total.introns.bed %>%
     select(c(chr, start, end, transcript_id, type, strand, gene_name, gene_id)) %>%
     filter(type %in% c("exon","intron","UTR","CDS","cds","utr"))
 
@@ -57,8 +60,8 @@ print(ptm)
 ## Forward strand: Exon 0 == Exon 1
 ### Reverse strand: Exon 0 == LAST EXON IN TRANSCRIPT
 
-print(dim(gtf_df))
-print(length(unique(gtf_df$transcript_id)))
+print(dim(total.introns.bed))
+print(length(unique(total.introns.bed$transcript_id)))
 
 modify_transcript <- function(transcript){
 
@@ -122,11 +125,11 @@ modify_transcript <- function(transcript){
 
 if(file.exists(file.to_write) ) {file.remove(file.to_write)}
 
-gtf_df_modified <- gtf_df %>%
+gtf_df_modified <- total.introns.bed %>%
     group_by(transcript_id,.drop = FALSE) %>%
     group_modify(~ modify_transcript(.x)) %>%
     select(c(chr, start, end, transcript_id, type, idx, strand, gene_name, gene_id )) %>%
-    arrange(chr,start,end)
+    arrange(chr,start,end, .by_group = T)
 
 time <- proc.time() - ptm
 print(time)
