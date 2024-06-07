@@ -1,3 +1,4 @@
+#!/usr/local/bin/Rscript
 
 # __author__      = "Alexandria Dymun"
 # __email__       = "pintoa1@mskcc.org"
@@ -6,13 +7,24 @@
 # __status__      = "Dev"
 
 
+suppressPackageStartupMessages({
+#    library(plyr)
+    library(dplyr)
+    library(data.table)
+    library(stringr)
+})
 
-library(dplyr)
-library(data.table)
-library(stringr)
-gtf <- rtracklayer::import('/work/taylorlab/cmopipeline/mskcc-igenomes/igenomes/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf')
-gtf_df <- as.data.frame(gtf)
+usage <- function() {
+    message("Usage:")
+    message("final_generate_v75_gene_bed.R <in.gff> <out.bed>")
+}
 
+args = commandArgs(TRUE)
+
+if (length(args)!=2) {
+    usage()
+    quit()
+}
 
 # Utilized gtf from igenomes for FORTE This corresponds to GRCh37 ensembl 75
 # Add introns to gtf, convert to gff3
@@ -20,28 +32,34 @@ gtf_df <- as.data.frame(gtf)
 # -B /tmp -B /scratch/ docker://quay.io/biocontainers/agat:0.8.0--pl5262hdfd78af_0  \\
 # /bin/bash -c "agat_sp_add_introns.pl -g /juno/work/taylorlab/cmopipeline/mskcc-igenomes/igenomes/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf\\
 # -o genes.INTRONS.gff3"
-# gff2bed < genes.INTRONS.gff3 > genes.INTRONS.agat.bed
+
+gtf <- rtracklayer::import(args[1])
+gtf_df <- as.data.frame(gtf)
+
+file.to_write <- args[2]
+
+gtf_df <- gtf_df %>%
+    rename(
+        chr = seqnames
+    ) %>%
+    select(c(chr, start, end, transcript_id, type, strand, gene_name, gene_id)) %>%
+    filter(type %in% c("exon","intron","UTR","CDS","cds","utr"))
 
 
-total.introns.bed <- fread(file="/work/ccs/pintoa1/metafusion_refs/meta_fusion_bed_generation/genes.INTRONS.agat.bed", header = FALSE, stringsAsFactors = F, sep="\t", na.strings = "",data.table = F)
-colnames(total.introns.bed) <- c("chr","start","end","gene_id","tmp","strand","gene_biotype","type","V9","description")
-total.introns.bed$transcript_id <- gsub("\\;.*","",str_split_fixed(total.introns.bed$description,"transcript_id=",n=2)[,2])
-total.introns.bed$gene_name <-gsub("\\;.*","",str_split_fixed(total.introns.bed$description,"gene_name=",n=2)[,2])
-
-transcript_ids <- unique(total.introns.bed$transcript_id)
-file.to_write <- "/work/ccs/pintoa1/metafusion_refs/meta_fusion_bed_generation/cleaned_metafusion_v75_gene.bed"
-
-if(file.exists(file.to_write) ) {file.remove(file.to_write)}
-
-#START CLOCK: THE INDEXING TAKES A LONG TIME, LIKE 5 HOURS
+#START CLOCK
 ptm <- proc.time()
+print(ptm)
 
 # Index each transcript feature, incrementing when an intron is passed
 ## metafusion expects exon count 0 to (N(exons)-1)
 ## Forward strand: Exon 0 == Exon 1
 ### Reverse strand: Exon 0 == LAST EXON IN TRANSCRIPT
-for (id in transcript_ids){
-    transcript <- total.introns.bed[total.introns.bed$transcript_id == id,]
+
+print(dim(gtf_df))
+print(length(unique(gtf_df$transcript_id)))
+
+modify_transcript <- function(transcript){
+
     # Remove exons if coding gene, since "exon" and "CDS" are duplicates of one another
     if ("CDS" %in% transcript$type){
         transcript <- transcript[!transcript$type == "exon",]
@@ -51,7 +69,7 @@ for (id in transcript_ids){
     # Index features
     idx <- 0
     for (i in 1:nrow(transcript)){
-        transcript$idx [i]<- idx
+        transcript$idx[i]<- idx
         if (transcript$type[i] == "intron"){
             idx <- idx + 1
         }
@@ -68,7 +86,8 @@ for (id in transcript_ids){
     #Add "chr" prefix to chromosomes
     transcript$chr <- sapply("chr", paste0,  transcript$chr)
     #Change CDS --> cds ### IF A TRANSCRIPT LACKS "CDS" THIS LINE WILL DO NOTHING, Changing exon values to UTRs later
-    if ("CDS" %in% unique(transcript$type)){transcript[transcript$type == "CDS",]$type <- "cds"}
+    transcript <- transcript %>% mutate(type = as.character(type))
+    transcript <- transcript %>% mutate(type=ifelse(type == "CDS","cds",type))
     ## DETERMING UTR3 and UTR5
     ### INSTEAD OF START AND STOP, USE CDS LOCATIONS AND STRAND INFORMATION.....
     if ("UTR" %in% unique(transcript$type)){
@@ -79,35 +98,42 @@ for (id in transcript_ids){
             transcript$type[transcript$end <= start_coding &  transcript$type == "UTR"] <- "utr5"
             transcript$type[transcript$start >= stop_coding & transcript$type == "UTR"] <- "utr3"
         }else {
+            #Reverse strand
             start_coding <- max(transcript[transcript$type == "cds","end"])
             stop_coding <- min(transcript[transcript$type == "cds","start"])
             transcript$type[transcript$end <= start_coding &  transcript$type == "UTR"] <- "utr3"
             transcript$type[transcript$start >= stop_coding & transcript$type == "UTR"] <- "utr5"
         }
     }
-    transcript <- transcript[,c("chr", "start", "end", "transcript_id", "type", "idx", "strand", "gene_name", "gene_id" )]
-    write.table(transcript, file.to_write, append=TRUE, sep="\t", quote=F,  row.names=F, col.names=F)
+    #### Any exon that remains after teh cds change, is likely and untranslated region. change below
+
+    # Basically, subfeatures which are "exon" need to be changed (i.e. exon --> utr3/utr5)
+    #Forward strand
+    transcript$type[transcript$strand == "f" &  transcript$type == "exon" ] <- "utr5"
+    #Reverse strand
+    transcript$type[transcript$strand == "r" &  transcript$type == "exon"]<- "utr3"
+    #transcript <- transcript[,c("chr", "start", "end", "transcript_id", "type", "idx", "strand", "gene_name", "gene_id" )]
+    expected_types <- c("cds","intron","utr3","utr5")
+    transcript <- transcript[transcript$type %in% c(expected_types),]
+    return(transcript)
 }
 
+if(file.exists(file.to_write) ) {file.remove(file.to_write)}
+
+gtf_df_modified <- gtf_df %>%
+    group_by(transcript_id,.drop = FALSE) %>%
+    group_modify(~ modify_transcript(.x)) %>%
+    select(c(chr, start, end, transcript_id, type, idx, strand, gene_name, gene_id )) %>%
+    arrange(chr,start,end)
+
 time <- proc.time() - ptm
-time
-#
-# user    system   elapsed
-# 16657.116    32.227 16741.382
+print(time)
 
-
-new.bed <- fread(file.to_write,data.table = F)
-colnames(new.bed) <- c("chr","start","end","transcript_id","type","idx","strand","gene_name","gene_id")
-
-#### Any exon that remains after teh cds change, is likely and untranslated region. change below
-
-# Basically, subfeatures which are "exon" need to be changed (i.e. exon --> utr3/utr5)
-#Forward strand
-new.bed$type[new.bed$strand == "f" &  new.bed$type == "exon" ] <- "utr5"
-#Reverse strand
-new.bed$type[new.bed$strand == "r" &  new.bed$type == "exon"]<- "utr3"
-
-expected_types <- c("cds","intron","utr3","utr5")
-new.bed.ready <- new.bed[new.bed$type %in% c(expected_types),]
-
-write.table(new.bed.ready, "/work/ccs/pintoa1/metafusion_refs/meta_fusion_bed_generation/v75_gene.bed",  sep="\t", quote=F,  row.names=F, col.names=F)
+write.table(
+    gtf_df_modified,
+    file.to_write,
+    sep="\t",
+    quote=F,
+    row.names=F,
+    col.names=F
+)

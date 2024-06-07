@@ -1,0 +1,45 @@
+{
+    "sarscov2 illumina  paired-end [fastq]": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "sample": "197"
+                        },
+                        "variant_file.vcf:md5,28c8df33c7ea5ed5d1cf9997d8e00ffa"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "sample": "197"
+                        },
+                        "versions.yml:md5,a94265ed3bc4b5631d85b9b9b5d2b7e5"
+                    ]
+                ],
+                "variant_file": [
+                    [
+                        {
+                            "id": "test",
+                            "sample": "197"
+                        },
+                        "variant_file.vcf:md5,28c8df33c7ea5ed5d1cf9997d8e00ffa"
+                    ]
+                ],
+                "versions": [
+                    [
+                        {
+                            "id": "test",
+                            "sample": "197"
+                        },
+                        "versions.yml:md5,a94265ed3bc4b5631d85b9b9b5d2b7e5"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2023-12-13T15:05:34.981489"
+    }
+}

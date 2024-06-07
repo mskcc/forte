@@ -12,8 +12,10 @@ process STARFUSION_BUILD {
     path "*"  , emit: reference
 
     script:
-    def binPath = ( params.enable_conda ? "prep_genome_lib.pl" : "/usr/local/src/STAR-Fusion/ctat-genome-lib-builder/prep_genome_lib.pl" )
     """
+    if [ -d /usr/local/src/STAR-Fusion/ctat-genome-lib-builder/ ] ; then 
+        export PATH="/usr/local/src/STAR-Fusion/ctat-genome-lib-builder/:\$PATH"
+    fi
     export TMPDIR=/tmp
     wget http://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam34.0/Pfam-A.hmm.gz --no-check-certificate
     wget https://github.com/FusionAnnotator/CTAT_HumanFusionLib/releases/download/v0.3.0/fusion_lib.Mar2021.dat.gz -O CTAT_HumanFusionLib_Mar2021.dat.gz --no-check-certificate
@@ -24,7 +26,7 @@ process STARFUSION_BUILD {
     wget https://www.dfam.org/releases/Dfam_3.4/infrastructure/dfamscan/homo_sapiens_dfam.hmm.h3m --no-check-certificate
     wget https://www.dfam.org/releases/Dfam_3.4/infrastructure/dfamscan/homo_sapiens_dfam.hmm.h3p --no-check-certificate
     gunzip Pfam-A.hmm.gz && hmmpress Pfam-A.hmm
-    $binPath \\
+    prep_genome_lib.pl
         --genome_fa $fasta \\
         --gtf $gtf \\
         --annot_filter_rule AnnotFilterRule.pm \\

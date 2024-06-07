@@ -1,0 +1,8 @@
+- name: run_test_fillouts
+  command: nextflow run ./tests/test_fillout/main.nf -profile test -entry test_rna_fillout -c ./tests/nextflow.config -c ./tests/test_fillout/nextflow.config
+  tags:
+    - test_fillouts
+  exit_code: 0
+  files:
+    - path: output/analysis/SAMPLE_PAIRED_END/fillouts/SAMPLE_PAIRED_END.reformat.gbcms.combined.maf
+      md5sum: 44c6d9489b426af2b4f58fd0290cfc36

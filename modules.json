@@ -2,9 +2,25 @@
     "name": "mskcc/forte",
     "homePage": "https://github.com/mskcc/forte",
     "repos": {
+        "git@github.com:mskcc-omics-workflows/modules.git": {
+            "modules": {
+                "msk": {
+                    "gbcms": {
+                        "branch": "develop",
+                        "git_sha": "e70681357ccd39e7a10d328ca696c074750d8163",
+                        "installed_by": ["modules"]
+                    }
+                }
+            }
+        },
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "agat/spaddintrons": {
+                        "branch": "master",
+                        "git_sha": "6898156da3604a6bdf26c36036053a970050fea0",
+                        "installed_by": ["modules"]
+                    },
                     "arriba": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
@@ -22,7 +38,7 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "b6d4d476aee074311c89d82a69c1921bd70c8180",
+                        "git_sha": "bba7e362e4afead70653f84d8700588ea28d0f9e",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
@@ -42,7 +58,7 @@
                     },
                     "gunzip": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "3a5fef109d113b4997c9822198664ca5f2716208",
                         "installed_by": ["modules"]
                     },
                     "kallisto/index": {
@@ -154,12 +170,12 @@
                     },
                     "umitools/dedup": {
                         "branch": "master",
-                        "git_sha": "7297204bf49273300a3dbfa4b7a4027c8683f1bd",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["modules"]
                     },
                     "umitools/extract": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/umitools/extract/umitools-extract.diff"
                     }
