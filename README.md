@@ -45,13 +45,13 @@ with `-profile test` before running the workflow on actual data.
 
 Now, you can run the pipeline using:
 
-   ```bash
-   nextflow run /path/to/clonedrepo/main.nf \
-     --input samplesheet.csv \
-     --outdir <OUTDIR> \
-     --genome GRCh37 \
-     -profile singularity
-   ```
+```bash
+nextflow run /path/to/clonedrepo/main.nf \
+  --input samplesheet.csv \
+  --outdir <OUTDIR> \
+  --genome GRCh37 \
+  -profile singularity
+```
 
 :::warning
 Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those

@@ -65,7 +65,8 @@ the following is a description of each field that can be used. Fields that do no
 #### UMI
 
 FORTE can extract and deduplicate samples with either single or dual UMI. These functions can be turned on by using the `umi` and `umi2` columns in the samplesheet and entering UMI patterns in one of two ways:
-1. The string method that is described by [UMI-tools](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method) (e.g. `NNNXX`). 
+
+1. The string method that is described by [UMI-tools](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method) (e.g. `NNNXX`).
 2. A number, which will indicate the number of bases to be extracted from the beginning of the respective read (e.g. `3`).
 
 The fusion workflows of FORTE will use UMI-extracted reads, where applicable, but not deduplicated reads. The final BAM produced by FORTE is deduplicated where applicable, and by default the expression counts are based on deduplicated BAMs.
