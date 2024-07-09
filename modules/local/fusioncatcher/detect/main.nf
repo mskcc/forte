@@ -17,6 +17,7 @@ process FUSIONCATCHER_DETECT {
     tuple val(meta), path("*.fusioncatcher.fusion-genes.hg19.txt"), optional:true, emit: fusions_alt
     tuple val(meta), path("*.fusioncatcher.summary.txt")          , optional:true, emit: summary
     tuple val(meta), path("*.fusioncatcher.log")                                 , emit: log
+    tuple val(meta), path("*.supporting-reads_gene-fusions*.zip")                , emit: supporting_reads
     path "versions.yml"                                                          , emit: versions
 
     when:
@@ -40,6 +41,9 @@ process FUSIONCATCHER_DETECT {
     mv final-list_candidate-fusion-genes.hg19.txt ${prefix}.fusioncatcher.fusion-genes.hg19.txt
     mv summary_candidate_fusions.txt ${prefix}.fusioncatcher.summary.txt
     mv fusioncatcher.log ${prefix}.fusioncatcher.log
+    for i in supporting-reads_gene-fusions*zip ; do
+        mv $i ${prefix}.$i
+    done
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
