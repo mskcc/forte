@@ -8,7 +8,7 @@ process METAFUSION_GENEBED {
         'quay.io/biocontainers/mulled-v2-28e4eeae4055c6901c8218fe9e55d342d59035ef:0b59d552b4c1c8b2845385236f1053a7e1fb80c6-0' }"
 
     input:
-    tuple val(meta), path(gtf)
+    tuple val(meta), path(gff)
 
     output:
     tuple val(meta), path("*.metafusion.gene.bed"), emit: metafusion_gene_bed
@@ -22,7 +22,7 @@ process METAFUSION_GENEBED {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     final_generate_v75_gene_bed.R \\
-        $gtf \\
+        $gff \\
         ${prefix}.metafusion.gene.bed
 
     cat <<-END_VERSIONS > versions.yml
