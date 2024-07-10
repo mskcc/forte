@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- [#117](https://github.com/mskcc/forte/pull/117) - add supporting-reads_gene-fusions*.zip files to fusioncatcher outputs
+- [#117](https://github.com/mskcc/forte/pull/117) - add supporting-reads_gene-fusions\*.zip files to fusioncatcher outputs
 
 ### `Fixed`
 
