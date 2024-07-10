@@ -42,7 +42,7 @@ process FUSIONCATCHER_DETECT {
     mv summary_candidate_fusions.txt ${prefix}.fusioncatcher.summary.txt
     mv fusioncatcher.log ${prefix}.fusioncatcher.log
     for i in supporting-reads_gene-fusions*zip ; do
-        mv $i ${prefix}.$i
+        mv \$i ${prefix}.\$i
     done
 
     cat <<-END_VERSIONS > versions.yml
