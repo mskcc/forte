@@ -62,6 +62,15 @@ the following is a description of each field that can be used. Fields that do no
 | fastq_1    | `str`       | `/path/to/*fastq.gz`    | (none)   |
 | fastq_2    | `str`       | `/path/to/*fastq.gz`    | (none)   |
 
+#### UMI
+
+FORTE can extract and deduplicate samples with either single or dual UMI. These functions can be turned on by using the `umi` and `umi2` columns in the samplesheet and entering UMI patterns in one of two ways:
+
+1. The string method that is described by [UMI-tools](https://umi-tools.readthedocs.io/en/latest/reference/extract.html#extract-method) (e.g. `NNNXX`).
+2. A number, which will indicate the number of bases to be extracted from the beginning of the respective read (e.g. `3`).
+
+The fusion workflows of FORTE will use UMI-extracted reads, where applicable, but not deduplicated reads. The final BAM produced by FORTE is deduplicated where applicable, and by default the expression counts are based on deduplicated BAMs.
+
 ### MAF Samplesheet
 
 You can optionally supply a secondary samplesheet with information for performing MAF fillouts, using the option `--maf_input`. Each row in this file requires a sample name that matches a sample name in the input samplesheet, and a path to relevant maf file. For example:
@@ -78,7 +87,7 @@ For each sample in this input, FORTE will use the corresponding RNA bam to calcu
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run mskcc/forte --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile singularity
+nextflow run /path/to/clonedrepo/main.nf --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile singularity
 ```
 
 This will launch the pipeline with the `singularity` configuration profile. See below for more information about profiles.

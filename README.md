@@ -35,6 +35,8 @@
 
    Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
 
+## Usage
+
 :::note
 If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
 to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
@@ -44,11 +46,11 @@ with `-profile test` before running the workflow on actual data.
 Now, you can run the pipeline using:
 
 ```bash
-git clone git@github.com:mskcc/forte.git
-nextflow run forte/main.nf \
-   -profile <docker/singularity/.../institute> \
-   --input samplesheet.csv \
-   --outdir <OUTDIR>
+nextflow run /path/to/clonedrepo/main.nf \
+  --input samplesheet.csv \
+  --outdir <OUTDIR> \
+  --genome GRCh37 \
+  -profile singularity
 ```
 
 :::warning
