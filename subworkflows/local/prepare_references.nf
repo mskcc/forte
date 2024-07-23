@@ -10,7 +10,7 @@ include {
     GUNZIP as GUNZIP_METAFUSIONGENEBED ;
     GUNZIP as GUNZIP_METAFUSIONBLOCKLIST
 } from '../../modules/nf-core/gunzip/main'
-include { STARFUSION_DOWNLOAD            } from '../../modules/local/starfusion/download/main'
+include { UNTAR as UNTAR_STARFUSION      } from '../../modules/nf-core/untar/main'
 include { FUSIONCATCHER_DOWNLOAD         } from '../../modules/local/fusioncatcher/download/main'
 include { ARRIBA_DOWNLOAD                } from '../../modules/local/arriba/download/main'
 include { KALLISTO_INDEX                 } from '../../modules/nf-core/kallisto/index/main'
@@ -67,8 +67,8 @@ workflow PREPARE_REFERENCES {
     SAMTOOLS_FAIDX ([[:],params.fasta])
 
     if (params.starfusion_url) {
-        STARFUSION_DOWNLOAD(params.starfusion_url)
-        starfusion_ref = STARFUSION_DOWNLOAD.out.reference
+        UNTAR_STARFUSION([[id:params.starfusion_url.tokenize("/")[-1].replaceFirst(/\.tar\.gz$/, "")],params.starfusion_url])
+        starfusion_ref = UNTAR_STARFUSION.out.untar.map{meta, starfusion_folder -> file(starfusion_folder.toString() + "/ctat_genome_lib_build_dir/")  }
     } else {
         starfusion_ref = Channel.empty()
     }
@@ -94,7 +94,7 @@ workflow PREPARE_REFERENCES {
     )
 
     METAFUSION_GENEINFO(
-        [[:],gtf], starfusion_ref,fusioncatcher_ref
+        [[:],gtf], starfusion_ref, fusioncatcher_ref
     )
 
     AGFUSION_DOWNLOAD(
