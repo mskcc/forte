@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#118](https://github.com/mskcc/forte/pull/119) - change script error behavior in METAFUSION_RUN process
+
 ### `Dependencies`
 
 ### `Deprecated`
