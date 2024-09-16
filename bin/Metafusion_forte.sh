@@ -7,7 +7,7 @@ set -eo pipefail
 # __author__      = "Alexandria Dymun"
 # __email__       = "pintoa1@mskcc.org"
 # __contributor__ = "Anne Marie Noronha (noronhaa@mskcc.org)"
-# __version__     = "0.0.1"
+# __version__     = "0.0.2"
 # __status__      = "Dev"
 
 output_ANC_RT_SG=1
@@ -15,7 +15,7 @@ RT_call_filter=1
 blck_filter=1
 ANC_filter=1
 usage() {
-    echo "Usage: Metafusion_forte.sh --num_tools=<minNumToolsCalled> --genome_fasta <FASTA adds SEQ to fusion>  --recurrent_bedpe <blacklistFusions>  --outdir <outputDirectory> --cff <cffFile> --gene_bed <geneBedFile> --gene_info <geneInfoFile>" 1>&2;
+    echo "Usage: Metafusion_forte.sh --num_tools=<minNumToolsCalled> --genome_fasta <FASTA adds SEQ to fusion>  --recurrent_bedpe <blacklistFusions>  --outdir <outputDirectory> --cff <cffFile> --gene_bed <geneBedFile> --gene_info <geneInfoFile> --clinical_genes <clinicalGenes>" 1>&2;
     exit 1;
 }
 
