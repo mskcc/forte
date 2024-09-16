@@ -8,7 +8,7 @@
 
 
 suppressPackageStartupMessages({
-#    library(plyr)
+    library(plyr)
     library(dplyr)
     library(data.table)
     library(stringr)
