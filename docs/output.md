@@ -100,6 +100,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - `*.fusioncatcher.log`
   - `*.fusioncatcher.summary.txt`
   - `*_fusioncatcher.cff`
+  - `*.supporting-reads_gene-fusions*.zip`
 - `analysis/<sample>/starfusion/`
   - `*.starfusion.abridged.coding_effect.tsv`
   - `*.starfusion.abridged.tsv`
