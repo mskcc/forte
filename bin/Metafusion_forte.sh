@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -eo pipefail
+
 #STEPS
 
 # __author__      = "Alexandria Dymun"
@@ -6,7 +9,6 @@
 # __contributor__ = "Anne Marie Noronha (noronhaa@mskcc.org)"
 # __version__     = "0.0.1"
 # __status__      = "Dev"
-
 
 output_ANC_RT_SG=1
 RT_call_filter=1
@@ -60,15 +62,17 @@ if [[ ! $cff || ! $gene_info  || ! $gene_bed ]]; then
     usage
 fi
 
+env | grep -i tmp
 
-mkdir $outdir
+mkdir -p $outdir
 
 #Check CFF file format:
 #Remove entries with nonconformming chromosome name
 
 all_gene_bed_chrs=`awk -F '\t' '{print $1}' $gene_bed | sort | uniq | sed 's/chr//g '`
 awk -F " " -v arr="${all_gene_bed_chrs[*]}" 'BEGIN{OFS = "\t"; split(arr,arr1); for(i in arr1) dict[arr1[i]]=""} $1 in dict && $4 in dict' $cff >  $outdir/$(basename $cff).cleaned_chr
-grep -v -f $outdir/$(basename $cff).cleaned_chr $cff > problematic_chromosomes.cff
+head $outdir/$(basename $cff).cleaned_chr
+grep -v -f $outdir/$(basename $cff).cleaned_chr $cff > problematic_chromosomes.cff || test $? = 1
 cff=$outdir/$(basename $cff).cleaned_chr
 
 #Rename cff
@@ -116,10 +120,10 @@ fi
 #ReadThrough Callerfilter
 if [ $RT_call_filter -eq 1 ]; then
     echo ReadThrough, callerfilter $num_tools
-    cat $cluster | grep ReadThrough > $outdir/$(basename $cluster).ReadThrough
+    cat $cluster | grep ReadThrough > $outdir/$(basename $cluster).ReadThrough || test $? = 1
     callerfilter_num.py --cluster $cluster  --num_tools $num_tools > $outdir/$(basename $cluster).callerfilter.$num_tools
     callerfilter_excluded=$(comm -13 <(cut -f 22 $outdir/$(basename $cluster).callerfilter.$num_tools | sort | uniq) <(cut -f 22 $cluster | sort | uniq))
-    grep -v ReadThrough $outdir/$(basename $cluster).callerfilter.$num_tools > $outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools
+    grep -v ReadThrough $outdir/$(basename $cluster).callerfilter.$num_tools > $outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools || test $? = 1
     cluster_RT_call=$outdir/$(basename $cluster).RT_filter.callerfilter.$num_tools
 fi
 # Blocklist Filter

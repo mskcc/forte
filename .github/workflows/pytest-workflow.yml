@@ -69,7 +69,7 @@ jobs:
           batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
       - name: Upload logs on failure
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: logs-${{ matrix.profile }}
           path: |
