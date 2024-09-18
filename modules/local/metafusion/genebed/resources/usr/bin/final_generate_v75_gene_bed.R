@@ -12,6 +12,7 @@ suppressPackageStartupMessages({
     library(dplyr)
     library(data.table)
     library(stringr)
+    options(scipen = 999)
 })
 
 usage <- function() {
