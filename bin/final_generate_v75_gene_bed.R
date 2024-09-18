@@ -3,7 +3,7 @@
 # __author__      = "Alexandria Dymun"
 # __email__       = "pintoa1@mskcc.org"
 # __contributor__ = "Anne Marie Noronha (noronhaa@mskcc.org)"
-# __version__     = "0.0.1"
+# __version__     = "0.0.2"
 # __status__      = "Dev"
 
 
