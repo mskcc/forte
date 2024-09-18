@@ -13,7 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#118](https://github.com/mskcc/forte/pull/119) - change script error behavior in METAFUSION_RUN process
+- [#119](https://github.com/mskcc/forte/pull/119) - change script error behavior in METAFUSION_RUN process
+
+- [#125](https://github.com/mskcc/forte/pull/125) - update upload-artifact version because the version previously in use (v2) is deprecated.
 
 ### `Dependencies`
 
