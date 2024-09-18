@@ -186,7 +186,7 @@ library(data.table)
     )
     if (!is.null(filters)){
         unfiltered_cff <- merge(unfiltered_cff,filters, by="FID", all.x = T, all.y = F) %>%
-            mutate(Metafusion_flag=ifelse(is.null(Metafusion_flag) | is.na(Metafusion_flag) | Metafusion_flag=="", tmpflag, paste(Metafusion_flag,tmpflag,sep=","))) %>%
+            mutate(Metafusion_flag=ifelse(is.null(Metafusion_flag) | is.na(Metafusion_flag) | Metafusion_flag=="", tmpflag, ifelse(!is.na(tmpflag), Metafusion_flag, paste(Metafusion_flag,tmpflag,sep=",")))) %>%
             select(-c(tmpflag))
     }
 

@@ -107,7 +107,7 @@ cff <- merge(
     all.x = T,
     all.y = F)
 
-cff$gene5_transcript_id <- paste0(cff$gene5_transcript_id,".",cff$V16)
+cff$gene5_transcript_id <- ifelse(is.na(cff$gene5_transcript_id),NA,paste0(cff$gene5_transcript_id,".",cff$V16))
 cff$V16 <- NULL
 
 cff <- as.data.frame(cff)[,c(final_cff_cols)]
