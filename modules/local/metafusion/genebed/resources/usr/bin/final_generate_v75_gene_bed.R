@@ -40,12 +40,13 @@ gtf_df <- gtf_df[!grepl("NF",gtf_df$tag),]
 
 file.to_write <- args[2]
 
+### ensure start is 0 based
 gtf_df <- gtf_df %>%
     rename(
         chr = seqnames
     ) %>%
     select(c(chr, start, end, transcript_id, type, strand, gene_name, gene_id)) %>%
-    filter(type %in% c("exon","intron","UTR","CDS","cds","utr"))
+    filter(type %in% c("exon","intron","UTR","CDS","cds","utr")) %>% mutate(start = start-1)
 
 
 #START CLOCK
