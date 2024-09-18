@@ -10,12 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#117](https://github.com/mskcc/forte/pull/117) - add supporting-reads_gene-fusions\*.zip files to fusioncatcher outputs
 
 - [#118](https://github.com/mskcc/forte/pull/118) - change the way the plug-n-play starfusion reference is downloaded.
+- -[#126](https://github.com/mskcc/forte/pull/126) - enable clinical genes prioritization in Metafusion
 
 ### `Fixed`
 
 - [#119](https://github.com/mskcc/forte/pull/119) - change script error behavior in METAFUSION_RUN process
 
 - [#125](https://github.com/mskcc/forte/pull/125) - update upload-artifact version because the version previously in use (v2) is deprecated.
+- [#126](https://github.com/mskcc/forte/pull/126) - 0 based gene bed annotation with removal of incomplete transcripts
 
 ### `Dependencies`
 

@@ -141,7 +141,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 </details>
 
-FORTE uses a custom fork of [Metafusion](https://github.com/mskcc/MetaFusion) to filter, cluster and annotate the fusion calls. Several `intermediate` files are included in the output.
+FORTE uses a custom fork of [Metafusion](https://github.com/mskcc/MetaFusion) to filter, cluster and annotate the fusion calls. Several `intermediate` files are included in the output, [see wiki for detailed information](https://github.com/mskcc/forte/wiki/Metafusion-Output).
 
 `Fusion_effect` information is added using a custom fork of [AGFusion](https://github.com/anoronh4/AGFusion).
 
