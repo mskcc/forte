@@ -97,7 +97,7 @@ cff <- merge(
     by.y = "V15",
     all.x = T ,
     all.y = F)
-cff$gene3_transcript_id <- paste0(cff$gene3_transcript_id,".",cff$V16)
+cff$gene3_transcript_id <- ifelse(is.na(cff$gene3_transcript_id),NA,paste0(cff$gene3_transcript_id,".",cff$V16))
 cff$V16 <- NULL
 cff <- merge(
     cff,
