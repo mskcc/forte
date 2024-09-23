@@ -38,7 +38,10 @@ workflow PREPARE_REFERENCES {
         metafusion_blocklist = params.metafusion_blocklist
     }
 
-    STAR_GENOMEGENERATE(params.fasta,gtf.map{it[1] }.first())
+    STAR_GENOMEGENERATE(
+        [[id:params.genome],params.fasta],
+        gtf
+    )
     ch_versions = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
     star_index = STAR_GENOMEGENERATE.out.index
 
