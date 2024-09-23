@@ -142,7 +142,7 @@ workflow FUSION {
             ADD_FLAG.out.unfiltered_cff
                 .join(ONCOKB_FUSIONANNOTATOR.out.oncokb_fusions, by:0)
                 .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0),
-            transcipts
+            transcripts
         )
     } else {
         CFF_FINALIZE(
