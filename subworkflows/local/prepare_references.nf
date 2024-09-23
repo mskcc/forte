@@ -25,10 +25,10 @@ workflow PREPARE_REFERENCES {
     ch_versions = Channel.empty()
 
     if (params.gtf.endsWith(".gz")){
-        GUNZIP_GTF([[:],params.gtf])
-        gtf = GUNZIP_GTF.out.gunzip.map{ it[1] }.first()
+        GUNZIP_GTF([[id:params.genome],params.gtf])
+        gtf = GUNZIP_GTF.out.gunzip.first()
     } else {
-        gtf = params.gtf
+        gtf = Channel.of([[id:params.genome],params.gtf])
     }
 
     if (params.metafusion_blocklist.endsWith(".gz")){
@@ -38,11 +38,11 @@ workflow PREPARE_REFERENCES {
         metafusion_blocklist = params.metafusion_blocklist
     }
 
-    STAR_GENOMEGENERATE(params.fasta,gtf)
+    STAR_GENOMEGENERATE(params.fasta,gtf.map{it[1] }.first())
     ch_versions = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
     star_index = STAR_GENOMEGENERATE.out.index
 
-    UCSC_GTFTOGENEPRED(Channel.value(gtf).map{[[id:params.genome],it]})
+    UCSC_GTFTOGENEPRED(gtf)
     ch_versions = ch_versions.mix(UCSC_GTFTOGENEPRED.out.versions)
 
     UCSC_GENEPREDTOBED(UCSC_GTFTOGENEPRED.out.genepred)
@@ -85,7 +85,7 @@ workflow PREPARE_REFERENCES {
     ARRIBA_DOWNLOAD()
 
     AGAT_SPADDINTRONS(
-        [[:],gtf],
+        gtf,
         []
     )
 
@@ -94,7 +94,7 @@ workflow PREPARE_REFERENCES {
     )
 
     METAFUSION_GENEINFO(
-        [[:],gtf], starfusion_ref, fusioncatcher_ref
+        gtf,starfusion_ref, fusioncatcher_ref
     )
 
     AGFUSION_DOWNLOAD(

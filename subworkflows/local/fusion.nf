@@ -41,7 +41,7 @@ workflow FUSION {
     STAR_FOR_ARRIBA(
         reads,
         star_index,
-        gtf,
+        gtf.map{it[1]},
         false,
         [],
         []
@@ -51,7 +51,7 @@ workflow FUSION {
     ARRIBA(
         STAR_FOR_ARRIBA.out.bam,
         fasta,
-        gtf,
+        gtf.map{it[1]},
         arriba_blacklist,
         arriba_known_fusions,
         [],
