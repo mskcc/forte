@@ -11,7 +11,7 @@ process METAFUSION_GENEBED {
     tuple val(meta), path(gff)
 
     output:
-    tuple val(meta), path("*.metafusion.gene.bed"), emit: metafusion_gene_bed
+    tuple val(meta), path("${meta.id}.metafusion.gene.bed"), emit: metafusion_gene_bed
     path "versions.yml"                           , emit: versions
 
     when:
