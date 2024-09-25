@@ -1,4 +1,4 @@
-# nf-core/forte: Output
+# mskcc/forte: Output
 
 ## Introduction
 
