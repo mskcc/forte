@@ -129,6 +129,7 @@ workflow FORTE {
         PREPROCESS_READS.out.reads_trimmed,
         PREPROCESS_READS.out.reads_untrimmed,
         PREPARE_REFERENCES.out.star_index,
+	PREPARE_REFERENCES.out.fasta,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
         PREPARE_REFERENCES.out.fusioncatcher_ref,
@@ -152,7 +153,7 @@ workflow FORTE {
         ALIGN_READS.out.bam,
         ALIGN_READS.out.bai,
         MAF_INPUT_CHECK.out.mafs,
-        params.fasta,
+        PREPARE_REFERENCES.out.fasta,
         PREPARE_REFERENCES.out.fasta_fai.map{ it[1] }.first()
     )
     ch_versions = ch_versions.mix(FILLOUT.out.ch_versions)
@@ -168,6 +169,7 @@ workflow FORTE {
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
+	PREPARE_REFERENCES.out.fasta,
         PREPARE_REFERENCES.out.fasta_fai,
         PREPARE_REFERENCES.out.fasta_dict,
         BAIT_INPUTS.out.baits
@@ -189,6 +191,7 @@ workflow FORTE {
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
+	PREPARE_REFERENCES.out.fasta,
         PREPARE_REFERENCES.out.fasta_fai,
         PREPARE_REFERENCES.out.fasta_dict,
         BAIT_INPUTS.out.baits

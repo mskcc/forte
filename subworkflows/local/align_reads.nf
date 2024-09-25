@@ -19,7 +19,7 @@ workflow ALIGN_READS {
     STAR_ALIGN(
         reads,
         star_index,
-        gtf.map{it[1]},
+        gtf,
         false,
         [],
         []

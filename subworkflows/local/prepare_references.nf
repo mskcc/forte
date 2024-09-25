@@ -6,6 +6,7 @@ include { SAMTOOLS_FAIDX                 } from '../../modules/nf-core/samtools/
 include { GATK4_BEDTOINTERVALLIST        } from '../../modules/nf-core/gatk4/bedtointervallist/main'
 include { PREPARE_RRNA                   } from '../../modules/local/prepare_rrna/main'
 include {
+    GUNZIP as GUNZIP_FASTA ;
     GUNZIP as GUNZIP_GTF ;
     GUNZIP as GUNZIP_METAFUSIONGENEBED ;
     GUNZIP as GUNZIP_METAFUSIONBLOCKLIST
@@ -24,6 +25,13 @@ workflow PREPARE_REFERENCES {
     main:
     ch_versions = Channel.empty()
 
+    if (params.fasta.endsWith(".gz")){
+        GUNZIP_FASTA([[id:params.genome],params.fasta])
+        fasta = GUNZIP_FASTA.out.gunzip.first()
+    } else {
+        fasta = Channel.of([[id:params.genome],params.fasta])
+    }
+
     if (params.gtf.endsWith(".gz")){
         GUNZIP_GTF([[id:params.genome],params.gtf])
         gtf = GUNZIP_GTF.out.gunzip.first()
@@ -39,7 +47,7 @@ workflow PREPARE_REFERENCES {
     }
 
     STAR_GENOMEGENERATE(
-        [[id:params.genome],params.fasta],
+        fasta,
         gtf
     )
     ch_versions = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
@@ -58,7 +66,7 @@ workflow PREPARE_REFERENCES {
     }
     PREPARE_RRNA([],refflat)
 
-    GATK4_CREATESEQUENCEDICTIONARY(params.fasta)
+    GATK4_CREATESEQUENCEDICTIONARY(fasta)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
 
     GATK4_BEDTOINTERVALLIST(
@@ -67,7 +75,7 @@ workflow PREPARE_REFERENCES {
     )
     ch_versions = ch_versions.mix(GATK4_BEDTOINTERVALLIST.out.versions)
 
-    SAMTOOLS_FAIDX ([[:],params.fasta])
+    SAMTOOLS_FAIDX(fasta,[[:],[]])
 
     if (params.starfusion_url) {
         UNTAR_STARFUSION([[id:params.starfusion_url.tokenize("/")[-1].replaceFirst(/\.tar\.gz$/, "")],params.starfusion_url])
@@ -113,6 +121,7 @@ workflow PREPARE_REFERENCES {
     star_index         = star_index
     // Convert queue channel to value channel so it never gets poison pilled
     refflat            = refflat
+    fasta              = fasta
     fasta_dict         = GATK4_CREATESEQUENCEDICTIONARY.out.dict
     fasta_fai          = SAMTOOLS_FAIDX.out.fai
     rrna_bed           = PREPARE_RRNA.out.rRNA_bed
