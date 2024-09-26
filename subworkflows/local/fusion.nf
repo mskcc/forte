@@ -53,7 +53,7 @@ workflow FUSION {
         STAR_FOR_ARRIBA.out.bam,
         fasta,
         gtf,
-	arriba_blacklist.map{[[:],it]}.view(),
+	arriba_blacklist.map{[[:],it]},
 	arriba_known_fusions.map{[[:],it]},
         [[:],[]],
         [[:],[]],
