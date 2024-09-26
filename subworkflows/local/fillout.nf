@@ -32,7 +32,7 @@ workflow FILLOUT {
             .map{ meta, bam, bai, variants ->
                 [ meta, bam, bai, variants, "${variants.getBaseName()}.gbcms.maf"]
             },
-        fasta.map{it[1]}.first(),
+        fasta,
         fai
 
     )

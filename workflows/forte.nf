@@ -138,9 +138,9 @@ workflow FORTE {
         PREPARE_REFERENCES.out.metafusion_gene_bed,
         PREPARE_REFERENCES.out.metafusion_gene_info,
         PREPARE_REFERENCES.out.metafusion_blocklist,
-        workflow.profile.toString().split(",").contains("test") ? [] : PREPARE_REFERENCES.out.arriba_blacklist,
-        workflow.profile.toString().split(",").contains("test") ? [] : PREPARE_REFERENCES.out.arriba_known_fusions,
-        workflow.profile.toString().split(",").contains("test") ? [] : PREPARE_REFERENCES.out.arriba_protein_domains
+        workflow.profile.toString().split(",").contains("test") ? Channel.of([]) : PREPARE_REFERENCES.out.arriba_blacklist,
+        workflow.profile.toString().split(",").contains("test") ? Channel.of([]) : PREPARE_REFERENCES.out.arriba_known_fusions,
+        workflow.profile.toString().split(",").contains("test") ? Channel.of([]) : PREPARE_REFERENCES.out.arriba_protein_domains
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
@@ -153,7 +153,7 @@ workflow FORTE {
         ALIGN_READS.out.bam,
         ALIGN_READS.out.bai,
         MAF_INPUT_CHECK.out.mafs,
-        PREPARE_REFERENCES.out.fasta,
+        PREPARE_REFERENCES.out.fasta.map{ it[1] }.first(),
         PREPARE_REFERENCES.out.fasta_fai.map{ it[1] }.first()
     )
     ch_versions = ch_versions.mix(FILLOUT.out.ch_versions)
