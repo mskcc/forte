@@ -31,7 +31,7 @@ process AGFUSION_DOWNLOAD {
 
         pyensembl install --species ${pyensembl_species} --release ${ensembl_release}
 
-        agfusion download -g ${agfusion_genome}
+        agfusion download -s ${pyensembl_species} --release ${ensembl_release}
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
