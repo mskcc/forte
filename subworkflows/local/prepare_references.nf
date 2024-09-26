@@ -29,21 +29,21 @@ workflow PREPARE_REFERENCES {
         GUNZIP_FASTA([[id:params.genome],params.fasta])
         fasta = GUNZIP_FASTA.out.gunzip.first()
     } else {
-        fasta = Channel.of([[id:params.genome],params.fasta])
+        fasta = Channel.of([[id:params.genome],params.fasta]).first()
     }
 
     if (params.gtf.endsWith(".gz")){
         GUNZIP_GTF([[id:params.genome],params.gtf])
         gtf = GUNZIP_GTF.out.gunzip.first()
     } else {
-        gtf = Channel.of([[id:params.genome],params.gtf])
+        gtf = Channel.of([[id:params.genome],params.gtf]).first()
     }
 
     if (params.metafusion_blocklist.endsWith(".gz")){
         GUNZIP_METAFUSIONBLOCKLIST([[:],params.metafusion_blocklist])
         metafusion_blocklist = GUNZIP_METAFUSIONBLOCKLIST.out.gunzip.map{ it[1] }.first()
     } else {
-        metafusion_blocklist = params.metafusion_blocklist
+        metafusion_blocklist = Channel.of(params.metafusion_blocklist).first()
     }
 
     STAR_GENOMEGENERATE(
@@ -51,7 +51,7 @@ workflow PREPARE_REFERENCES {
         gtf
     )
     ch_versions = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
-    star_index = STAR_GENOMEGENERATE.out.index
+    star_index = STAR_GENOMEGENERATE.out.index.first()
 
     UCSC_GTFTOGENEPRED(gtf)
     ch_versions = ch_versions.mix(UCSC_GTFTOGENEPRED.out.versions)
