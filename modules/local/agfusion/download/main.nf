@@ -4,8 +4,8 @@ process AGFUSION_DOWNLOAD {
     // Note: 2.7X indices incompatible with AWS iGenomes.
     conda 'bioconda::agfusion=1.252'
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker://cmopipeline/agfusion:0.0.6' :
-        'docker.io/cmopipeline/agfusion:0.0.6' }"
+        'docker://cmopipeline/agfusion:0.0.7' :
+        'docker.io/cmopipeline/agfusion:0.0.7' }"
 
     input:
     val(ensembl_release)
@@ -25,13 +25,13 @@ process AGFUSION_DOWNLOAD {
         ['GRCh38','hg38'].contains(genome) ? 'hg38' :
         ['GRCm38','mm10'].contains(genome) ? 'mm10' : ''
     def pyensembl_species = ['GRCm38','mm10'].contains(genome) ? 'mus_musculus' : 'homo_sapiens'
-    if (ensembl_release < 93) {
+    if (ensembl_release < 112) {
         """
         export PYENSEMBL_CACHE_DIR=\$PWD/pyensembl_cache
 
         pyensembl install --species ${pyensembl_species} --release ${ensembl_release}
 
-        agfusion download -s ${pyensembl_species} --release ${ensembl_release}
+        agfusion download -s ${pyensembl_species} -r ${ensembl_release}
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
