@@ -5,8 +5,8 @@ process AGFUSION_BATCH {
     // Note: 2.7X indices incompatible with AWS iGenomes.
     conda 'bioconda::agfusion=1.252'
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker://cmopipeline/agfusion:0.0.6' :
-        'docker.io/cmopipeline/agfusion:0.0.6' }"
+        'docker://cmopipeline/agfusion:0.0.7' :
+        'docker.io/cmopipeline/agfusion:0.0.7' }"
 
     input:
     tuple val(meta), path(fusions)
