@@ -44,7 +44,7 @@ process AGFUSION_DOWNLOAD {
 
         pyensembl install --species ${pyensembl_species} --release ${ensembl_release}
 
-        curl http://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/database_files/pfamA.txt.gz > pfamA.txt.gz
+        curl http://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.0/database_files/pfamA.txt.gz > pfamA.txt.gz
         gunzip pfamA.txt.gz
         agfusion build --dir . --species ${agfusion_genome} --release ${ensembl_release} --pfam pfamA.txt
         rm pfamA.txt
