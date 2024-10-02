@@ -28,7 +28,7 @@ process METAFUSION_GENEBED {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -n1)
-        final_generate_v75_gene_bed.R: 0.0.1
+        final_generate_v75_gene_bed.R: 0.0.2
     END_VERSIONS
     """
 
@@ -41,7 +41,7 @@ process METAFUSION_GENEBED {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -n1)
-        final_generate_v75_gene_bed.R: 0.0.1
+        final_generate_v75_gene_bed.R: 0.0.2
     END_VERSIONS
     """
 }
