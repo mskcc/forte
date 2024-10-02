@@ -12,6 +12,7 @@ suppressPackageStartupMessages({
     library(dplyr)
     library(data.table)
     library(stringr)
+    options(scipen = 999)
 })
 
 usage <- function() {
@@ -45,7 +46,7 @@ gtf_df <- gtf_df %>%
         chr = seqnames
     ) %>%
     select(c(chr, start, end, transcript_id, type, strand, gene_name, gene_id)) %>%
-    filter(type %in% c("exon","intron","UTR","CDS","cds","utr")) %>% 
+    filter(type %in% c("exon","intron","UTR","CDS","cds","utr")) %>%
     mutate(gene_name = ifelse(is.na(gene_name),gene_id,gene_name))
 
 
