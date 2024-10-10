@@ -1,9 +1,9 @@
-
 #!/usr/local/bin/Rscript
+
 # __author__      = "Alexandria Dymun"
 # __email__       = "pintoa1@mskcc.org"
 # __contributor__ = "Anne Marie Noronha (noronhaa@mskcc.org)"
-# __version__     = "0.0.1"
+# __version__     = "0.0.2"
 # __status__      = "Dev"
 
 
@@ -12,6 +12,7 @@ suppressPackageStartupMessages({
     library(dplyr)
     library(data.table)
     library(stringr)
+    options(scipen = 999)
 })
 
 usage <- function() {
@@ -35,6 +36,8 @@ if (length(args)!=2) {
 
 gtf <- rtracklayer::import(args[1])
 gtf_df <- as.data.frame(gtf)
+#remove incomplete transcripts mRNA_end_NF and mRNA_start_NF (not finished)
+gtf_df <- gtf_df[!grepl("NF",gtf_df$tag),]
 
 file.to_write <- args[2]
 

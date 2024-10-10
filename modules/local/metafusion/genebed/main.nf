@@ -9,10 +9,9 @@ process METAFUSION_GENEBED {
 
     input:
     tuple val(meta), path(gff)
-    val ensembl_version
 
     output:
-    tuple val(meta), path("*.metafusion.gene.bed"), emit: metafusion_gene_bed
+    tuple val(meta), path("${meta.id}.metafusion.gene.bed"), emit: metafusion_gene_bed
     path "versions.yml"                           , emit: versions
 
     when:
@@ -24,12 +23,12 @@ process METAFUSION_GENEBED {
     """
     final_generate_v75_gene_bed.R \\
         $gff \\
-        ${ensembl_version}.metafusion.gene.bed
+        ${prefix}.metafusion.gene.bed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -n1)
-        final_generate_v75_gene_bed.R: 0.0.1
+        final_generate_v75_gene_bed.R: 0.0.2
     END_VERSIONS
     """
 
@@ -42,7 +41,7 @@ process METAFUSION_GENEBED {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -n1)
-        final_generate_v75_gene_bed.R: 0.0.1
+        final_generate_v75_gene_bed.R: 0.0.2
     END_VERSIONS
     """
 }

@@ -35,8 +35,9 @@ workflow FUSION {
     ch_versions = Channel.empty()
     fasta = params.fasta
     //gene_bed = params.metafusion_gene_bed
-    //gene_info = params.metafusion_gene_info
+    clinicalgenes = params.clinicalgenes
     //blocklist = params.metafusion_blocklist
+    transcripts = params.transcripts
 
     STAR_FOR_ARRIBA(
         reads,
@@ -114,7 +115,8 @@ workflow FUSION {
         gene_bed.map{ it[1] }.first(),
         gene_info.map{ it[1] }.first(),
         fasta,
-        blocklist
+        blocklist,
+        clinicalgenes
     )
 
     ADD_FLAG(
@@ -139,7 +141,8 @@ workflow FUSION {
         CFF_FINALIZE(
             ADD_FLAG.out.unfiltered_cff
                 .join(ONCOKB_FUSIONANNOTATOR.out.oncokb_fusions, by:0)
-                .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
+                .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0),
+            transcripts
         )
     } else {
         CFF_FINALIZE(
@@ -147,7 +150,8 @@ workflow FUSION {
                 .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
                 .map{ meta, cff, agfusion_file ->
                     [ meta, cff, [], agfusion_file ]
-                }
+                },
+            transcripts
         )
     }
     ch_versions = ch_versions.mix(ADD_FLAG.out.versions.first())

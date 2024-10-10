@@ -84,14 +84,16 @@ workflow PREPARE_REFERENCES {
 
     ARRIBA_DOWNLOAD()
 
+    //cosmic_usr = params.cosmic_usr ?: ""
+    //cosmic_passwd = params.cosmic_passwd ?: ""
+
     AGAT_SPADDINTRONS(
-        [[:],gtf],
+        [[id:params.ensembl_version],gtf],
         []
     )
 
     METAFUSION_GENEBED(
-        AGAT_SPADDINTRONS.out.gff,
-        params.ensembl_version
+        AGAT_SPADDINTRONS.out.gff
     )
 
     METAFUSION_GENEINFO(
