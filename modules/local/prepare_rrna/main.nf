@@ -14,6 +14,7 @@ process PREPARE_RRNA {
     path "rna.bed", emit: rRNA_bed
 
     script:
+    def extra_filter_chr = params.genome == "GRCh38" ? "|^GL000220|^KI270733" : ""
     if (gtf) {
         """
         (${"${gtf}".endsWith(".gz") ? "z" : ""}grep "rRNA" ${gtf} || true) | \\
@@ -23,7 +24,7 @@ process PREPARE_RRNA {
                 /transcript_id "([^"]+)"/ or die "no transcript_id on \$.";
                 print join "\t", (@F[0,1,2,3], \$1)
             ' | \\
-            (grep -vP "^HG|^HSCHR" || true) | \\
+            (grep -vP "^HG|^HSCHR${extra_filter_chr}" || true) | \\
             sort -k1V -k2n -k3n \\
             > rna.bed
 
@@ -32,7 +33,7 @@ process PREPARE_RRNA {
         """
         (${"${refflat}".endsWith(".gz") ? "z" : ""}grep -P "^RNA5|^RNA1|^RNA2" ${refflat} || true) | \\
             awk -F"\\t" -v OFS="\\t" '{ print \$3,\$5,\$6,\$4,\$2 }' | \\
-            (grep -vP "^HG|^HSCHR" || true) | \\
+            (grep -vP "^HG|^HSCHR${extra_filter_chr}" || true) | \\
             sort -k1V -k2n -k3n \\
             > rna.bed
         """

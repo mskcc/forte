@@ -19,6 +19,7 @@ include { AGFUSION_DOWNLOAD              } from '../../modules/local/agfusion/do
 include { AGAT_SPADDINTRONS              } from '../../modules/nf-core/agat/spaddintrons/main'
 include { METAFUSION_GENEBED             } from '../../modules/local/metafusion/genebed/main'
 include { METAFUSION_GENEINFO            } from '../../modules/local/metafusion/geneinfo/main'
+include { FASTAREMOVEPREFIX              } from '../../modules/local/fastaremoveprefix/main'
 
 workflow PREPARE_REFERENCES {
 
@@ -30,6 +31,11 @@ workflow PREPARE_REFERENCES {
         fasta = GUNZIP_FASTA.out.gunzip.first()
     } else {
         fasta = Channel.of([[id:params.genome],params.fasta]).first()
+    }
+
+    if (params.genome == "GRCh38" ){
+        FASTAREMOVEPREFIX(fasta)
+	fasta = FASTAREMOVEPREFIX.out.fasta
     }
 
     if (params.gtf.endsWith(".gz")){
