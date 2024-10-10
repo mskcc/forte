@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#125](https://github.com/mskcc/forte/pull/125) - update upload-artifact version because the version previously in use (v2) is deprecated.
 - [#126](https://github.com/mskcc/forte/pull/126) - 0 based gene bed annotation with removal of incomplete transcripts
 
+- [#124](https://github.com/mskcc/forte/pull/124) - ensure genebed file as 0based start site
+
+- [#127](https://github.com/mskcc/forte/pull/127) - allow dynamic increase of memory for process_single label
+
 ### `Dependencies`
 
 ### `Deprecated`
