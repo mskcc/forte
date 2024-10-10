@@ -20,7 +20,7 @@ process FASTAREMOVEPREFIX {
     script:
     def modified_fasta = fasta.fileName.name
     """
-    cat ${fasta} | sed "s/^>chr/>/g" > ${modified_fasta}
+    cat ${fasta} | sed "s/^>chr/>/g" | sed "s/^>M />MT /g" > ${modified_fasta}
 
     cat <<-END_VERSIONS > versions.yml
         "${task.process}":
