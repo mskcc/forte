@@ -106,7 +106,7 @@ gene_info <- rbind(gene_info,add_these_excess_gene_ids)
 gene_info <- merge(gene_info,do.call(rbind,unique_id_to_names[versioned_gtf])[,c("gene_id","gene_id_with_version")],by = "gene_id",all.x = T, all.y = F)
 
 gene_info$Synonyms <- ifelse(is.na(gene_info$gene_id_with_version),gene_info$gene_id,paste0(gene_info$gene_id,"|",gene_info$gene_id_with_version))
-gene_info$Symbol <- gene_info$gene_name
+gene_info$Symbol <- ifelse(is.na(gene_info$gene_name), gene_info$gene_id, gene_info$gene_name)
 
 gene_info <- gene_info[,c("Symbol","Synonyms")]
 

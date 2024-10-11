@@ -1,5 +1,5 @@
 include { STAR_ALIGN as STAR_FOR_ARRIBA     } from '../../modules/nf-core/star/align/main'
-include { ARRIBA                            } from '../../modules/nf-core/arriba/main'
+include { ARRIBA_ARRIBA                     } from '../../modules/nf-core/arriba/arriba/main'
 include { STAR_ALIGN as STAR_FOR_STARFUSION } from '../../modules/nf-core/star/align/main'
 include { STARFUSION                        } from '../../modules/local/starfusion/detect/main'
 include { FUSIONCATCHER_DETECT              } from '../../modules/local/fusioncatcher/detect/main'
@@ -19,6 +19,7 @@ workflow FUSION {
     reads
     reads_untrimmed
     star_index
+    fasta
     gtf
     starfusion_ref
     fusioncatcher_ref
@@ -33,7 +34,7 @@ workflow FUSION {
 
     main:
     ch_versions = Channel.empty()
-    fasta = params.fasta
+    //fasta = params.fasta
     //gene_bed = params.metafusion_gene_bed
     //gene_info = params.metafusion_gene_info
     //blocklist = params.metafusion_blocklist
@@ -48,23 +49,23 @@ workflow FUSION {
     )
     ch_versions = ch_versions.mix(STAR_FOR_ARRIBA.out.versions.first())
 
-    ARRIBA(
+    ARRIBA_ARRIBA(
         STAR_FOR_ARRIBA.out.bam,
         fasta,
         gtf,
-        arriba_blacklist,
-        arriba_known_fusions,
-        [],
-        [],
-        arriba_protein_domains
+	arriba_blacklist.map{[[:],it]},
+	arriba_known_fusions.map{[[:],it]},
+        [[:],[]],
+        [[:],[]],
+	arriba_protein_domains.map{[[:],it]}
     )
-    ch_versions = ch_versions.mix(ARRIBA.out.versions.first())
+    ch_versions = ch_versions.mix(ARRIBA_ARRIBA.out.versions.first())
 
     STAR_FOR_STARFUSION(
         reads,
         // use the star index in the starfusion reference to ensure compatibility
-        starfusion_ref.map{ file( it + "/ref_genome.fa.star.idx")},
-	starfusion_ref.map{ file( it + "/ref_annot.gtf")},
+        starfusion_ref.map{ [[id:params.genome],file( it + "/ref_genome.fa.star.idx")] },
+	starfusion_ref.map{ [[id:params.genome],file( it + "/ref_annot.gtf")] },
         false,
         [],
         []
@@ -88,7 +89,7 @@ workflow FUSION {
     fc_fusions = ["GRCh37","hg19","smallGRCh37"].contains(params.genome) ? FUSIONCATCHER_DETECT.out.fusions_alt : FUSIONCATCHER_DETECT.out.fusions
 
 
-    ARRIBA_TO_CFF(ARRIBA.out.fusions
+    ARRIBA_TO_CFF(ARRIBA_ARRIBA.out.fusions
             .map{ meta, file ->[ meta, "arriba", file ] })
     FUSIONCATCHER_TO_CFF(fc_fusions
                     .map{ meta, file -> [ meta, "fusioncatcher", file ] } )
@@ -113,7 +114,7 @@ workflow FUSION {
         MERGE_CFF.out.file_out,
         gene_bed.map{ it[1] }.first(),
         gene_info.map{ it[1] }.first(),
-        fasta,
+        fasta.map{ it[1] }.first(),
         blocklist
     )
 

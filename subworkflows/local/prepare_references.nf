@@ -6,6 +6,7 @@ include { SAMTOOLS_FAIDX                 } from '../../modules/nf-core/samtools/
 include { GATK4_BEDTOINTERVALLIST        } from '../../modules/nf-core/gatk4/bedtointervallist/main'
 include { PREPARE_RRNA                   } from '../../modules/local/prepare_rrna/main'
 include {
+    GUNZIP as GUNZIP_FASTA ;
     GUNZIP as GUNZIP_GTF ;
     GUNZIP as GUNZIP_METAFUSIONGENEBED ;
     GUNZIP as GUNZIP_METAFUSIONBLOCKLIST
@@ -18,31 +19,47 @@ include { AGFUSION_DOWNLOAD              } from '../../modules/local/agfusion/do
 include { AGAT_SPADDINTRONS              } from '../../modules/nf-core/agat/spaddintrons/main'
 include { METAFUSION_GENEBED             } from '../../modules/local/metafusion/genebed/main'
 include { METAFUSION_GENEINFO            } from '../../modules/local/metafusion/geneinfo/main'
+include { FASTAREMOVEPREFIX              } from '../../modules/local/fastaremoveprefix/main'
 
 workflow PREPARE_REFERENCES {
 
     main:
     ch_versions = Channel.empty()
 
-    if (params.gtf.endsWith(".gz")){
-        GUNZIP_GTF([[:],params.gtf])
-        gtf = GUNZIP_GTF.out.gunzip.map{ it[1] }.first()
+    if (params.fasta.endsWith(".gz")){
+        GUNZIP_FASTA([[id:params.genome],params.fasta])
+        fasta = GUNZIP_FASTA.out.gunzip.first()
     } else {
-        gtf = params.gtf
+        fasta = Channel.of([[id:params.genome],params.fasta]).first()
+    }
+
+    if (params.genome == "GRCh38" ){
+        FASTAREMOVEPREFIX(fasta)
+	fasta = FASTAREMOVEPREFIX.out.fasta
+    }
+
+    if (params.gtf.endsWith(".gz")){
+        GUNZIP_GTF([[id:params.genome],params.gtf])
+        gtf = GUNZIP_GTF.out.gunzip.first()
+    } else {
+        gtf = Channel.of([[id:params.genome],params.gtf]).first()
     }
 
     if (params.metafusion_blocklist.endsWith(".gz")){
         GUNZIP_METAFUSIONBLOCKLIST([[:],params.metafusion_blocklist])
         metafusion_blocklist = GUNZIP_METAFUSIONBLOCKLIST.out.gunzip.map{ it[1] }.first()
     } else {
-        metafusion_blocklist = params.metafusion_blocklist
+        metafusion_blocklist = Channel.of(params.metafusion_blocklist).first()
     }
 
-    STAR_GENOMEGENERATE(params.fasta,gtf)
+    STAR_GENOMEGENERATE(
+        fasta,
+        gtf
+    )
     ch_versions = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
-    star_index = STAR_GENOMEGENERATE.out.index
+    star_index = STAR_GENOMEGENERATE.out.index.first()
 
-    UCSC_GTFTOGENEPRED(Channel.value(gtf).map{[[id:params.genome],it]})
+    UCSC_GTFTOGENEPRED(gtf)
     ch_versions = ch_versions.mix(UCSC_GTFTOGENEPRED.out.versions)
 
     UCSC_GENEPREDTOBED(UCSC_GTFTOGENEPRED.out.genepred)
@@ -55,7 +72,7 @@ workflow PREPARE_REFERENCES {
     }
     PREPARE_RRNA([],refflat)
 
-    GATK4_CREATESEQUENCEDICTIONARY(params.fasta)
+    GATK4_CREATESEQUENCEDICTIONARY(fasta)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
 
     GATK4_BEDTOINTERVALLIST(
@@ -64,7 +81,7 @@ workflow PREPARE_REFERENCES {
     )
     ch_versions = ch_versions.mix(GATK4_BEDTOINTERVALLIST.out.versions)
 
-    SAMTOOLS_FAIDX ([[:],params.fasta])
+    SAMTOOLS_FAIDX(fasta,[[:],[]])
 
     if (params.starfusion_url) {
         UNTAR_STARFUSION([[id:params.starfusion_url.tokenize("/")[-1].replaceFirst(/\.tar\.gz$/, "")],params.starfusion_url])
@@ -85,7 +102,7 @@ workflow PREPARE_REFERENCES {
     ARRIBA_DOWNLOAD()
 
     AGAT_SPADDINTRONS(
-        [[:],gtf],
+        gtf,
         []
     )
 
@@ -95,7 +112,7 @@ workflow PREPARE_REFERENCES {
     )
 
     METAFUSION_GENEINFO(
-        [[:],gtf], starfusion_ref, fusioncatcher_ref
+        gtf,starfusion_ref, fusioncatcher_ref
     )
 
     AGFUSION_DOWNLOAD(
@@ -111,6 +128,7 @@ workflow PREPARE_REFERENCES {
     star_index         = star_index
     // Convert queue channel to value channel so it never gets poison pilled
     refflat            = refflat
+    fasta              = fasta
     fasta_dict         = GATK4_CREATESEQUENCEDICTIONARY.out.dict
     fasta_fai          = SAMTOOLS_FAIDX.out.fai
     rrna_bed           = PREPARE_RRNA.out.rRNA_bed

@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#118](https://github.com/mskcc/forte/pull/118) - change the way the plug-n-play starfusion reference is downloaded.
 
+- [#128](https://github.com/mskcc/forte/pull/128) - full support for GRCh38 added
+
 ### `Fixed`
 
 - [#119](https://github.com/mskcc/forte/pull/119) - change script error behavior in METAFUSION_RUN process
