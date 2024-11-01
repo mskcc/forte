@@ -19,14 +19,14 @@ workflow QUANTIFICATION {
 
     HTSEQ_COUNT(
         bam.join(bai,by:[0]),
-        gtf
+        gtf.map{it[1]}
     )
     ch_versions   = ch_versions.mix(HTSEQ_COUNT.out.versions)
 
 
     FEATURECOUNTS_GENE(
         bam,
-        gtf
+        gtf.map{it[1]}
     )
     ch_versions = ch_versions.mix(FEATURECOUNTS_GENE.out.versions)
 
@@ -40,7 +40,7 @@ workflow QUANTIFICATION {
 
     COUNT_FEATURES(
         KALLISTO_QUANT.out.abundance,
-        gtf
+        gtf.map{it[1]}
     )
 
 

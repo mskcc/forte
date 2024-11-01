@@ -47,7 +47,8 @@ gtf_df <- gtf_df %>%
         chr = seqnames
     ) %>%
     select(c(chr, start, end, transcript_id, type, strand, gene_name, gene_id)) %>%
-    filter(type %in% c("exon","intron","UTR","CDS","cds","utr")) %>% mutate(start = start-1)
+    filter(type %in% c("exon","intron","UTR","CDS","cds","utr")) %>%
+    mutate(gene_name = ifelse(is.na(gene_name),gene_id,gene_name)) %>% mutate(start = start-1)
 
 
 #START CLOCK
