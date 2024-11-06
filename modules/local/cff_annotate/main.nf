@@ -8,7 +8,6 @@ process CFF_ANNOTATE {
 
     input:
     tuple val(meta), path(cff), path(oncokb), path(agfusion)
-    path(transcripts)
 
     output:
     tuple val(meta), path("${prefix}.unfiltered.cff"), emit: unfiltered_cff
@@ -26,8 +25,7 @@ process CFF_ANNOTATE {
         --cff ${cff} \\
         ${oncokb_param} \\
         --agfusion ${agfusion} \\
-        --out-prefix ${prefix} \\
-        --transcripts ${transcripts}
+        --out-prefix ${prefix} 
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

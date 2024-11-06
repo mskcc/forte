@@ -11,7 +11,7 @@ suppressPackageStartupMessages({
 
 usage <- function() {
     message("Usage:")
-    message("add_annotations_cff.R --cff-file <file.cff> --agfusion-file <agfusion.tsv> --oncokb-file <oncokb.tsv> --out-prefix <prefix> --transcripts <transcript.txt>")
+    message("add_annotations_cff.R --cff-file <file.cff> --agfusion-file <agfusion.tsv> --oncokb-file <oncokb.tsv> --out-prefix <prefix>")
 }
 
 args = commandArgs(TRUE)
@@ -39,14 +39,14 @@ parse_args <- function(x){
 
 args_opt <- parse_args(paste(args,collapse=" "))
 
-possible_args = c("cff", "oncokb", "agfusion", "out_prefix","transcripts")
+possible_args = c("cff", "oncokb", "agfusion", "out_prefix")
 if (length(setdiff(names(args_opt),possible_args)) > 0){
     message("Invalid options")
     usage()
     quit()
 }
 
-required_args <- c("cff","agfusion","out_prefix","transcripts")
+required_args <- c("cff","agfusion","out_prefix")
 if (length(setdiff(required_args,names(args_opt))) > 0) {
     message("Missing required arguments")
     usage()
@@ -57,14 +57,11 @@ oncokb_file = args_opt$oncokb
 agfusion_file = args_opt$agfusion
 cff_file = args_opt$cff
 out_prefix = args_opt$out_prefix
-transcripts = args_opt$transcripts
 
 cff = fread(cff_file)
 final_cff_cols <- c(names(cff))
 agfusion_tab = fread(agfusion_file) %>% select(c(`5'_transcript`,`3'_transcript`,`5'_breakpoint`,`3'_breakpoint`,Fusion_effect))
-#Add transcript version corresponding to gtf ensembl version
-transcripts <- read.delim(transcripts,header = F)
-transcripts <- transcripts[,c("V15","V16")]
+
 
 final_cff_cols <- c(final_cff_cols,"Fusion_effect")
 
@@ -89,26 +86,6 @@ cff <- merge(
     all.x = T,
     all.y = T
 )
-### merge
-cff <- merge(
-    cff,
-    transcripts,
-    by.x = "gene3_transcript_id",
-    by.y = "V15",
-    all.x = T ,
-    all.y = F)
-cff$gene3_transcript_id <- ifelse(is.na(cff$gene3_transcript_id),NA,paste0(cff$gene3_transcript_id,".",cff$V16))
-cff$V16 <- NULL
-cff <- merge(
-    cff,
-    transcripts,
-    by.x = "gene5_transcript_id",
-    by.y = "V15",
-    all.x = T,
-    all.y = F)
-
-cff$gene5_transcript_id <- ifelse(is.na(cff$gene5_transcript_id),NA,paste0(cff$gene5_transcript_id,".",cff$V16))
-cff$V16 <- NULL
 
 cff <- as.data.frame(cff)[,c(final_cff_cols)]
 #cff <- cff %>% mutate(!!final_cff_cols[34] := Fusion_effect) %>% select(-c(Fusion_effect))

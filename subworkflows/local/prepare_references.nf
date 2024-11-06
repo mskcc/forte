@@ -105,7 +105,7 @@ workflow PREPARE_REFERENCES {
     //cosmic_passwd = params.cosmic_passwd ?: ""
 
     AGAT_SPADDINTRONS(
-        [[id:params.ensembl_version],gtf],
+        gtf,
         []
     )
 

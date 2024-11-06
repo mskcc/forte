@@ -142,8 +142,7 @@ workflow FUSION {
         CFF_FINALIZE(
             ADD_FLAG.out.unfiltered_cff
                 .join(ONCOKB_FUSIONANNOTATOR.out.oncokb_fusions, by:0)
-                .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0),
-            transcripts
+                .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
         )
     } else {
         CFF_FINALIZE(
@@ -151,8 +150,7 @@ workflow FUSION {
                 .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
                 .map{ meta, cff, agfusion_file ->
                     [ meta, cff, [], agfusion_file ]
-                },
-            transcripts
+                }
         )
     }
     ch_versions = ch_versions.mix(ADD_FLAG.out.versions.first())
