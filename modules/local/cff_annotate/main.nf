@@ -25,7 +25,7 @@ process CFF_ANNOTATE {
         --cff ${cff} \\
         ${oncokb_param} \\
         --agfusion ${agfusion} \\
-        --out-prefix ${prefix} 
+        --out-prefix ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
