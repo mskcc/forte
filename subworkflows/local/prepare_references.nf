@@ -107,8 +107,7 @@ workflow PREPARE_REFERENCES {
     )
 
     METAFUSION_GENEBED(
-        AGAT_SPADDINTRONS.out.gff,
-        params.ensembl_version
+        AGAT_SPADDINTRONS.out.gff
     )
 
     METAFUSION_GENEINFO(
