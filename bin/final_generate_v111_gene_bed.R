@@ -88,8 +88,6 @@ modify_transcript <- function(transcript){
     transcript <- transcript %>% mutate(type=ifelse(type == "CDS","cds",type))
     transcript$type[transcript$type == "five_prime_utr"] <- "utr5"
     transcript$type[transcript$type == "three_prime_utr"] <- "utr3"
-    
-
     #### Any exon that remains after the cds change, is likely and untranslated region. change below
     # Basically, subfeatures which are "exon" need to be changed (i.e. exon --> utr3/utr5)
     #Forward strand

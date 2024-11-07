@@ -32,6 +32,7 @@ process METAFUSION_GENEBED {
             final_generate_v75_gene_bed.R: 0.0.2
         END_VERSIONS
         """
+
     else if( prefix == 'GRCh38' )
         """
         final_generate_v111_gene_bed.R \\
@@ -58,8 +59,9 @@ process METAFUSION_GENEBED {
             final_generate_v75_gene_bed.R: 0.0.2
         END_VERSIONS
         """
+
     else if( prefix == 'GRCh38' )
-            """
+        """
         touch ${prefix}.metafusion.gene.bed
 
         cat <<-END_VERSIONS > versions.yml
@@ -68,4 +70,5 @@ process METAFUSION_GENEBED {
             final_generate_v111_gene_bed.R: 0.0.1
         END_VERSIONS
         """
+
 }
