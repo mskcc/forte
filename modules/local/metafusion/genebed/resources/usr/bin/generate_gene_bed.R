@@ -17,7 +17,7 @@ suppressPackageStartupMessages({
 
 usage <- function() {
     message("Usage:")
-    message("final_generate_v75_gene_bed.R <in.gff> <out.bed>")
+    message("generate_gene_bed.R <in.gff> <out.bed>")
 }
 
 args = commandArgs(TRUE)
@@ -26,13 +26,6 @@ if (length(args)!=2) {
     usage()
     quit()
 }
-
-# Utilized gtf from igenomes for FORTE This corresponds to GRCh37 ensembl 75
-# Add introns to gtf, convert to gff3
-# bsub -R "rusage[mem=64]" -o add_introns_agat_%J.out singularity exec -B /juno/ \\
-# -B /tmp -B /scratch/ docker://quay.io/biocontainers/agat:0.8.0--pl5262hdfd78af_0  \\
-# /bin/bash -c "agat_sp_add_introns.pl -g /juno/work/taylorlab/cmopipeline/mskcc-igenomes/igenomes/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf\\
-# -o genes.INTRONS.gff3"
 
 gtf <- rtracklayer::import(args[1])
 gtf_df <- as.data.frame(gtf)
@@ -47,7 +40,7 @@ gtf_df <- gtf_df %>%
         chr = seqnames
     ) %>%
     select(c(chr, start, end, transcript_id, type, strand, gene_name, gene_id)) %>%
-    filter(type %in% c("exon","intron","UTR","CDS","cds","utr")) %>%
+    filter(type %in% c("exon","intron","UTR","CDS","cds","utr","five_prime_utr","three_prime_utr")) %>%
     mutate(gene_name = ifelse(is.na(gene_name),gene_id,gene_name)) %>% mutate(start = start-1)
 
 
@@ -110,6 +103,8 @@ modify_transcript <- function(transcript){
             transcript$type[transcript$start >= stop_coding & transcript$type == "UTR"] <- "utr5"
         }
     }
+    transcript$type[transcript$type == "five_prime_utr"] <- "utr5"
+    transcript$type[transcript$type == "three_prime_utr"] <- "utr3"
     #### Any exon that remains after teh cds change, is likely and untranslated region. change below
 
     # Basically, subfeatures which are "exon" need to be changed (i.e. exon --> utr3/utr5)
