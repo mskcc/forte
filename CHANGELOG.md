@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#124](https://github.com/mskcc/forte/pull/124) - ensure genebed file as 0based start site
 
 - [#127](https://github.com/mskcc/forte/pull/127) - allow dynamic increase of memory for process_single label
+  
+- [#132](https://github.com/mskcc/forte/pull/132) - fix generate cff split/span logic for fusioncatcher and arriba
 
 ### `Dependencies`
 
