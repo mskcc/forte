@@ -53,9 +53,10 @@ make_arriba <- function(sample_file) {
     df$strand2 <-
         str_split_fixed(sample_file$`strand2(gene/fusion)`, "/", 2)[, 1]
     df$tool <- "arriba"
-    df$split_cnt <-
-        ifelse(!is.na(sample_file$split_reads1),
-            sample_file$split_reads1,
+    df$split_cnt <- apply(sample_file[,c("split_reads1","split_reads2")], 1, sum,na.rm=TRUE)
+    df$split_cnt <- 
+        ifelse( !is.na(df$split_cnt), 
+            df$split_cnt, 
             -1)
     df$span_cnt <-
         ifelse(!is.na(sample_file$discordant_mates),
@@ -85,12 +86,7 @@ make_fusioncatcher <- function(sample_file) {
     df$strand2 <-
         str_split_fixed(sample_file[, "Fusion_point_for_gene_2(3end_fusion_partner)"], ":", 3)[, 3]
     df$tool <- "fusioncatcher"
-    df$split_cnt <-
-        ifelse(
-            !is.na(sample_file$Spanning_unique_reads),
-            sample_file$Spanning_unique_reads,
-            -1
-        )
+    df$split_cnt <- -1
     df$span_cnt <-
         ifelse(!is.na(sample_file$Spanning_pairs),
             sample_file$Spanning_pairs,
