@@ -55,8 +55,8 @@ make_arriba <- function(sample_file) {
     df$tool <- "arriba"
     df$split_cnt <- apply(sample_file[,c("split_reads1","split_reads2")], 1, sum,na.rm=TRUE)
     df$split_cnt <- 
-        ifelse( !is.na(df$split_cnt), 
-            df$split_cnt, 
+        ifelse( !is.na(df$split_cnt),
+            df$split_cnt,
             -1)
     df$span_cnt <-
         ifelse(!is.na(sample_file$discordant_mates),
