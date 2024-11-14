@@ -54,7 +54,7 @@ make_arriba <- function(sample_file) {
         str_split_fixed(sample_file$`strand2(gene/fusion)`, "/", 2)[, 1]
     df$tool <- "arriba"
     df$split_cnt <- apply(sample_file[,c("split_reads1","split_reads2")], 1, sum,na.rm=TRUE)
-    df$split_cnt <- 
+    df$split_cnt <-
         ifelse( !is.na(df$split_cnt),
             df$split_cnt,
             -1)
