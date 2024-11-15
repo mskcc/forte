@@ -38,7 +38,6 @@ workflow FUSION {
     //gene_bed = params.metafusion_gene_bed
     clinicalgenes = params.clinicalgenes
     //blocklist = params.metafusion_blocklist
-    transcripts = params.transcripts
 
     STAR_FOR_ARRIBA(
         reads,
