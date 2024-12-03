@@ -20,55 +20,30 @@ process METAFUSION_GENEBED {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    if( prefix == 'GRCh37' )
-        """
-        final_generate_v75_gene_bed.R \\
-            $gff \\
-            ${prefix}.metafusion.gene.bed
+    """
+    generate_gene_bed.R \\
+        $gff \\
+        ${prefix}.metafusion.gene.bed
 
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            R: \$(R --version | head -n1)
-            final_generate_v75_gene_bed.R: 0.0.2
-        END_VERSIONS
-        """
-
-    else if( prefix == 'GRCh38' )
-        """
-        final_generate_v111_gene_bed.R \\
-            $gff \\
-            ${prefix}.metafusion.gene.bed
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            R: \$(R --version | head -n1)
-            final_generate_v111_gene_bed.R: 0.0.1
-        END_VERSIONS
-        """
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        R: \$(R --version | head -n1)
+        generate_gene_bed.R: 0.0.2
+    END_VERSIONS
+    """
 
     stub:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    if( prefix == 'GRCh37' )
-        """
-        touch ${prefix}.metafusion.gene.bed
 
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            R: \$(R --version | head -n1)
-            final_generate_v75_gene_bed.R: 0.0.2
-        END_VERSIONS
-        """
+    """
+    touch ${prefix}.metafusion.gene.bed
 
-    else if( prefix == 'GRCh38' )
-        """
-        touch ${prefix}.metafusion.gene.bed
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            R: \$(R --version | head -n1)
-            final_generate_v111_gene_bed.R: 0.0.1
-        END_VERSIONS
-        """
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        R: \$(R --version | head -n1)
+        generate_gene_bed.R: 0.0.2
+    END_VERSIONS
+    """
 
 }

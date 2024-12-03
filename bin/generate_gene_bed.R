@@ -3,7 +3,7 @@
 # __author__      = "Alexandria Dymun"
 # __email__       = "pintoa1@mskcc.org"
 # __contributor__ = "Anne Marie Noronha (noronhaa@mskcc.org)"
-# __version__     = "0.0.1"
+# __version__     = "0.0.2"
 # __status__      = "Dev"
 
 
@@ -17,7 +17,7 @@ suppressPackageStartupMessages({
 
 usage <- function() {
     message("Usage:")
-    message("final_generate_v111_gene_bed.R <in.gff> <out.bed>")
+    message("generate_gene_bed.R <in.gff> <out.bed>")
 }
 
 args = commandArgs(TRUE)
@@ -40,7 +40,7 @@ gtf_df <- gtf_df %>%
         chr = seqnames
     ) %>%
     select(c(chr, start, end, transcript_id, type, strand, gene_name, gene_id)) %>%
-    filter(type %in% c("exon","intron","five_prime_utr","three_prime_utr","CDS")) %>%
+    filter(type %in% c("exon","intron","UTR","CDS","cds","utr","five_prime_utr","three_prime_utr")) %>%
     mutate(gene_name = ifelse(is.na(gene_name),gene_id,gene_name)) %>% mutate(start = start-1)
 
 
@@ -86,14 +86,33 @@ modify_transcript <- function(transcript){
     #Change CDS --> cds ### IF A TRANSCRIPT LACKS "CDS" THIS LINE WILL DO NOTHING, Changing exon values to UTRs later
     transcript <- transcript %>% mutate(type = as.character(type))
     transcript <- transcript %>% mutate(type=ifelse(type == "CDS","cds",type))
+    ## DETERMING UTR3 and UTR5
+    ### INSTEAD OF START AND STOP, USE CDS LOCATIONS AND STRAND INFORMATION.....
+    if ("UTR" %in% unique(transcript$type)){
+        if( unique(transcript$strand) == "f"){
+            #Forward strand
+            start_coding <- min(transcript[transcript$type == "cds","start"])
+            stop_coding <-  max(transcript[transcript$type == "cds","end"])
+            transcript$type[transcript$end <= start_coding &  transcript$type == "UTR"] <- "utr5"
+            transcript$type[transcript$start >= stop_coding & transcript$type == "UTR"] <- "utr3"
+        }else {
+            #Reverse strand
+            start_coding <- max(transcript[transcript$type == "cds","end"])
+            stop_coding <- min(transcript[transcript$type == "cds","start"])
+            transcript$type[transcript$end <= start_coding &  transcript$type == "UTR"] <- "utr3"
+            transcript$type[transcript$start >= stop_coding & transcript$type == "UTR"] <- "utr5"
+        }
+    }
     transcript$type[transcript$type == "five_prime_utr"] <- "utr5"
     transcript$type[transcript$type == "three_prime_utr"] <- "utr3"
-    #### Any exon that remains after the cds change, is likely and untranslated region. change below
+    #### Any exon that remains after teh cds change, is likely and untranslated region. change below
+
     # Basically, subfeatures which are "exon" need to be changed (i.e. exon --> utr3/utr5)
     #Forward strand
     transcript$type[transcript$strand == "f" &  transcript$type == "exon" ] <- "utr5"
     #Reverse strand
     transcript$type[transcript$strand == "r" &  transcript$type == "exon"]<- "utr3"
+    #transcript <- transcript[,c("chr", "start", "end", "transcript_id", "type", "idx", "strand", "gene_name", "gene_id" )]
     expected_types <- c("cds","intron","utr3","utr5")
     transcript <- transcript[transcript$type %in% c(expected_types),]
     return(transcript)
