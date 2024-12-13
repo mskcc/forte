@@ -129,7 +129,7 @@ workflow FORTE {
         PREPROCESS_READS.out.reads_trimmed,
         PREPROCESS_READS.out.reads_untrimmed,
         PREPARE_REFERENCES.out.star_index,
-	PREPARE_REFERENCES.out.fasta,
+	    PREPARE_REFERENCES.out.fasta,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
         PREPARE_REFERENCES.out.fusioncatcher_ref,

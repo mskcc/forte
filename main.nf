@@ -28,8 +28,8 @@ params.metafusion_blocklist   = WorkflowMain.getGenomeAttribute(params, 'metafus
 params.metafusion_gene_bed    = WorkflowMain.getGenomeAttribute(params, 'metafusion_gene_bed')
 params.metafusion_gene_info   = WorkflowMain.getGenomeAttribute(params, 'metafusion_gene_info')
 params.ensembl_version        = WorkflowMain.getGenomeAttribute(params, 'ensembl_version')
-params.clinicalgenes          = WorkflowMain.getGenomeAttribute(params, 'clinicalgenes')
-
+params.transcript_allowlist   = WorkflowMain.getGenomeAttribute(params, 'transcript_allowlist')
+params.clinical_genes         = WorkflowMain.getGenomeAttribute(params, 'clinical_genes')
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE & PRINT PARAMETER SUMMARY
