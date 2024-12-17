@@ -12,9 +12,9 @@ process ADD_FLAG {
     path clinical_genes
 
     output:
-    tuple val(meta), path("*_metafusion_cluster.unfiltered.cff"), emit: unfiltered_cff
-    tuple val(meta), path("*_metafusion_cluster.unfiltered.clinical.cff"), emit: unfiltered_clinical_cff
-    path "versions.yml"                                         , emit: versions
+    tuple val(meta), path("*_metafusion_cluster.unfiltered.cff")            , emit: unfiltered_cff
+    tuple val(meta), path("*_metafusion_cluster.unfiltered.clinical.cff")   , emit: unfiltered_clinical_cff
+    path "versions.yml"                                                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
