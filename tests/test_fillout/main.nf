@@ -1,5 +1,5 @@
 
-include { MAF_INPUT_CHECK } from '../../subworkflows/local/input_check'
+include { MAF_INPUT_CHECK } from '../../subworkflows/local/maf_input_check'
 include { FILLOUT         } from '../../subworkflows/local/fillout'
 
 workflow test_rna_fillout {
