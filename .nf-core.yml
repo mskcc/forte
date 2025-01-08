@@ -18,8 +18,15 @@ lint:
   nextflow_config:
   - manifest.name
   - manifest.homePage
-nf_core_version: 2.14.1
+nf_core_version: 3.1.1
 repository_type: pipeline
 template:
-  prefix: mskcc
-  skip: []
+  author: Anne Marie Noronha
+  description: RNAseq pipeline
+  force: false
+  is_nfcore: false
+  name: forte
+  org: mskcc
+  outdir: .
+  skip_features: []
+  version: 1.0.1
