@@ -28,18 +28,18 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_fort
 */
 
 params.fasta                  = getGenomeAttribute('fasta')
-params.gtf                    = WorkflowMain.getGenomeAttribute(params, 'gtf')
-params.starfusion_url         = WorkflowMain.getGenomeAttribute(params, 'starfusion_url')
-params.refflat                = WorkflowMain.getGenomeAttribute(params, 'refflat')
-params.baits                  = WorkflowMain.getGenomeAttribute(params, 'baits')
-params.cdna                   = WorkflowMain.getGenomeAttribute(params, 'cdna')
-params.arriba_blacklist       = WorkflowMain.getGenomeAttribute(params, 'arriba_blacklist')
-params.arriba_known_fusions   = WorkflowMain.getGenomeAttribute(params, 'arriba_known_fusions')
-params.arriba_protein_domains = WorkflowMain.getGenomeAttribute(params, 'arriba_protein_domains')
-params.metafusion_blocklist   = WorkflowMain.getGenomeAttribute(params, 'metafusion_blocklist')
-params.metafusion_gene_bed    = WorkflowMain.getGenomeAttribute(params, 'metafusion_gene_bed')
-params.metafusion_gene_info   = WorkflowMain.getGenomeAttribute(params, 'metafusion_gene_info')
-params.ensembl_version        = WorkflowMain.getGenomeAttribute(params, 'ensembl_version')
+params.gtf                    = getGenomeAttribute('gtf')
+params.starfusion_url         = getGenomeAttribute('starfusion_url')
+params.refflat                = getGenomeAttribute('refflat')
+params.baits                  = getGenomeAttribute('baits')
+params.cdna                   = getGenomeAttribute('cdna')
+params.arriba_blacklist       = getGenomeAttribute('arriba_blacklist')
+params.arriba_known_fusions   = getGenomeAttribute('arriba_known_fusions')
+params.arriba_protein_domains = getGenomeAttribute('arriba_protein_domains')
+params.metafusion_blocklist   = getGenomeAttribute('metafusion_blocklist')
+params.metafusion_gene_bed    = getGenomeAttribute('metafusion_gene_bed')
+params.metafusion_gene_info   = getGenomeAttribute('metafusion_gene_info')
+params.ensembl_version        = getGenomeAttribute('ensembl_version')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
