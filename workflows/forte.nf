@@ -101,7 +101,7 @@ workflow FORTE {
 
     MAF_INPUT_CHECK(
         params.maf_input,
-	ch_samplesheet.map{ meta, reads -> meta.sample }.unique()
+        ch_samplesheet.map{ meta, reads -> meta.sample }.unique()
     )
 
     FILLOUT(
