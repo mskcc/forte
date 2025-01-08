@@ -35,14 +35,11 @@ workflow FORTE {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
 
-    //
-    // SUBWORKFLOW: If baitsets are available, they will be added to the channel
-    //
-    BAIT_INPUTS ()
+    main:
 
-    //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
+    ch_versions = Channel.empty()
+
+    BAIT_INPUTS ()
 
     PREPARE_REFERENCES()
     ch_versions = ch_versions.mix(PREPARE_REFERENCES.out.ch_versions)
