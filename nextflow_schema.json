@@ -251,10 +251,6 @@
             "type": "boolean",
             "default": true
         },
-        "igenomes_base": {
-            "type": "string",
-            "default": "s3://ngi-igenomes/igenomes"
-        },
         "targets_base": {
             "type": "string",
             "default": "None"
