@@ -9,13 +9,10 @@
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+    GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { FORTE  } from './workflows/forte'
-include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_forte_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_forte_pipeline'
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_forte_pipeline'
 
 /*
@@ -37,6 +34,16 @@ params.metafusion_blocklist   = getGenomeAttribute('metafusion_blocklist')
 params.metafusion_gene_bed    = getGenomeAttribute('metafusion_gene_bed')
 params.metafusion_gene_info   = getGenomeAttribute('metafusion_gene_info')
 params.ensembl_version        = getGenomeAttribute('ensembl_version')
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+include { FORTE                   } from './workflows/forte'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_forte_pipeline'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_forte_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

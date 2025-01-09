@@ -36,7 +36,24 @@ workflow FORTE {
     ch_samplesheet // channel: samplesheet read in from --input
     main:
 
+    ch_samplesheet = ch_samplesheet
+        .groupTuple(by:[0])
+        .map{ meta, reads ->
+            def meta_clone = meta.clone()
+            meta_clone.sample = meta.id
+            meta_clone.fq_num = reads.size()
+            def fastq_pair_id = (1..reads.size()).toList().collect{ "${meta.id}_T${it}" }
+            [meta_clone, reads, fastq_pair_id]
+        }.transpose()
+        .map{ meta, reads, fastq_pair_id ->
+            def meta_clone = meta.clone()
+            meta_clone.fastq_pair_id = fastq_pair_id
+            [meta_clone,reads]
+        }
+
     ch_versions = Channel.empty()
+
+    ch_multiqc_files = Channel.empty()
 
     BAIT_INPUTS ()
 
