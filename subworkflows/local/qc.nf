@@ -72,15 +72,19 @@ workflow QC {
         }
 
     MULTIQC(
-        multiqc_files.groupTuple(by:[0]),
+        multiqc_files.groupTuple(by:[0]).map{meta, multiqc_files -> multiqc_files},
         ch_multiqc_config.collect().ifEmpty([]),
+        [],
+        [],
         [],
         []
     )
 
     MULTIQC_COLLECT(
-        multiqc_files.map{meta, multiqc_files -> multiqc_files}.collect().map{[[:],it]},
+        multiqc_files.map{meta, multiqc_files -> multiqc_files},
         ch_multiqc_config.collect().ifEmpty([]),
+        [],
+        [],
         [],
         []
     )
