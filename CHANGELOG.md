@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#132](https://github.com/mskcc/forte/pull/132) - fix generate cff split/span logic for fusioncatcher and arriba
 
+- [#133](https://github.com/mskcc/forte/pull/133) - Template update for nf-core/tools v3.1.1
+
 ### `Dependencies`
 
 ### `Deprecated`
