@@ -4,7 +4,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { MAF_INPUT_CHECK } from '../subworkflows/local/maf_input_check'
 include { BAIT_INPUTS     } from '../subworkflows/local/baits'
 include { CUSTOM_DUMPSOFTWAREVERSIONS       } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { PREPARE_REFERENCES                } from '../subworkflows/local/prepare_references'
@@ -34,6 +33,7 @@ workflow FORTE {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
+    ch_maf_samplesheet // channel: samplesheet optionally read in from --maf_input
     main:
 
     ch_samplesheet = ch_samplesheet
@@ -112,15 +112,10 @@ workflow FORTE {
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
-    MAF_INPUT_CHECK(
-        params.maf_input,
-        ch_samplesheet.map{ meta, reads -> meta.sample }.unique()
-    )
-
     FILLOUT(
         ALIGN_READS.out.bam,
         ALIGN_READS.out.bai,
-        MAF_INPUT_CHECK.out.mafs,
+        ch_maf_samplesheet,
         params.fasta,
         PREPARE_REFERENCES.out.fasta_fai.map{ it[1] }.first()
     )

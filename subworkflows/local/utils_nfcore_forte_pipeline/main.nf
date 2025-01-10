@@ -92,8 +92,26 @@ workflow PIPELINE_INITIALISATION {
         }
         .set { ch_samplesheet }
 
+    if (params.maf_input) {
+        Channel
+            .fromList(samplesheetToList(params.maf_input, "${projectDir}/assets/schema_maf_input.json"))
+            .set { ch_maf_samplesheet }
+    } else {
+        ch_maf_samplesheet = Channel.empty()
+    }
+
+    ch_maf_samplesheet
+        .map{meta, maf -> [meta.id, maf]}
+        .join(ch_samplesheet.map{meta, reads -> [meta.id, reads]},remainder:true)
+        .subscribe{ id, maf, reads ->
+            if (reads == null) {
+                error("Please check maf input samplesheet -> All sample names should also exist in the fastq input samplesheet")
+            }
+        }
+
     emit:
     samplesheet = ch_samplesheet
+    maf_samplesheet = ch_maf_samplesheet
     versions    = ch_versions
 }
 

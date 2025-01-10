@@ -58,6 +58,7 @@ workflow MSKCC_FORTE {
 
     take:
     samplesheet // channel: samplesheet read in from --input
+    maf_samplesheet
 
     main:
 
@@ -65,7 +66,8 @@ workflow MSKCC_FORTE {
     // WORKFLOW: Run pipeline
     //
     FORTE (
-        samplesheet
+        samplesheet,
+        maf_samplesheet
     )
     emit:
     multiqc_report = FORTE.out.multiqc_report // channel: /path/to/multiqc_report.html
@@ -95,7 +97,8 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     MSKCC_FORTE (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.samplesheet,
+        PIPELINE_INITIALISATION.out.maf_samplesheet
     )
     //
     // SUBWORKFLOW: Run completion tasks
