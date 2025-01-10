@@ -40,7 +40,7 @@ workflow FORTE {
         .groupTuple(by:[0])
         .map{ meta, reads ->
             def meta_clone = meta.clone()
-            meta_clone.sample = meta.id
+            meta_clone.has_umi = meta.umi == [] ? false : true
             meta_clone.fq_num = reads.size()
             def fastq_pair_id = (1..reads.size()).toList().collect{ "${meta.id}_T${it}" }
             [meta_clone, reads, fastq_pair_id]
