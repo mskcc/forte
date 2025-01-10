@@ -1,4 +1,5 @@
-include { FILLOUT         } from '../../subworkflows/local/fillout'
+include { samplesheetToList } from 'plugin/nf-schema'
+include { FILLOUT           } from '../../subworkflows/local/fillout'
 
 workflow test_rna_fillout {
 
@@ -13,7 +14,6 @@ workflow test_rna_fillout {
     ]
 
     // test maf has only chr22 variants
-    input_maf_samplesheet = "tests/test_fillout/data/input.tsv"
     fasta = file("https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta")
     fai   = file("https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta.fai")
 
@@ -22,16 +22,8 @@ workflow test_rna_fillout {
         Channel.of(input_bam),
         Channel.of(input_bai),
         Channel
-            .fromPath(input_maf_samplesheet)
-            .splitCsv(header: true)
-            .map{ row ->
-                def meta = [:]
-                meta.id = row.sample
-                meta.sample = row.sample
-                [meta, file(row.maf)]
-            }.view(),
+            .fromList(samplesheetToList(params.maf_input, "assets/schema_maf_input.json")),
         fasta,
         fai
     )
-
 }
