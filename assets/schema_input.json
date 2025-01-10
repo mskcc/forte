@@ -11,7 +11,7 @@
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
-                "meta": ["id","sample"]
+                "meta": ["id", "sample"]
             },
             "fastq_1": {
                 "type": "string",
@@ -34,12 +34,12 @@
                         "pattern": "^[NXC]+$"
                     },
                     {
-                        "type":"integer",
+                        "type": "integer",
                         "minimum": 1
                     }
                 ],
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
-                "meta":["umi"]
+                "meta": ["umi"]
             },
             "umi2": {
                 "oneOf": [
@@ -48,12 +48,12 @@
                         "pattern": "^[NXC]+$"
                     },
                     {
-                        "type":"integer",
+                        "type": "integer",
                         "minimum": 1
                     }
                 ],
                 "errorMessage": "UMI pattern must contain a string consisting of Ns, Cs or Xs, or an integer",
-                "meta":["umi2"]
+                "meta": ["umi2"]
             },
             "strand": {
                 "type": "string",
@@ -61,13 +61,12 @@
                 "errorMessage": "Strand must be 'yes', 'no', or 'reverse'",
                 "meta": ["strandedness"],
                 "default": "no"
-
             },
             "bait": {
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Bait name should not contain spaces",
-                "meta":["bait"]
+                "meta": ["bait"]
             }
         },
         "required": ["sample", "fastq_1"]
