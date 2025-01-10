@@ -1,5 +1,3 @@
-
-include { MAF_INPUT_CHECK } from '../../subworkflows/local/maf_input_check'
 include { FILLOUT         } from '../../subworkflows/local/fillout'
 
 workflow test_rna_fillout {
@@ -19,17 +17,19 @@ workflow test_rna_fillout {
     fasta = file("https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta")
     fai   = file("https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta.fai")
 
-    // extract from input_maf_samplesheet
-    MAF_INPUT_CHECK(
-        input_maf_samplesheet,
-        Channel.empty()
-    )
-
     // run fillouts
     FILLOUT(
         Channel.of(input_bam),
         Channel.of(input_bai),
-        MAF_INPUT_CHECK.out.mafs,
+        Channel
+            .fromPath(input_maf_samplesheet)
+            .splitCsv(header: true)
+            .map{ row ->
+                def meta = [:]
+                meta.id = row.sample
+                meta.sample = row.sample
+                [meta, file(row.maf)]
+            }.view(),
         fasta,
         fai
     )
