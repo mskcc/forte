@@ -43,7 +43,7 @@ process METAFUSION_RUN {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        Metafusion docker: \$METAFUSION_TAG
+        Metafusion: \$METAFUSION_TAG
         Metafusion_forte.sh: 0.0.2
     END_VERSIONS
     """

@@ -101,9 +101,6 @@ workflow PREPARE_REFERENCES {
 
     ARRIBA_DOWNLOAD()
 
-    //cosmic_usr = params.cosmic_usr ?: ""
-    //cosmic_passwd = params.cosmic_passwd ?: ""
-
     AGAT_SPADDINTRONS(
         gtf,
         []

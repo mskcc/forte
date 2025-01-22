@@ -58,8 +58,8 @@ library(data.table)
             "captured_reads",
             "gene5_transcript_id",
             "gene3_transcript_id",
-            "is_clinical5",
-            "is_clinical3"
+            "refseq_transcript_id_5",
+            "refseq_transcript_id_3"
         )
     colnames(unfiltered_cff) <- header_cff
     cluster <- fread(args[2],data.table = F)

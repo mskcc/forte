@@ -31,12 +31,12 @@ workflow FUSION {
     arriba_blacklist
     arriba_known_fusions
     arriba_protein_domains
+    clinicalgenes
 
     main:
     ch_versions = Channel.empty()
     //fasta = params.fasta
     //gene_bed = params.metafusion_gene_bed
-    clinicalgenes = params.clinicalgenes
     //blocklist = params.metafusion_blocklist
 
     STAR_FOR_ARRIBA(
