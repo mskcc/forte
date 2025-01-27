@@ -17,12 +17,12 @@ workflow QC {
     refflat
     rrna_intervals
     rseqc_bed
+    fasta
     fai
     dict
     baits
 
     main:
-    fasta = params.fasta
     ch_versions = Channel.empty()
 
     BAM_RSEQC(
@@ -35,7 +35,7 @@ workflow QC {
     PICARD_COLLECTRNASEQMETRICS(
         bam,
         refflat,
-        fasta,
+        fasta.map{it[1]}.first(),
         rrna_intervals
     )
     ch_versions = ch_versions.mix(PICARD_COLLECTRNASEQMETRICS.out.versions.first())
@@ -51,9 +51,9 @@ workflow QC {
             }.map{ meta, bam, bai, bait, bait_file, target_file ->
                 [meta, bam, bai, bait_file, target_file]
             },
-        [[:],fasta],
+	fasta,
         fai,
-        dict.map{ dict -> [[:],dict]}
+        dict
     )
 
     multiqc_files = multiqc_files
