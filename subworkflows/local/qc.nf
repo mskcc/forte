@@ -51,7 +51,7 @@ workflow QC {
             }.map{ meta, bam, bai, bait, bait_file, target_file ->
                 [meta, bam, bai, bait_file, target_file]
             },
-	fasta,
+        fasta,
         fai,
         dict
     )
