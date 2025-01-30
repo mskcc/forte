@@ -8,7 +8,7 @@
 
 
 suppressPackageStartupMessages({
-#    library(plyr)
+    library(plyr)
     library(dplyr)
     library(data.table)
     library(stringr)
@@ -34,7 +34,7 @@ gtf_df <- gtf_df[!grepl("NF",gtf_df$tag),]
 
 file.to_write <- args[2]
 
-### ensure start is 0 based
+### convert start to 0-based to match metafusion expectations of gff format
 gtf_df <- gtf_df %>%
     rename(
         chr = seqnames
