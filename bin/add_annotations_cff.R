@@ -1,7 +1,7 @@
 #!/usr/local/bin/Rscript
 # __author__      = "Anne Marie Noronha"
 # __email__       = "noronhaa@mskcc.org"
-# __version__     = "0.0.1"
+# __version__     = "0.0.2"
 
 
 suppressPackageStartupMessages({
@@ -61,7 +61,10 @@ out_prefix = args_opt$out_prefix
 cff = fread(cff_file)
 final_cff_cols <- c(names(cff))
 agfusion_tab = fread(agfusion_file) %>% select(c(`5'_transcript`,`3'_transcript`,`5'_breakpoint`,`3'_breakpoint`,Fusion_effect))
+
+
 final_cff_cols <- c(final_cff_cols,"Fusion_effect")
+
 if (!is.null(oncokb_file)){
     oncokb_tab = fread(oncokb_file) %>% select(-Fusion)
     final_cff_cols = c(final_cff_cols,names(oncokb_tab %>% select(-Tumor_Sample_Barcode)))
