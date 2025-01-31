@@ -4,7 +4,7 @@
     - test_profile
   files:
     - path: output/analysis/SAMPLE_PAIRED_END/STAR/SAMPLE_PAIRED_END.Aligned.sortedByCoord.out.bam
-      md5sum: e46db0148604c6937a2cc7535d934292
+      md5sum: 77e5769b4937eb596dca0b245fdf1e38
     - path: output/analysis/SAMPLE_PAIRED_END_UMI/STAR/SAMPLE_PAIRED_END_UMI.Aligned.sortedByCoord.out.bam
     - path: output/analysis/SAMPLE_SINGLE_END/STAR/SAMPLE_SINGLE_END.Aligned.sortedByCoord.out.bam
     - path: output/analysis/SAMPLE_SINGLE_END/arriba/SAMPLE_SINGLE_END.fusions.discarded.tsv

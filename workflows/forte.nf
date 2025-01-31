@@ -128,8 +128,9 @@ workflow FORTE {
     FUSION(
         PREPROCESS_READS.out.reads_trimmed,
         PREPROCESS_READS.out.reads_untrimmed,
+        ALIGN_READS.out.bam_withdup,
         PREPARE_REFERENCES.out.star_index,
-	PREPARE_REFERENCES.out.fasta,
+        PREPARE_REFERENCES.out.fasta,
         PREPARE_REFERENCES.out.gtf,
         PREPARE_REFERENCES.out.starfusion_ref,
         PREPARE_REFERENCES.out.fusioncatcher_ref,
@@ -170,7 +171,7 @@ workflow FORTE {
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
-	PREPARE_REFERENCES.out.fasta,
+        PREPARE_REFERENCES.out.fasta,
         PREPARE_REFERENCES.out.fasta_fai,
         PREPARE_REFERENCES.out.fasta_dict,
         BAIT_INPUTS.out.baits
@@ -192,7 +193,7 @@ workflow FORTE {
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
-	PREPARE_REFERENCES.out.fasta,
+        PREPARE_REFERENCES.out.fasta,
         PREPARE_REFERENCES.out.fasta_fai,
         PREPARE_REFERENCES.out.fasta_dict,
         BAIT_INPUTS.out.baits
