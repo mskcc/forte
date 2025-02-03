@@ -14,7 +14,7 @@ workflow GROUP_READS {
             [groupKey(meta_clone,meta.fq_num), reads, read_group, fastq_pair_id]
         }.groupTuple(by:[0])
         .map{ meta, reads, read_group, fastq_pair_id ->
-            meta = meta + [read_group:read_group.join(','), fastq_pair_id:fastq_pair_id.join(',')]
+            meta = meta + [read_group:read_group.sort().join(','), fastq_pair_id:fastq_pair_id.sort().join(',')]
             [meta, reads.flatten()]
         }
 
