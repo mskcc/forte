@@ -7,7 +7,7 @@ set -eo pipefail
 # __author__      = "Alexandria Dymun"
 # __email__       = "pintoa1@mskcc.org"
 # __contributor__ = "Anne Marie Noronha (noronhaa@mskcc.org)"
-# __version__     = "0.0.1"
+# __version__     = "0.0.2"
 # __status__      = "Dev"
 
 output_ANC_RT_SG=1
@@ -15,7 +15,7 @@ RT_call_filter=1
 blck_filter=1
 ANC_filter=1
 usage() {
-    echo "Usage: Metafusion_forte.sh --num_tools=<minNumToolsCalled> --genome_fasta <FASTA adds SEQ to fusion>  --recurrent_bedpe <blacklistFusions>  --outdir <outputDirectory> --cff <cffFile> --gene_bed <geneBedFile> --gene_info <geneInfoFile>" 1>&2;
+    echo "Usage: Metafusion_forte.sh --num_tools=<minNumToolsCalled> --genome_fasta <FASTA adds SEQ to fusion>  --recurrent_bedpe <blacklistFusions>  --outdir <outputDirectory> --cff <cffFile> --gene_bed <geneBedFile> --gene_info <geneInfoFile> --clinical_genes <clinicalGenes>" 1>&2;
     exit 1;
 }
 
@@ -48,6 +48,10 @@ while test $# -gt 0;do
         ;;
         --recurrent_bedpe)
         recurrent_bedpe="$2"
+        shift 2
+        ;;
+        --clinical_genes)
+        clinical_genes="$2"
         shift 2
         ;;
         *)
@@ -83,10 +87,10 @@ cff=$outdir/$(basename $cff).renamed
 #Annotate cff
 if [ $genome_fasta ]; then
     echo Annotate cff, extract sequence surrounding breakpoint
-    reann_cff_fusion.py --cff $cff --gene_bed $gene_bed --ref_fa $genome_fasta > $outdir/$(basename $cff).reann.WITH_SEQ
+    reann_cff_fusion.py --cff $cff --gene_bed $gene_bed --ref_fa $genome_fasta --clinical_genes $clinical_genes > $outdir/$(basename $cff).reann.WITH_SEQ
 else
     echo Annotate cff, no extraction of sequence surrounding breakpoint
-    reann_cff_fusion.py --cff $cff --gene_bed $gene_bed > $outdir/$(basename $cff).reann.NO_SEQ
+    reann_cff_fusion.py --cff $cff --gene_bed $gene_bed --clinical_genes $clinical_genes > $outdir/$(basename $cff).reann.NO_SEQ
 fi
 
 # Assign .cff based on SEQ or NOSEQ
