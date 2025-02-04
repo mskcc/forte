@@ -81,7 +81,7 @@ workflow QC {
     )
 
     MULTIQC_COLLECT(
-        multiqc_files.map{meta, multiqc_files -> multiqc_files},
+        multiqc_files.map{meta, multiqc_files -> multiqc_files}.collect().map{[[:],it]},
         ch_multiqc_config.collect().ifEmpty([]),
         [],
         [],
