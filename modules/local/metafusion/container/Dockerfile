@@ -9,7 +9,7 @@ ENV PATH="${PATH}:/MetaFusion/scripts"
 
 RUN R -e "chooseCRANmirror(ind=52); install.packages(c('plyr','data.table'))"
 
-RUN git clone -b $METAFUSION_TAG https://github.com/pintoa1-mskcc/MetaFusion.git --single-branch && \
+RUN git clone -b $METAFUSION_TAG https://github.com/mskcc/MetaFusion.git --single-branch && \
     cd /MetaFusion/ && \
     git pull && \
     chmod -R +x /MetaFusion/scripts && \

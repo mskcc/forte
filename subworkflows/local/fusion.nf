@@ -32,14 +32,13 @@ workflow FUSION {
     arriba_blacklist
     arriba_known_fusions
     arriba_protein_domains
+    clinical_genes
+    transcript_allowlist
 
     main:
     ch_versions = Channel.empty()
     //fasta = params.fasta
     //gene_bed = params.metafusion_gene_bed
-    transcript_allowlist = params.transcript_allowlist
-    clinical_genes = params.clinical_genes
-
     //blocklist = params.metafusion_blocklist
 
     STAR_FOR_ARRIBA(

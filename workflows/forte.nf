@@ -140,7 +140,9 @@ workflow FORTE {
         PREPARE_REFERENCES.out.metafusion_blocklist,
         workflow.profile.toString().split(",").contains("test") ? Channel.of([]) : PREPARE_REFERENCES.out.arriba_blacklist,
         workflow.profile.toString().split(",").contains("test") ? Channel.of([]) : PREPARE_REFERENCES.out.arriba_known_fusions,
-        workflow.profile.toString().split(",").contains("test") ? Channel.of([]) : PREPARE_REFERENCES.out.arriba_protein_domains
+        workflow.profile.toString().split(",").contains("test") ? Channel.of([]) : PREPARE_REFERENCES.out.arriba_protein_domains,
+        params.clinicalgenes,
+        params.transcript_allowlist 
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
