@@ -13,6 +13,7 @@ include { CAT_CAT as MERGE_CFF                  } from '../../modules/nf-core/ca
 include { METAFUSION_RUN                        } from '../../modules/local/metafusion/run/main'
 include { ADD_FLAG                              } from '../../modules/local/add_flags/main'
 include { CFF_ANNOTATE as CFF_FINALIZE          } from '../../modules/local/cff_annotate/main'
+include { ADD_FLAGS_AGFUSION                    } from '../../modules/local/add_flags_agfusion/main'
 
 workflow FUSION {
 
@@ -161,11 +162,20 @@ workflow FUSION {
                 }
         )
     }
+
+    ADD_FLAGS_AGFUSION(
+        ADD_FLAG.out.unfiltered_cff
+            .join(AGFUSION_CLINICAL.out.fusion_transcripts_tsv, by:0),
+        transcript_allowlist
+    )
+
     ch_versions = ch_versions.mix(ADD_FLAG.out.versions.first())
     ch_versions = ch_versions.mix(METAFUSION_RUN.out.versions.first())
     ch_versions = ch_versions.mix(ARRIBA_TO_CFF.out.versions.first())
     ch_versions = ch_versions.mix(FUSIONCATCHER_TO_CFF.out.versions.first())
     ch_versions = ch_versions.mix(STARFUSION_TO_CFF.out.versions.first())
+    ch_versions = ch_versions.mix(ADD_FLAGS_AGFUSION.out.versions.first())
+
 
     emit:
     ch_versions
