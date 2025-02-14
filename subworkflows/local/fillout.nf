@@ -36,7 +36,7 @@ workflow FILLOUT {
         fai
 
     )
-    ch_versions = ch_versions.mix(GBCMS.out.versions.first())
+    ch_versions = ch_versions.mix(GBCMS.out.versions.map{it[1]}.first())
 
     COMBINE_FILLOUTS(
         GBCMS.out.variant_file
