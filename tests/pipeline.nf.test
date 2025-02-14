@@ -13,8 +13,8 @@ nextflow_pipeline {
         }
 
         then {
-            def stable_name = getAllFilesFromDir(outputDir, relative:true, includeDir: true, include:['analysis/**/*']) 
-	    def stable_path = getAllFilesFromDir(outputDir, ignore: ['pipeline_info/**','analysis/**/*Log*.out','analysis/**/*.rna_metrics','{analysis,multiqc}/**/*.{html,json,pdf}','analysis/**/*.fastp.log','references/**/Log.out','multiqc/**','analysis/**/*.umi_extract.log'])
+            def stable_name = getAllFilesFromDir(outputDir, relative:true, includeDir: true, include:['analysis/**/*'])
+            def stable_path = getAllFilesFromDir(outputDir, ignore: ['pipeline_info/**','analysis/**/*Log*.out','analysis/**/*.rna_metrics','{analysis,multiqc}/**/*.{html,json,pdf}','analysis/**/*.fastp.log','references/**/Log.out','multiqc/**','analysis/**/*.umi_extract.log'])
             assertAll(
                 // workflow completes with success
                 { assert workflow.success },
@@ -23,7 +23,7 @@ nextflow_pipeline {
                     workflow.trace.succeeded().size(),
                     removeNextflowVersion("$outputDir/pipeline_info/forte_software_mqc_versions.yml"),
                     stable_name,
-		    stable_path
+                    stable_path
                 ).match() }
             )
         }

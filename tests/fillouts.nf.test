@@ -5,18 +5,18 @@ nextflow_workflow {
     workflow "FILLOUT"
     config "tests/fillouts.config"
 
-    
+   
         setup {
             run("PIPELINE_INITIALISATION") {
-	    script '../subworkflows/local/utils_nfcore_forte_pipeline/main.nf'
-	        config "tests/fillouts.config"
+            script '../subworkflows/local/utils_nfcore_forte_pipeline/main.nf'
+                config "tests/fillouts.config"
                 workflow {
                     """
                     input[0] = false
                     input[1] = false
                     input[1] = true
                     input[3] = []
-                    input[4] = "$outputDir" 
+                    input[4] = "$outputDir"
                     input[5] = params.input
                     """
                 }
@@ -24,7 +24,7 @@ nextflow_workflow {
         }
     test("Should run without failures") {
         //script "../subworkflows/local/fillout.nf"
-	//workflow "FILLOUT"
+        //workflow "FILLOUT"
 
         when {
 
@@ -50,14 +50,14 @@ nextflow_workflow {
         }
 
         then {
-            def stable_name = getAllFilesFromDir(outputDir, relative:true, includeDir: true, include:['analysis/**/*']) 
+            def stable_name = getAllFilesFromDir(outputDir, relative:true, includeDir: true, include:['analysis/**/*'])
             def stable_path = getAllFilesFromDir(outputDir, ignore: ['pipeline_info/**'])
 
             assertAll(
                 // workflow completes with success
                 { assert workflow.success },
                 // Number of successful tasks
-		
+               
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
                     stable_name,
