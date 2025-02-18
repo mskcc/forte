@@ -44,7 +44,7 @@ jobs:
           - isMaster: false
             profile: "conda"
           - isMaster: false
-            profile: "singularity"
+            profile: "docker"
         shard: [1]
         filter: ["workflow", "pipeline"]
     steps:
