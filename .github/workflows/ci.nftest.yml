@@ -26,9 +26,10 @@ jobs:
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'mskcc/forte') }}"
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         NXF_VER:
-          - "24.04.2"
+          - "24.10.3"
           - "latest-everything"
         profile:
           - "conda"
