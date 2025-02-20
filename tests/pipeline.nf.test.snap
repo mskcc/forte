@@ -199,7 +199,7 @@
                 "SAMPLE_PAIRED_END_arriba.cff:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SAMPLE_PAIRED_END@SRR5665260.1.36873006@@SAMPLE_PAIRED_END_T1_1.fastp.fastq.gz:md5,c01c30082956f990c991505116e080f7",
                 "SAMPLE_PAIRED_END@SRR5665260.1.36873006@@SAMPLE_PAIRED_END_T1_2.fastp.fastq.gz:md5,314744ed8805b87abb855c8e6b82a4f8",
-                "SAMPLE_PAIRED_END.gene.featureCounts.txt:md5,4f62e5237a7b99ae96d5750911eaeef0",
+                "SAMPLE_PAIRED_END.gene.featureCounts.txt:md5,fd2b9b178d8d63292e7ce281014bc082",
                 "SAMPLE_PAIRED_END.gene.featureCounts.txt.summary:md5,4ee398767be572e0437f07b35acad81c",
                 "SAMPLE_PAIRED_END.bam_stat.txt:md5,7e95965caeba197d0b417fea3ba87a0c",
                 "SAMPLE_PAIRED_END.inner_distance.txt:md5,ebe9ec6580df318c5a192ef25b4d17d9",
@@ -215,7 +215,7 @@
                 "SAMPLE_PAIRED_END_UMI_arriba.cff:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SAMPLE_PAIRED_END_UMI@SRR5665260.1.36873006@@SAMPLE_PAIRED_END_UMI_T1_1.fastp.fastq.gz:md5,6741d8444976807f6e3cd5d770474d4d",
                 "SAMPLE_PAIRED_END_UMI@SRR5665260.1.36873006@@SAMPLE_PAIRED_END_UMI_T1_2.fastp.fastq.gz:md5,882962186d3e04042b89868e70630b52",
-                "SAMPLE_PAIRED_END_UMI.gene.featureCounts.txt:md5,75bc8e27c097ec68a0a7ef742ac93811",
+                "SAMPLE_PAIRED_END_UMI.gene.featureCounts.txt:md5,925573cfd3223a4c66f2b3c6b104c89e",
                 "SAMPLE_PAIRED_END_UMI.gene.featureCounts.txt.summary:md5,fe522391f15498a0fc5d53029370435e",
                 "SAMPLE_PAIRED_END_UMI.bam_stat.txt:md5,b435b63ec20c54b175c33b920b79cb96",
                 "SAMPLE_PAIRED_END_UMI.inner_distance.txt:md5,8fb2f83e4a3fae3328033f3323158f48",
@@ -240,7 +240,7 @@
                 "SAMPLE_SINGLE_END.fusions.tsv:md5,7c3383f7eb6d79b84b0bd30a7ef02d70",
                 "SAMPLE_SINGLE_END_arriba.cff:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SAMPLE_SINGLE_END@SRR5665260.1.36873006@@SAMPLE_SINGLE_END_T1.fastp.fastq.gz:md5,4d4605641f64c810e550efc464cfc1ce",
-                "SAMPLE_SINGLE_END.gene.featureCounts.txt:md5,7a87f074d3b3defa0cfbe887c20a99b2",
+                "SAMPLE_SINGLE_END.gene.featureCounts.txt:md5,92a28b0d6e134bbfa84ce4b2dfc3b23f",
                 "SAMPLE_SINGLE_END.gene.featureCounts.txt.summary:md5,80d397b6ece31195a10daff5cabce31a",
                 "SAMPLE_SINGLE_END.bam_stat.txt:md5,d4cde5a2c242bc733dea4f7496c6b7f7",
                 "kallisto:md5,f077f8b81234cbd2e475f5cd69069517",
@@ -259,7 +259,7 @@
                 "exonGeTrInfo.tab:md5,72d4dd88d25e3c5b0bb72b12b4ac99a8",
                 "exonInfo.tab:md5,0d560290fab688b7268d88d5494bf9fe",
                 "geneInfo.tab:md5,8b608537307443ffaee4927d2b428805",
-                "genomeParameters.txt:md5,7b062cc4f4355a896dcafcd4277c5add",
+                "genomeParameters.txt:md5,2af894b082afb598240dc1ccf5919505",
                 "sjdbInfo.txt:md5,5690ea9d9f09f7ff85b7fd47bd234903",
                 "sjdbList.fromGTF.out.tab:md5,8760c33e966dad0b39f440301ebbdee4",
                 "sjdbList.out.tab:md5,9e4f991abbbfeb3935a2bb21b9e258f1",
@@ -269,8 +269,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "23.10.1"
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2025-02-19T12:48:59.077362"
+        "timestamp": "2025-02-20T15:02:20.199155"
     }
 }
