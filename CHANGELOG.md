@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#135](https://github.com/mskcc/forte/pull/135) - sort read_group and fastq_pair_id values before concatenation
 
+- [#139](https://github.com/mskcc/forte/pull/139) - Add nftests and CI workflow
+
 ### `Dependencies`
 
 ### `Deprecated`
