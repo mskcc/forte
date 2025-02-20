@@ -30,7 +30,7 @@ workflow QC {
         rseqc_bed,
         params.rseqc_modules
     )
-    ch_versions = ch_versions.mix(BAM_RSEQC.out.versions.first())
+    ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 
     PICARD_COLLECTRNASEQMETRICS(
         bam,
