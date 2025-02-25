@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#132](https://github.com/mskcc/forte/pull/132) - fix generate cff split/span logic for fusioncatcher and arriba
 
+- [#135](https://github.com/mskcc/forte/pull/135) - sort read_group and fastq_pair_id values before concatenation
+
 ### `Dependencies`
 
 ### `Deprecated`
