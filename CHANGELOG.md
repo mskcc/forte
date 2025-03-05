@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#132](https://github.com/mskcc/forte/pull/132) - fix generate cff split/span logic for fusioncatcher and arriba
 
-- [#133](https://github.com/mskcc/forte/pull/133) - Template update for nf-core/tools v3.1.1
+- [#133](https://github.com/mskcc/forte/pull/133) - Template update from nf-core/tools v3.1.1, including addition of pipeline initialization and completion workflows, and input schemas. Also changing base branch to dev for more harmony with the template.
 
 - [#135](https://github.com/mskcc/forte/pull/135) - sort read_group and fastq_pair_id values before concatenation
 

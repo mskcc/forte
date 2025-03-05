@@ -340,7 +340,7 @@
             "default": "genomes"
         },
         "baits": {
-            "type": "string",
+            "type": "object",
             "default": null
         },
         "cdna": {
