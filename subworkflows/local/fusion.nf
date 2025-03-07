@@ -53,11 +53,11 @@ workflow FUSION {
         STAR_FOR_ARRIBA.out.bam,
         fasta,
         gtf,
-	arriba_blacklist.map{[[:],it]},
-	arriba_known_fusions.map{[[:],it]},
+        arriba_blacklist.map{[[:],it]},
+        arriba_known_fusions.map{[[:],it]},
         [[:],[]],
         [[:],[]],
-	arriba_protein_domains.map{[[:],it]}
+        arriba_protein_domains.map{[[:],it]}
     )
     ch_versions = ch_versions.mix(ARRIBA_ARRIBA.out.versions.first())
 
@@ -65,7 +65,7 @@ workflow FUSION {
         reads,
         // use the star index in the starfusion reference to ensure compatibility
         starfusion_ref.map{ [[id:params.genome],file( it + "/ref_genome.fa.star.idx")] },
-	starfusion_ref.map{ [[id:params.genome],file( it + "/ref_annot.gtf")] },
+        starfusion_ref.map{ [[id:params.genome],file( it + "/ref_annot.gtf")] },
         false,
         [],
         []
