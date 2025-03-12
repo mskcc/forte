@@ -1,4 +1,4 @@
-include { PORTCULLIS_FULL } from '../modules/nf-core/portcullis/full/main'
+include { PORTCULLIS_FULL } from '../../modules/nf-core/portcullis/full/main'
 
 workflow SPLICING {
     take:
