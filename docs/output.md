@@ -15,6 +15,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Quantification](#quantification)
 - [Fusion Calling](#fusion-calling)
 - [Fusion Merging and Annotation](#fusion-merging-and-annotation)
+- [Splicing](#splicing)
 - [QC](#qc)
 - [Fillouts](#fillouts)
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
@@ -146,6 +147,24 @@ FORTE uses a custom fork of [Metafusion](https://github.com/mskcc/MetaFusion) to
 `Fusion_effect` information is added using a custom fork of [AGFusion](https://github.com/anoronh4/AGFusion).
 
 [FusionAnnotator.py from the oncokb-annotator](https://github.com/oncokb/oncokb-annotator/blob/master/FusionAnnotator.py) is also run and added to the final cff file.
+
+### Splicing
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `analysis/<sample>/portcullis/`
+  - `*.portcullis.log`
+  - `portcullis_filtered.pass.junctions.bed`
+  - `portcullis_filtered.pass.junctions.tab`
+  - `portcullis_filtered.rules_in.junctions.bed`
+  - `portcullis_filtered.rules_in.junctions.tab`
+  - `portcullis_filtered.rules_out.failed.junctions.tab`
+  - `portcullis_filtered.rules_out.passed.junctions.tab`
+
+</details>
+
+[Portcullis](https://portcullis.readthedocs.io/en/latest/) analyzes and quantifies splice junctions from a BAM file.
 
 ### QC
 
