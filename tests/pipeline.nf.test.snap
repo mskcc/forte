@@ -225,7 +225,6 @@
                 "SAMPLE_PAIRED_END@SRR5665260.1.36873006@@SAMPLE_PAIRED_END_T1_2.fastp.fastq.gz:md5,314744ed8805b87abb855c8e6b82a4f8",
                 "SAMPLE_PAIRED_END.gene.featureCounts.txt:md5,fd2b9b178d8d63292e7ce281014bc082",
                 "SAMPLE_PAIRED_END.gene.featureCounts.txt.summary:md5,4ee398767be572e0437f07b35acad81c",
-                "SAMPLE_PAIRED_END.portcullis.log:md5,35e637c6dde0b91447482bfa0d5a8085",
                 "portcullis_filtered.pass.junctions.bed:md5,4b0c260218ce4cfef5776783be3fcaae",
                 "portcullis_filtered.pass.junctions.tab:md5,d6677c83321b445828717270e2e31863",
                 "portcullis_filtered.rules_in.junctions.bed:md5,42a762b8e9e247527261844c1f031ee6",
@@ -248,7 +247,6 @@
                 "SAMPLE_PAIRED_END_UMI@SRR5665260.1.36873006@@SAMPLE_PAIRED_END_UMI_T1_2.fastp.fastq.gz:md5,882962186d3e04042b89868e70630b52",
                 "SAMPLE_PAIRED_END_UMI.gene.featureCounts.txt:md5,925573cfd3223a4c66f2b3c6b104c89e",
                 "SAMPLE_PAIRED_END_UMI.gene.featureCounts.txt.summary:md5,fe522391f15498a0fc5d53029370435e",
-                "SAMPLE_PAIRED_END_UMI.portcullis.log:md5,7db9862e45329536907c07af8d0cfa22",
                 "portcullis_filtered.pass.junctions.bed:md5,90aed9872803b215a9d7f1d9f20d32ac",
                 "portcullis_filtered.pass.junctions.tab:md5,033ecb7bf901794f713ebad0b79f1d0f",
                 "portcullis_filtered.rules_in.junctions.bed:md5,c0251924556a211b69a0743b61f1bbab",
@@ -280,7 +278,6 @@
                 "SAMPLE_SINGLE_END@SRR5665260.1.36873006@@SAMPLE_SINGLE_END_T1.fastp.fastq.gz:md5,4d4605641f64c810e550efc464cfc1ce",
                 "SAMPLE_SINGLE_END.gene.featureCounts.txt:md5,92a28b0d6e134bbfa84ce4b2dfc3b23f",
                 "SAMPLE_SINGLE_END.gene.featureCounts.txt.summary:md5,80d397b6ece31195a10daff5cabce31a",
-                "SAMPLE_SINGLE_END.portcullis.log:md5,e0e1764e4269652f53fb0030195eac8f",
                 "portcullis_filtered.pass.junctions.bed:md5,9876df7fb2f214143636489a63b6af0e",
                 "portcullis_filtered.pass.junctions.tab:md5,2f5b156678c2fbb9870757089a3ce0f4",
                 "portcullis_filtered.rules_in.junctions.bed:md5,166f2f2aef417fdfba516cce03334880",
@@ -316,6 +313,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.3"
         },
-        "timestamp": "2025-03-12T12:57:20.278171"
+        "timestamp": "2025-03-12T13:51:51.709331"
     }
 }
