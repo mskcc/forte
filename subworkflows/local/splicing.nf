@@ -1,6 +1,6 @@
-include { PORTCULLIS_FULL } from '../modules/nf-core/portcullis/full/main'  
+include { PORTCULLIS_FULL } from '../modules/nf-core/portcullis/full/main'
 
-workflow SPLICING { 
+workflow SPLICING {
     take:
         bam
         junction_bed
