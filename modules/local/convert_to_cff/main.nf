@@ -4,8 +4,8 @@ process TO_CFF {
 
 //  must be using singularity 3.7+
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/rocker-org/devcontainer/tidyverse:4' :
-        'ghcr.io/rocker-org/devcontainer/tidyverse:4' }"
+        'ghcr.io/rocker-org/tidyverse:4.4.2' :
+        'ghcr.io/rocker-org/tidyverse:4.4.2' }"
 
     input:
     tuple val(meta), val(caller), path(fusions)

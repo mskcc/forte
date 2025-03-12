@@ -1,0 +1,19 @@
+{
+    "Should run without failures": {
+        "content": [
+            3,
+            [
+                "analysis/SAMPLE_PAIRED_END/fillouts",
+                "analysis/SAMPLE_PAIRED_END/fillouts/SAMPLE_PAIRED_END.reformat.gbcms.combined.maf"
+            ],
+            [
+                "SAMPLE_PAIRED_END.reformat.gbcms.combined.maf:md5,44c6d9489b426af2b4f58fd0290cfc36"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-02-13T17:05:58.621278"
+    }
+}
