@@ -8,7 +8,8 @@
                     "gbcms": {
                         "branch": "main",
                         "git_sha": "a1cac683a67fbc9d04e03f805475cda285a96686",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/msk/gbcms/gbcms.diff"
                     }
                 }
             }
