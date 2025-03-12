@@ -86,6 +86,11 @@
                         "git_sha": "54f28e020daf9215ab000da7af3b273e85639855",
                         "installed_by": ["modules"]
                     },
+                    "portcullis/full": {
+                        "branch": "master",
+                        "git_sha": "57fae03a59041fba2bde99758553938ffbefa477",
+                        "installed_by": ["modules"]
+                    },
                     "rseqc/bamstat": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",

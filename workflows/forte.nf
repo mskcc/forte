@@ -114,6 +114,14 @@ workflow FORTE {
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
 
+    SPLICING(
+        ALIGN_READS.out.bam,
+        PREPARE_REFERENCES.out.star_index.map{meta, star_index ->
+            [meta, file(star_index.toString() + "/sjdbList.out.tab")]
+        },
+        PREPARE_REFERENCES.out.fasta
+    )
+
     FILLOUT(
         ALIGN_READS.out.bam,
         ALIGN_READS.out.bai,
