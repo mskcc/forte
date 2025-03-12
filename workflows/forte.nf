@@ -18,6 +18,7 @@ include { EXTRACT_DEDUP_FQ                  } from '../subworkflows/local/extrac
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
 include { FUSION                            } from '../subworkflows/local/fusion'
 include { FILLOUT                           } from '../subworkflows/local/fillout'
+include { SPLICING                          } from '../subworkflows/local/splicing'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
