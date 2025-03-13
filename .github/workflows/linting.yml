@@ -28,7 +28,6 @@ jobs:
         run: pre-commit run --all-files
 
   nf-core:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out pipeline code
