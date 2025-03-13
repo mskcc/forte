@@ -2,7 +2,7 @@
     "name": "mskcc/forte",
     "homePage": "https://github.com/mskcc/forte",
     "repos": {
-        "git@github.com:mskcc-omics-workflows/modules.git": {
+        "https://github.com/mskcc-omics-workflows/modules.git": {
             "modules": {
                 "msk": {
                     "gbcms": {
