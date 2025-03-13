@@ -229,7 +229,7 @@
             "type": "string"
         },
         "ensembl_version": {
-            "type": "string"
+            "type": "integer"
         },
         "clinicalgenes": {
             "type": "string"
