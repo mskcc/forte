@@ -1,0 +1,361 @@
+##fileformat=VCFv4.1
+##FILTER=<ID=PASS,Description="All filters passed">
+##FILTER=<ID=NC,Description="Inconsistent Genotype Submission For At Least One Sample">
+##GATKCommandLine=<ID=LeftAlignAndTrimVariants,Version=2.7-63-g8d09086,Date="Mon Nov 04 10:02:23 EST 2013",Epoch=1383577343781,CommandLineOptions="analysis_type=LeftAlignAndTrimVariants input_file=[] read_buffer_size=null phone_home=AWS gatk_key=null tag=NA read_filter=[] intervals=null excludeIntervals=null interval_set_rule=UNION interval_merging=ALL interval_padding=0 reference_sequence=/humgen/1kg/reference/human_g1k_v37.fasta nonDeterministicRandomSeed=false disableDithering=false maxRuntime=-1 maxRuntimeUnits=MINUTES downsampling_type=BY_SAMPLE downsample_to_fraction=null downsample_to_coverage=1000 baq=OFF baqGapOpenPenalty=40.0 fix_misencoded_quality_scores=false allow_potentially_misencoded_quality_scores=false useOriginalQualities=false defaultBaseQualities=-1 performanceLog=null BQSR=null quantize_quals=0 disable_indel_quals=false emit_original_quals=false preserve_qscores_less_than=6 globalQScorePrior=-1.0 allow_bqsr_on_reduced_bams_despite_repeated_warnings=false validation_strictness=SILENT remove_program_records=false keep_program_records=false sample_rename_mapping_file=null unsafe=null disable_auto_index_creation_and_locking_when_reading_rods=false num_threads=1 num_cpu_threads_per_data_thread=1 num_io_threads=0 monitorThreadEfficiency=false num_bam_file_handles=null read_group_black_list=null pedigree=[] pedigreeString=[] pedigreeValidationType=STRICT allow_intervals_with_unindexed_bam=false generateShadowBCF=false logging_level=INFO log_to_file=null help=false version=false variant=(RodBinding name=variant source=138/00-All.vcf) trimAlleles=false splitMultiallelics=false out=org.broadinstitute.sting.gatk.io.stubs.VariantContextWriterStub no_cmdline_in_header=org.broadinstitute.sting.gatk.io.stubs.VariantContextWriterStub sites_only=org.broadinstitute.sting.gatk.io.stubs.VariantContextWriterStub bcf=org.broadinstitute.sting.gatk.io.stubs.VariantContextWriterStub filter_reads_with_N_cigar=false filter_mismatching_base_and_quals=false filter_bases_not_stored=false">
+##INFO=<ID=ASP,Number=0,Type=Flag,Description="Is Assembly specific. This is set if the variant only maps to one assembly">
+##INFO=<ID=ASS,Number=0,Type=Flag,Description="In acceptor splice site FxnCode = 73">
+##INFO=<ID=CAF,Number=.,Type=String,Description="An ordered, comma delimited list of allele frequencies based on 1000Genomes, starting with the reference allele followed by alternate alleles as ordered in the ALT column. Where a 1000Genomes alternate allele is not in the dbSNPs alternate allele set, the allele is added to the ALT column.  The minor allele is the second largest value in the list, and was previuosly reported in VCF as the GMAF.  This is the GMAF reported on the RefSNP and EntrezSNP pages and VariationReporter">
+##INFO=<ID=CDA,Number=0,Type=Flag,Description="Variation is interrogated in a clinical diagnostic assay">
+##INFO=<ID=CFL,Number=0,Type=Flag,Description="Has Assembly conflict. This is for weight 1 and 2 variant that maps to different chromosomes on different assemblies.">
+##INFO=<ID=CLNACC,Number=.,Type=String,Description="Variant Accession and Versions">
+##INFO=<ID=CLNALLE,Number=.,Type=Integer,Description="Variant alleles from REF or ALT columns.  0 is REF, 1 is the first ALT allele, etc.  This is used to match alleles with other corresponding clinical (CLN) INFO tags.  A value of -1 indicates that no allele was found to match a corresponding HGVS allele name.">
+##INFO=<ID=CLNDBN,Number=.,Type=String,Description="Variant disease name">
+##INFO=<ID=CLNDSDB,Number=.,Type=String,Description="Variant disease database name">
+##INFO=<ID=CLNDSDBID,Number=.,Type=String,Description="Variant disease database ID">
+##INFO=<ID=CLNHGVS,Number=.,Type=String,Description="Variant names from HGVS.    The order of these variants corresponds to the order of the info in the other clinical  INFO tags.">
+##INFO=<ID=CLNORIGIN,Number=.,Type=String,Description="Allele Origin. One or more of the following values may be added: 0 - unknown; 1 - germline; 2 - somatic; 4 - inherited; 8 - paternal; 16 - maternal; 32 - de-novo; 64 - biparental; 128 - uniparental; 256 - not-tested; 512 - tested-inconclusive; 1073741824 - other">
+##INFO=<ID=CLNSIG,Number=.,Type=String,Description="Variant Clinical Significance, 0 - unknown, 1 - untested, 2 - non-pathogenic, 3 - probable-non-pathogenic, 4 - probable-pathogenic, 5 - pathogenic, 6 - drug-response, 7 - histocompatibility, 255 - other">
+##INFO=<ID=CLNSRC,Number=.,Type=String,Description="Variant Clinical Chanels">
+##INFO=<ID=CLNSRCID,Number=.,Type=String,Description="Variant Clinical Channel IDs">
+##INFO=<ID=COMMON,Number=1,Type=Integer,Description="RS is a common SNP.  A common SNP is one that has at least one 1000Genomes population with a minor allele of frequency >= 1% and for which 2 or more founders contribute to that minor allele frequency.">
+##INFO=<ID=DSS,Number=0,Type=Flag,Description="In donor splice-site FxnCode = 75">
+##INFO=<ID=G5,Number=0,Type=Flag,Description=">5% minor allele frequency in 1+ populations">
+##INFO=<ID=G5A,Number=0,Type=Flag,Description=">5% minor allele frequency in each and all populations">
+##INFO=<ID=GENEINFO,Number=1,Type=String,Description="Pairs each of gene symbol:gene id.  The gene symbol and id are delimited by a colon (:) and each pair is delimited by a vertical bar (|)">
+##INFO=<ID=GNO,Number=0,Type=Flag,Description="Genotypes available. The variant has individual genotype (in SubInd table).">
+##INFO=<ID=HD,Number=0,Type=Flag,Description="Marker is on high density genotyping kit (50K density or greater).  The variant may have phenotype associations present in dbGaP.">
+##INFO=<ID=INT,Number=0,Type=Flag,Description="In Intron FxnCode = 6">
+##INFO=<ID=KGPROD,Number=0,Type=Flag,Description="Has 1000 Genome submission">
+##INFO=<ID=KGPhase1,Number=0,Type=Flag,Description="1000 Genome phase 1 (incl. June Interim phase 1)">
+##INFO=<ID=KGPilot123,Number=0,Type=Flag,Description="1000 Genome discovery all pilots 2010(1,2,3)">
+##INFO=<ID=KGValidated,Number=0,Type=Flag,Description="1000 Genome validated">
+##INFO=<ID=LSD,Number=0,Type=Flag,Description="Submitted from a locus-specific database">
+##INFO=<ID=MTP,Number=0,Type=Flag,Description="Microattribution/third-party annotation(TPA:GWAS,PAGE)">
+##INFO=<ID=MUT,Number=0,Type=Flag,Description="Is mutation (journal citation, explicit fact): a low frequency variation that is cited in journal and other reputable sources">
+##INFO=<ID=NOC,Number=0,Type=Flag,Description="Contig allele not present in variant allele list. The reference sequence allele at the mapped position is not present in the variant allele list, adjusted for orientation.">
+##INFO=<ID=NOV,Number=0,Type=Flag,Description="Rs cluster has non-overlapping allele sets. True when rs set has more than 2 alleles from different submissions and these sets share no alleles in common.">
+##INFO=<ID=NSF,Number=0,Type=Flag,Description="Has non-synonymous frameshift A coding region variation where one allele in the set changes all downstream amino acids. FxnClass = 44">
+##INFO=<ID=NSM,Number=0,Type=Flag,Description="Has non-synonymous missense A coding region variation where one allele in the set changes protein peptide. FxnClass = 42">
+##INFO=<ID=NSN,Number=0,Type=Flag,Description="Has non-synonymous nonsense A coding region variation where one allele in the set changes to STOP codon (TER). FxnClass = 41">
+##INFO=<ID=OM,Number=0,Type=Flag,Description="Has OMIM/OMIA">
+##INFO=<ID=OTH,Number=0,Type=Flag,Description="Has other variant with exactly the same set of mapped positions on NCBI refernce assembly.">
+##INFO=<ID=OTHERKG,Number=0,Type=Flag,Description="non-1000 Genome submission">
+##INFO=<ID=PH3,Number=0,Type=Flag,Description="HAP_MAP Phase 3 genotyped: filtered, non-redundant">
+##INFO=<ID=PM,Number=0,Type=Flag,Description="Variant is Precious(Clinical,Pubmed Cited)">
+##INFO=<ID=PMC,Number=0,Type=Flag,Description="Links exist to PubMed Central article">
+##INFO=<ID=R3,Number=0,Type=Flag,Description="In 3' gene region FxnCode = 13">
+##INFO=<ID=R5,Number=0,Type=Flag,Description="In 5' gene region FxnCode = 15">
+##INFO=<ID=REF,Number=0,Type=Flag,Description="Has reference A coding region variation where one allele in the set is identical to the reference sequence. FxnCode = 8">
+##INFO=<ID=RS,Number=1,Type=Integer,Description="dbSNP ID (i.e. rs number)">
+##INFO=<ID=RSPOS,Number=1,Type=Integer,Description="Chr position reported in dbSNP">
+##INFO=<ID=RV,Number=0,Type=Flag,Description="RS orientation is reversed">
+##INFO=<ID=S3D,Number=0,Type=Flag,Description="Has 3D structure - SNP3D table">
+##INFO=<ID=SAO,Number=1,Type=Integer,Description="Variant Allele Origin: 0 - unspecified, 1 - Germline, 2 - Somatic, 3 - Both">
+##INFO=<ID=SLO,Number=0,Type=Flag,Description="Has SubmitterLinkOut - From SNP->SubSNP->Batch.link_out">
+##INFO=<ID=SSR,Number=1,Type=Integer,Description="Variant Suspect Reason Codes (may be more than one value added together) 0 - unspecified, 1 - Paralog, 2 - byEST, 4 - oldAlign, 8 - Para_EST, 16 - 1kg_failed, 1024 - other">
+##INFO=<ID=SYN,Number=0,Type=Flag,Description="Has synonymous A coding region variation where one allele in the set does not change the encoded amino acid. FxnCode = 3">
+##INFO=<ID=TPA,Number=0,Type=Flag,Description="Provisional Third Party Annotation(TPA) (currently rs from PHARMGKB who will give phenotype data)">
+##INFO=<ID=U3,Number=0,Type=Flag,Description="In 3' UTR Location is in an untranslated region (UTR). FxnCode = 53">
+##INFO=<ID=U5,Number=0,Type=Flag,Description="In 5' UTR Location is in an untranslated region (UTR). FxnCode = 55">
+##INFO=<ID=VC,Number=1,Type=String,Description="Variation Class">
+##INFO=<ID=VLD,Number=0,Type=Flag,Description="Is Validated.  This bit is set if the variant has 2+ minor allele count based on frequency or genotype data.">
+##INFO=<ID=VP,Number=1,Type=String,Description="Variation Property.  Documentation is at ftp://ftp.ncbi.nlm.nih.gov/snp/specs/dbSNP_BitField_latest.pdf">
+##INFO=<ID=WGT,Number=1,Type=Integer,Description="Weight, 00 - unmapped, 1 - weight 1, 2 - weight 2, 3 - weight 3 or more">
+##INFO=<ID=WTD,Number=0,Type=Flag,Description="Is Withdrawn by submitter If one member ss is withdrawn by submitter, then this bit is set.  If all member ss' are withdrawn, then the rs is deleted to SNPHistory">
+##INFO=<ID=dbSNPBuildID,Number=1,Type=Integer,Description="First dbSNP Build for RS">
+##contig=<ID=chr22,length=51304566,assembly=b37>
+##dbSNP_BUILD_ID=138
+##fileDate=20130806
+##phasing=partial
+##reference=file:///humgen/1kg/reference/human_g1k_v37.fasta
+##source=dbSNP
+##variationPropertyDocumentationUrl=ftp://ftp.ncbi.nlm.nih.gov/snp/specs/dbSNP_BitField_latest.pdf	
+##bcftools_filterVersion=1.9+htslib-1.9
+##bcftools_filterCommand=filter -i 'G5!=0 && VC="SNV" && VLD!=0 && COMMON=1' --output-type z --output intermediates/dbsnp_138.b37.common.vcf.gz /juno/work/tempo/cmopipeline/mskcc-igenomes/igenomes/Homo_sapiens/GATK/b37/dbsnp_138.b37.vcf.gz; Date=Mon Oct 14 20:48:16 2024
+##bcftools_filterCommand=filter -R /juno/work/ccs/cmopipeline/forte/GRCh37/baits/idt_v2/IDT_Exome_v2_FP_b37_targets.bed intermediates/dbsnp_138.b37.common.vcf.gz; Date=Mon Oct 14 21:20:13 2024
+##bcftools_viewVersion=1.9+htslib-1.9
+##bcftools_viewCommand=view --regions 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 --output-type z --output-file intermediates/dbsnp_138.b37.common.idt_v2.autosomal.vcf.gz intermediates/dbsnp_138.b37.common.idt_v2.vcf.gz; Date=Mon Oct 14 21:21:00 2024
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+chr22	17265124	rs114306778	A	C	.	PASS	.
+chr22	17469026	rs5992604	G	A	.	PASS	.
+chr22	17469049	rs28502153	C	A	.	PASS	.
+chr22	17600977	rs5994165	G	A	.	PASS	.
+chr22	17601748	rs9606620	C	T	.	PASS	.
+chr22	17630486	rs1034859	C	A	.	PASS	.
+chr22	17669306	rs2231495	T	C	.	PASS	.
+chr22	17690409	rs362129	G	A	.	PASS	.
+chr22	18209613	rs4488761	A	G	.	PASS	.
+chr22	18300240	rs5992854	T	C	.	PASS	.
+chr22	18923745	rs2008720	G	T	.	PASS	.
+chr22	19026613	rs2072123	A	G	.	PASS	.
+chr22	19137658	rs34341950	G	A	.	PASS	.
+chr22	19184095	rs1061325	T	C	.	PASS	.
+chr22	19511925	rs885985	G	A	.	PASS	.
+chr22	19907099	rs5748469	C	A	.	PASS	.
+chr22	19907118	rs5748470	G	A	.	PASS	.
+chr22	19950235	rs4633	C	T	.	PASS	.
+chr22	19951207	rs4818	C	G,T	.	PASS	.
+chr22	19951271	rs4680	G	A	.	PASS	.
+chr22	19959473	rs165815	C	T	.	PASS	.
+chr22	19968971	rs2073748	G	A	.	PASS	.
+chr22	19969106	rs2240717	A	G	.	PASS	.
+chr22	20718525	rs2277833	T	C	.	PASS	.
+chr22	20779768	rs874101	G	C	.	PASS	.
+chr22	21066789	rs5996654	A	G	.	PASS	.
+chr22	21066897	rs1135929	G	A	.	PASS	.
+chr22	21141300	rs4675	T	C	.	PASS	.
+chr22	21167787	rs165854	G	A	.	PASS	.
+chr22	21213416	rs1061064	A	G	.	PASS	.
+chr22	21377301	rs1548411	C	A	.	PASS	.
+chr22	21570832	rs4051636	A	G	.	PASS	.
+chr22	21984205	rs710177	A	G	.	PASS	.
+chr22	22049783	rs12484060	C	T	.	PASS	.
+chr22	22868493	rs361666	G	T	.	PASS	.
+chr22	22868497	rs361762	G	C	.	PASS	.
+chr22	22868773	rs361737	G	A	.	PASS	.
+chr22	22868776	rs362173	G	A	.	PASS	.
+chr22	22869123	rs362003	T	C	.	PASS	.
+chr22	22869209	rs362124	C	G	.	PASS	.
+chr22	22869218	rs362132	T	C	.	PASS	.
+chr22	22869538	rs361611	A	G	.	PASS	.
+chr22	22869545	rs361580	T	G	.	PASS	.
+chr22	22869548	rs362011	T	C	.	PASS	.
+chr22	22869649	rs361721	G	C	.	PASS	.
+chr22	22869742	rs361959	C	A	.	PASS	.
+chr22	22899234	rs1129172	A	G	.	PASS	.
+chr22	23482460	rs4822360	A	G	.	PASS	.
+chr22	23503170	rs5759612	A	G	.	PASS	.
+chr22	23503756	rs737818	G	A	.	PASS	.
+chr22	23523630	rs5751602	C	A	.	PASS	.
+chr22	23631801	rs2227939	T	C	.	PASS	.
+chr22	24034288	rs738786	A	G	.	PASS	.
+chr22	24086107	rs5759985	A	G	.	PASS	.
+chr22	24224655	rs9608213	G	A	.	PASS	.
+chr22	24224659	rs9612499	C	A	.	PASS	.
+chr22	24300634	rs56104230	G	T	.	PASS	.
+chr22	24325095	rs74487784	A	G	.	PASS	.
+chr22	24622648	rs2275984	T	C	.	PASS	.
+chr22	24837301	rs5751876	T	C	.	PASS	.
+chr22	25145471	rs1892722	A	G	.	PASS	.
+chr22	25577688	rs763279	G	A	.	PASS	.
+chr22	25577733	rs9612887	T	C	.	PASS	.
+chr22	25601196	rs9608378	C	G	.	PASS	.
+chr22	25753231	rs133194	G	A	.	PASS	.
+chr22	26159289	rs133885	G	A	.	PASS	.
+chr22	26193982	rs738642	C	G	.	PASS	.
+chr22	26194045	rs738643	T	C	.	PASS	.
+chr22	26422980	rs2236005	A	G	.	PASS	.
+chr22	26702015	rs1210894	A	C	.	PASS	.
+chr22	26860269	rs2014410	G	C	.	PASS	.
+chr22	27620514	rs508576	G	T	.	PASS	.
+chr22	29446611	rs5997435	A	C	.	PASS	.
+chr22	29456733	rs6005977	T	C	.	PASS	.
+chr22	29621128	rs743920	C	G	.	PASS	.
+chr22	29704125	rs11090564	C	T	.	PASS	.
+chr22	29727866	rs174765	C	T	.	PASS	.
+chr22	29755888	rs2072051	T	C	.	PASS	.
+chr22	29913272	rs737976	C	T	.	PASS	.
+chr22	30403996	rs2074204	C	T	.	PASS	.
+chr22	30782089	rs5997629	A	G	.	PASS	.
+chr22	30793137	rs757660	G	A	.	PASS	.
+chr22	30823196	rs5753130	T	C	.	PASS	.
+chr22	30864610	rs4820853	A	G	.	PASS	.
+chr22	30934887	rs5753191	G	A	.	PASS	.
+chr22	30953295	rs2267161	C	T	.	PASS	.
+chr22	31011610	rs1801198	G	C	.	PASS	.
+chr22	31032920	rs5997714	A	G	.	PASS	.
+chr22	31302233	rs3804085	T	C	.	PASS	.
+chr22	31333631	rs3747151	T	C	.	PASS	.
+chr22	31342376	rs2072132	G	C	.	PASS	.
+chr22	31354653	rs737924	G	A	.	PASS	.
+chr22	31491295	rs3205187	G	C	.	PASS	.
+chr22	31521404	rs2240432	G	A	.	PASS	.
+chr22	31533967	rs2074739	G	A	.	PASS	.
+chr22	31838085	rs5997988	G	A	.	PASS	.
+chr22	31998612	rs2006771	G	A	.	PASS	.
+chr22	32011225	rs12171042	T	C	.	PASS	.
+chr22	32211412	rs5749334	A	C	.	PASS	.
+chr22	32334229	rs3788443	A	C	.	PASS	.
+chr22	32554985	rs5998267	A	G	.	PASS	.
+chr22	32586854	rs136467	C	T	.	PASS	.
+chr22	32586878	rs136469	A	G	.	PASS	.
+chr22	32586926	rs136470	T	C	.	PASS	.
+chr22	32587023	rs55974778	C	G	.	PASS	.
+chr22	32587027	rs136472	G	C	.	PASS	.
+chr22	32589023	rs136478	C	T	.	PASS	.
+chr22	32589034	rs136479	T	C	.	PASS	.
+chr22	32590449	rs108211	G	A	.	PASS	.
+chr22	32756744	rs2076035	A	G	.	PASS	.
+chr22	32795641	rs5749426	C	T	.	PASS	.
+chr22	32811952	rs5998478	A	G	.	PASS	.
+chr22	32875190	rs11107	G	A	.	PASS	.
+chr22	32887150	rs9726	C	T	.	PASS	.
+chr22	33253280	rs9862	T	C	.	PASS	.
+chr22	34022284	rs86487	G	A	.	PASS	.
+chr22	35463249	rs362090	C	T	.	PASS	.
+chr22	35660875	rs1053593	G	T	.	PASS	.
+chr22	35742925	rs743810	T	G	.	PASS	.
+chr22	35743124	rs2071745	G	C	.	PASS	.
+chr22	36007045	rs7292	G	A	.	PASS	.
+chr22	36007075	rs7293	C	T	.	PASS	.
+chr22	36122930	rs2076671	C	T	.	PASS	.
+chr22	36124860	rs2076673	C	G	.	PASS	.
+chr22	36537500	rs132618	A	T	.	PASS	.
+chr22	36587202	rs6000172	G	A	.	PASS	.
+chr22	36587223	rs6000173	G	T	.	PASS	.
+chr22	36587279	rs6000174	A	G	.	PASS	.
+chr22	36587486	rs2227167	A	G	.	PASS	.
+chr22	36587511	rs2227168	C	T	.	PASS	.
+chr22	36587952	rs2227169	C	T	.	PASS	.
+chr22	36591380	rs2007468	A	G	.	PASS	.
+chr22	36598049	rs80587	C	G	.	PASS	.
+chr22	36598058	rs132736	T	C	.	PASS	.
+chr22	36900271	rs2277841	T	C	.	PASS	.
+chr22	36900806	rs760718	A	G	.	PASS	.
+chr22	37462926	rs2235321	G	A	.	PASS	.
+chr22	37462936	rs855791	A	G	.	PASS	.
+chr22	37469591	rs4820268	G	A	.	PASS	.
+chr22	37480797	rs2111833	C	T	.	PASS	.
+chr22	37485724	rs2235324	T	C	.	PASS	.
+chr22	37531436	rs228953	G	A	.	PASS	.
+chr22	37578579	rs229519	C	T	.	PASS	.
+chr22	37581485	rs229527	C	A	.	PASS	.
+chr22	37603021	rs2071710	G	A	.	PASS	.
+chr22	37603051	rs229569	C	T	.	PASS	.
+chr22	37603390	rs86582	C	T	.	PASS	.
+chr22	37603744	rs86583	C	T	.	PASS	.
+chr22	37699377	rs2239822	T	C	.	PASS	.
+chr22	37770066	rs8142615	G	T	.	PASS	.
+chr22	37770357	rs7292751	A	G	.	PASS	.
+chr22	37771158	rs2071857	G	A	.	PASS	.
+chr22	37964299	rs2281098	C	G	.	PASS	.
+chr22	37964413	rs13055845	G	A,C	.	PASS	.
+chr22	37964429	rs62235034	T	C	.	PASS	.
+chr22	38051999	rs12483880	C	T	.	PASS	.
+chr22	38119213	rs12628603	G	A	.	PASS	.
+chr22	38121152	rs9610841	C	A	.	PASS	.
+chr22	38122122	rs5756795	T	C	.	PASS	.
+chr22	38122448	rs739137	C	T	.	PASS	.
+chr22	38122462	rs739138	A	G	.	PASS	.
+chr22	38129332	rs7284476	G	A	.	PASS	.
+chr22	38204089	rs710187	C	T	.	PASS	.
+chr22	38273749	rs9466	T	C	.	PASS	.
+chr22	38477930	rs2235573	G	A	.	PASS	.
+chr22	38485540	rs17856487	A	G	.	PASS	.
+chr22	39069181	rs3747174	T	C	.	PASS	.
+chr22	39134715	rs1062687	T	C,A	.	PASS	.
+chr22	39178701	rs760482	A	G	.	PASS	.
+chr22	39222652	rs5757299	G	A	.	PASS	.
+chr22	39381826	rs2076109	A	G	.	PASS	.
+chr22	39381999	rs2076111	T	C	.	PASS	.
+chr22	39387558	rs1065184	C	T	.	PASS	.
+chr22	39440149	rs5750728	C	T	.	PASS	.
+chr22	39441096	rs2020390	G	T	.	PASS	.
+chr22	39441203	rs4821862	C	T	.	PASS	.
+chr22	39445554	rs2076101	G	A	.	PASS	.
+chr22	39496412	rs139294	G	C	.	PASS	.
+chr22	39497404	rs139297	G	C	.	PASS	.
+chr22	39497452	rs139298	A	G	.	PASS	.
+chr22	39497454	rs139299	G	C	.	PASS	.
+chr22	39498038	rs139302	G	C	.	PASS	.
+chr22	39714490	rs6509	C	T	.	PASS	.
+chr22	39966856	rs3747178	C	T	.	PASS	.
+chr22	40814500	rs878756	T	C	.	PASS	.
+chr22	41075695	rs133073	C	T	.	PASS	.
+chr22	41551039	rs20552	T	A	.	PASS	.
+chr22	41610024	rs139451	G	A	.	PASS	.
+chr22	41903813	rs137831	A	C	.	PASS	.
+chr22	42276742	rs2228314	G	C	.	PASS	.
+chr22	42416056	rs133335	A	G	.	PASS	.
+chr22	42463814	rs133369	C	T	.	PASS	.
+chr22	42473603	rs133383	C	T	.	PASS	.
+chr22	42486723	rs1801311	G	A	.	PASS	.
+chr22	42522613	rs1135840	G	C	.	PASS	.
+chr22	42523943	rs16947	A	G	.	PASS	.
+chr22	42525132	rs1058164	G	C	.	PASS	.
+chr22	42537196	rs56404506	T	C	.	PASS	.
+chr22	42537597	rs1800754	A	G	.	PASS	.
+chr22	42538029	rs1058167	A	G	.	PASS	.
+chr22	42538508	rs3021082	A	G	.	PASS	.
+chr22	42538509	rs56023519	G	A	.	PASS	.
+chr22	42538618	rs2267448	A	G	.	PASS	.
+chr22	42970032	rs137055	T	C	.	PASS	.
+chr22	43088971	rs9623659	C	T	.	PASS	.
+chr22	43089055	rs6002904	G	C	.	PASS	.
+chr22	43089849	rs11541159	T	C	.	PASS	.
+chr22	43195147	rs1128013	A	G	.	PASS	.
+chr22	43206950	rs1018448	A	C	.	PASS	.
+chr22	43278220	rs2899365	C	T	.	PASS	.
+chr22	43435812	rs1052163	C	T	.	PASS	.
+chr22	43455432	rs5759125	G	A	.	PASS	.
+chr22	43529314	rs13815	G	C	.	PASS	.
+chr22	43576904	rs2071723	G	A,C	.	PASS	.
+chr22	43610207	rs138993	A	G	.	PASS	.
+chr22	43614316	rs9620123	C	G	.	PASS	.
+chr22	43623395	rs129415	C	G	.	PASS	.
+chr22	43830996	rs2413761	C	T	.	PASS	.
+chr22	43831056	rs4331615	C	T	.	PASS	.
+chr22	44083442	rs5764214	T	C	.	PASS	.
+chr22	44282276	rs739231	A	G	.	PASS	.
+chr22	44282307	rs739232	G	A	.	PASS	.
+chr22	44287062	rs2071884	A	G	.	PASS	.
+chr22	44368204	rs3177036	A	G	.	PASS	.
+chr22	44372632	rs14315	C	T	.	PASS	.
+chr22	44395451	rs1007863	T	C	.	PASS	.
+chr22	44489896	rs738479	T	C	.	PASS	.
+chr22	44681612	rs135388	A	G	.	PASS	.
+chr22	45075738	rs763213	T	C	.	PASS	.
+chr22	45128232	rs8141631	T	C	.	PASS	.
+chr22	45198009	rs2239813	A	G	.	PASS	.
+chr22	45244930	rs2269543	C	T	.	PASS	.
+chr22	45683246	rs2673088	C	T	.	PASS	.
+chr22	45685002	rs1135360	A	G	.	PASS	.
+chr22	45691594	rs1057356	A	G	.	PASS	.
+chr22	45723807	rs11556482	G	C	.	PASS	.
+chr22	45723842	rs17851057	G	A	.	PASS	.
+chr22	45723854	rs9615108	C	G	.	PASS	.
+chr22	45728370	rs6007594	G	A	.	PASS	.
+chr22	45748339	rs5765275	A	G	.	PASS	.
+chr22	45749983	rs5764698	G	T	.	PASS	.
+chr22	45767455	rs136569	A	G	.	PASS	.
+chr22	45782903	rs6007010	T	C	.	PASS	.
+chr22	45821887	rs1022477	G	A	.	PASS	.
+chr22	45821956	rs1022478	C	G	.	PASS	.
+chr22	45826880	rs2072770	G	A	.	PASS	.
+chr22	46652959	rs4508712	A	G,T	.	PASS	.
+chr22	50278568	rs910799	A	G	.	PASS	.
+chr22	50278642	rs910800	C	T	.	PASS	.
+chr22	50280136	rs5770755	T	C	.	PASS	.
+chr22	50301476	rs8135963	T	C	.	PASS	.
+chr22	50354819	rs11541025	C	A	.	PASS	.
+chr22	50435480	rs5771069	A	G	.	PASS	.
+chr22	50439194	rs9617090	C	T	.	PASS	.
+chr22	50468933	rs79298	G	T	.	PASS	.
+chr22	50480108	rs9628315	C	T	.	PASS	.
+chr22	50582626	rs2272837	A	G	.	PASS	.
+chr22	50616806	rs5771206	A	G	.	PASS	.
+chr22	50658424	rs11703226	T	C	.	PASS	.
+chr22	50699668	rs2272857	A	G	.	PASS	.
+chr22	50704661	rs2076139	T	C	.	PASS	.
+chr22	50716167	rs1127000	G	A	.	PASS	.
+chr22	50720622	rs11547728	C	T	.	PASS	.
+chr22	50722134	rs11547731	T	C	.	PASS	.
+chr22	50728062	rs28379706	T	C	.	PASS	.
+chr22	50753334	rs73439311	G	A	.	PASS	.
+chr22	50754466	rs62241230	C	T	.	PASS	.
+chr22	50754648	rs11553141	T	C	.	PASS	.
+chr22	50885775	rs1053744	A	G	.	PASS	.
+chr22	50944163	rs128941	G	A	.	PASS	.
+chr22	50945256	rs131824	A	G	.	PASS	.
+chr22	50962208	rs12148	T	G	.	PASS	.
+chr22	50962782	rs140523	C	G	.	PASS	.
+chr22	50987287	rs5770886	A	G	.	PASS	.
+chr22	50988062	rs140519	G	T	.	PASS	.
+chr22	50988193	rs131779	A	G	.	PASS	.
+chr22	51009953	rs470117	C	T	.	PASS	.
+chr22	51011376	rs8142477	G	C	.	PASS	.
+chr22	51043278	rs3219201	G	A	.	PASS	.
+chr22	51045190	rs1140555	C	T	.	PASS	.
+chr22	51064039	rs743616	G	C	.	PASS	.
+chr22	51117580	rs9616915	T	C	.	PASS	.
+chr22	51183255	rs5771002	A	G	.	PASS	.
