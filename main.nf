@@ -29,6 +29,7 @@ params.metafusion_gene_bed    = getGenomeAttribute('metafusion_gene_bed')
 params.metafusion_gene_info   = getGenomeAttribute('metafusion_gene_info')
 params.ensembl_version        = getGenomeAttribute('ensembl_version')
 params.clinicalgenes          = getGenomeAttribute('clinicalgenes')
+params.fingerprint            = getGenomeAttribute('fingerprint')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
