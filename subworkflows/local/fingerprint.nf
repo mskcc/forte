@@ -1,4 +1,5 @@
-include { GBCMS } from '../../modules/msk/gbcms/main'
+include { GBCMS            } from '../../modules/msk/gbcms/main'
+include { FINGERPRINTPARSE } from '../../modules/local/fingerprintparse/main'
 
 workflow FINGERPRINT {
 
@@ -24,7 +25,10 @@ workflow FINGERPRINT {
     )
     ch_versions = ch_versions.mix(GBCMS.out.versions)
 
+    FINGERPRINTPARSE(GBCMS.out.variant_file)
+    ch_versions = ch_versions.mix(FINGERPRINTPARSE.out.versions)
 
     emit:
     ch_versions
+    fingerprint = FINGERPRINTPARSE.out.fp_txt
 }

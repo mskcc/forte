@@ -9,6 +9,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS       } from '../modules/nf-core/custom/du
 include { PREPARE_REFERENCES                } from '../subworkflows/local/prepare_references'
 include { PREPROCESS_READS                  } from '../subworkflows/local/preprocess_reads'
 include { ALIGN_READS                       } from '../subworkflows/local/align_reads'
+include { FINGERPRINT                       } from '../subworkflows/local/fingerprint'
 include { MULTIQC                           } from '../modules/nf-core/multiqc/main'
 include {
     QC as QC_DUP ;
@@ -122,6 +123,15 @@ workflow FORTE {
         PREPARE_REFERENCES.out.fasta_fai.map{ it[1] }.first()
     )
     ch_versions = ch_versions.mix(FILLOUT.out.ch_versions)
+
+    FINGERPRINT(
+        ALIGN_READS.out.bam_withdup,
+        ALIGN_READS.out.bai_withdup,
+        params.fingerprint,
+        PREPARE_REFERENCES.out.fasta.map{ it[1] }.first(),
+        PREPARE_REFERENCES.out.fasta_fai.map{ it[1] }.first()
+    )
+    ch_versions = ch_versions.mix(FINGERPRINT.out.ch_versions)
 
     QC_DEDUP(
         ALIGN_READS.out.bam_dedup,
