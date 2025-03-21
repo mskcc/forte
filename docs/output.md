@@ -221,8 +221,6 @@ FORTE uses a custom fork of [Metafusion](https://github.com/mskcc/MetaFusion) to
 
 FORTE uses a custom script to output a MAF file that combines all original columns and new columns from GBCMS.
 
-### Pipeline information
-
 <details markdown="1">
 <summary>Output files</summary>
 

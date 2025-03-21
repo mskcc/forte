@@ -28,7 +28,7 @@ workflow QC {
     BAM_RSEQC(
         bam.join(bai, by:[0]),
         rseqc_bed,
-        params.rseqc_modules
+        params.rseqc_modules.split(",")
     )
     ch_versions = ch_versions.mix(BAM_RSEQC.out.versions)
 

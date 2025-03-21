@@ -1,0 +1,68 @@
+Changes in component 'msk/gbcms'
+'modules/msk/gbcms/environment.yml' is unchanged
+Changes in 'gbcms/meta.yml':
+--- modules/msk/gbcms/meta.yml
++++ modules/msk/gbcms/meta.yml
+@@ -1,7 +1,6 @@
+ # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/yaml-schema.json
+ name: "gbcms"
+-description:
+-  This module wraps GetBaseCountsMultiSample, which calculates the base
++description: This module wraps GetBaseCountsMultiSample, which calculates the base
+   counts in multiple BAM files for all the sites in a given VCF file or MAF file
+ keywords:
+   - basecount
+@@ -9,8 +8,7 @@
+   - vcf
+ tools:
+   - "gbcms":
+-      description:
+-        "Calculate the base counts in multiple BAM files for all the sites
++      description: "Calculate the base counts in multiple BAM files for all the sites
+         in a given VCF file or MAF file"
+       homepage: "https://github.com/msk-access/GetBaseCountsMultiSample"
+       documentation: "https://github.com/msk-access/GetBaseCountsMultiSample/blob/master/README.md"
+@@ -25,8 +23,7 @@
+           e.g. `[ id:'test', single_end:false ]`
+     - bam:
+         type: file
+-        description:
+-          Input bam file, in the format of SAMPLE_NAME:BAM_FILE. This paramter
++        description: Input bam file, in the format of SAMPLE_NAME:BAM_FILE. This paramter
+           need to be specified at least once
+         pattern: "*.bam"
+     - bambai:
+@@ -35,8 +32,7 @@
+         pattern: "*.bai"
+     - variant_file:
+         type: file
+-        description:
+-          Input variant file in TCGA maf format. --maf or --vcf need to be
++        description: Input variant file in TCGA maf format. --maf or --vcf need to be
+           specified at least once. But --maf and --vcf are mutually exclusive
+         pattern: "*.{maf,vcf}"
+     - output:
+@@ -54,14 +50,12 @@
+   - variant_file:
+       - meta:
+           type: file
+-          description:
+-            base counts in multiple BAM files for all the sites in a given
++          description: base counts in multiple BAM files for all the sites in a given
+             VCF file or MAF file
+           pattern: "*.{vcf,maf}"
+       - "*.{vcf,maf}":
+           type: file
+-          description:
+-            base counts in multiple BAM files for all the sites in a given
++          description: base counts in multiple BAM files for all the sites in a given
+             VCF file or MAF file
+           pattern: "*.{vcf,maf}"
+   - versions:
+
+'modules/msk/gbcms/main.nf' is unchanged
+'modules/msk/gbcms/tests/nextflow.config' is unchanged
+'modules/msk/gbcms/tests/tags.yml' is unchanged
+'modules/msk/gbcms/tests/main.nf.test' is unchanged
+'modules/msk/gbcms/tests/main.nf.test.snap' is unchanged
+************************************************************
