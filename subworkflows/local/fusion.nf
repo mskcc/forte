@@ -13,7 +13,7 @@ include { CAT_CAT as MERGE_CFF                  } from '../../modules/nf-core/ca
 include { METAFUSION_RUN                        } from '../../modules/local/metafusion/run/main'
 include { ADD_FLAG                              } from '../../modules/local/add_flags/main'
 include { CFF_ANNOTATE as CFF_FINALIZE          } from '../../modules/local/cff_annotate/main'
-include { ADD_FLAGS_AGFUSION                    } from '../../modules/local/add_flags_agfusion/main'
+include { CFF_ANNOTATE as ADD_FLAG_AGFUSION     } from  '../../modules/local/cff_annotate/main'
 
 workflow FUSION {
 
@@ -152,6 +152,10 @@ workflow FUSION {
             ADD_FLAG.out.unfiltered_cff
                 .join(ONCOKB_FUSIONANNOTATOR.out.oncokb_fusions, by:0)
                 .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
+                .map{ meta, cff, oncokb, agfusion_file ->
+                    [ meta, cff, oncokb, agfusion_file ]
+                },
+            transcript_allowlist
         )
     } else {
         CFF_FINALIZE(
@@ -159,13 +163,17 @@ workflow FUSION {
                 .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
                 .map{ meta, cff, agfusion_file ->
                     [ meta, cff, [], agfusion_file ]
-                }
+                },
+            transcript_allowlist
         )
     }
 
-    ADD_FLAGS_AGFUSION(
+    ADD_FLAG_AGFUSION(
         ADD_FLAG.out.unfiltered_cff
-            .join(AGFUSION_CLINICAL.out.fusion_transcripts_tsv, by:0),
+            .join(AGFUSION_CLINICAL.out.fusion_transcripts_tsv, by:0)
+            .map{ meta, cff, agfusion_file ->
+                    [ meta, cff, [], agfusion_file]
+                },
         transcript_allowlist
     )
 
@@ -174,7 +182,7 @@ workflow FUSION {
     ch_versions = ch_versions.mix(ARRIBA_TO_CFF.out.versions.first())
     ch_versions = ch_versions.mix(FUSIONCATCHER_TO_CFF.out.versions.first())
     ch_versions = ch_versions.mix(STARFUSION_TO_CFF.out.versions.first())
-    ch_versions = ch_versions.mix(ADD_FLAGS_AGFUSION.out.versions.first())
+    ch_versions = ch_versions.mix(ADD_FLAG_AGFUSION.out.versions.first())
 
 
     emit:
