@@ -3,11 +3,11 @@ process CFF_ANNOTATE {
     label "process_single"
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/rocker-org/devcontainer/tidyverse:4' :
-        'ghcr.io/rocker-org/devcontainer/tidyverse:4' }"
+        'ghcr.io/rocker-org/tidyverse:4.4.2' :
+        'ghcr.io/rocker-org/tidyverse:4.4.2' }"
 
     input:
-    tuple val(meta),  path(cff), path(oncokb), path(agfusion)
+    tuple val(meta), path(cff), path(oncokb), path(agfusion)
     path(transcript_allowlist)
 
     output:
