@@ -141,14 +141,13 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - `analysis/<sample>/agfusion_clinical`
   -`*.expanded_agfusion_transcripts.tsv`
 
-
 </details>
 
 FORTE uses a custom fork of [Metafusion](https://github.com/mskcc/MetaFusion) to filter, cluster and annotate the fusion calls. Several `intermediate` files are included in the output, [see wiki for detailed information](https://github.com/mskcc/forte/wiki/Metafusion-Output).
 
 `Fusion_effect` information is added using a custom fork of [AGFusion](https://github.com/anoronh4/AGFusion).
 
-`*.expanded_agfusion_transcripts.tsv` file is available for manual review of all possible frame status's across all transcript combinations for a select list of clinical genes within `assests/clinical_genes.txt`. 
+`*.expanded_agfusion_transcripts.tsv` file is available for manual review of all possible frame status's across all transcript combinations for a select list of clinical genes within `assests/clinical_genes.txt`.
 
 [FusionAnnotator.py from the oncokb-annotator](https://github.com/oncokb/oncokb-annotator/blob/master/FusionAnnotator.py) is also run and added to the final cff file.
 
