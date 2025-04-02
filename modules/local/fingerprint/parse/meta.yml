@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
-name: "fingerprintparse"
+name: "fingerprint_parse"
 ## TODO nf-core: Add a description of the module and list keywords
 description: write your description here
 keywords:
@@ -8,7 +8,7 @@ keywords:
   - example
   - genomics
 tools:
-  - "fingerprintparse":
+  - "fingerprint":
       ## TODO nf-core: Add a description and other details for the software below
       description: ""
       homepage: ""

@@ -53,7 +53,7 @@ def main():
         locus = "{}:{}".format(vcf_rec.chrom,vcf_rec.pos)
         depth = vcf_rec.samples[args.samplename]["DP"]
 
-        fp_out_list += [[locus,formatted_counts, genotype, maf, depth]]
+        fp_out_list += [[locus,formatted_counts, genotype, maf]]
 
     with open(args.output,'w') as f:
         f.write("\t".join(['Locus', args.samplename + '_Counts', args.samplename + '_Genotypes', args.samplename + '_MinorAlleleFreq']) + "\n")

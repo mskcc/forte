@@ -1,0 +1,37 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "fingerprint_correlation"
+description: Collects formatted fingerprint files and outputs a correlation table
+keywords:
+  - fingerprint
+  - qc
+  - variant
+tools:
+  - "fingerprint":
+      description: "Custom tools for formatting fingerprint files and outputting a correlation table"
+      homepage: "None"
+      documentation: "None"
+
+input:
+  - - fingerprints:
+        type: file
+        description: Fingerprint files
+        pattern: "*.{txt,tsv}"
+
+output:
+  - correlation:
+    - "*.tsv":
+        type: file
+        description: Sorted BAM/CRAM/SAM file
+        pattern: "*.tsv"
+
+  - versions:
+    - "versions.yml":
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+
+authors:
+  - "@anoronh4"
+maintainers:
+  - "@anoronh4"

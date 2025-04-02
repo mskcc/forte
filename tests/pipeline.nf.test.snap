@@ -1,7 +1,7 @@
 {
     "Should run without failures": {
         "content": [
-            63,
+            64,
             {
                 "ARRIBA_ARRIBA": {
                     "arriba": "2.4.0"
@@ -16,8 +16,8 @@
                 "FEATURECOUNTS_GENE": {
                     "subread": "2.0.1"
                 },
-                "FINGERPRINTPARSE": {
-                    "fingerprintparse": "0.1.0"
+                "FINGERPRINT_PARSE": {
+                    "parse_fingerprint_vcf.py": "0.1.0"
                 },
                 "GATK4_BEDTOINTERVALLIST": {
                     "gatk4": "4.5.0.0"
@@ -104,7 +104,8 @@
                 "analysis/SAMPLE_PAIRED_END/featurecounts/SAMPLE_PAIRED_END.gene.featureCounts.txt",
                 "analysis/SAMPLE_PAIRED_END/featurecounts/SAMPLE_PAIRED_END.gene.featureCounts.txt.summary",
                 "analysis/SAMPLE_PAIRED_END/fingerprint",
-                "analysis/SAMPLE_PAIRED_END/fingerprint/SAMPLE_PAIRED_END.tsv",
+                "analysis/SAMPLE_PAIRED_END/fingerprint/SAMPLE_PAIRED_END.fp.tsv",
+                "analysis/SAMPLE_PAIRED_END/fingerprint/SAMPLE_PAIRED_END.fp.vcf",
                 "analysis/SAMPLE_PAIRED_END/picard",
                 "analysis/SAMPLE_PAIRED_END/picard/dup",
                 "analysis/SAMPLE_PAIRED_END/picard/dup/SAMPLE_PAIRED_END.rna_metrics",
@@ -139,7 +140,8 @@
                 "analysis/SAMPLE_PAIRED_END_UMI/featurecounts/SAMPLE_PAIRED_END_UMI.gene.featureCounts.txt",
                 "analysis/SAMPLE_PAIRED_END_UMI/featurecounts/SAMPLE_PAIRED_END_UMI.gene.featureCounts.txt.summary",
                 "analysis/SAMPLE_PAIRED_END_UMI/fingerprint",
-                "analysis/SAMPLE_PAIRED_END_UMI/fingerprint/SAMPLE_PAIRED_END_UMI.tsv",
+                "analysis/SAMPLE_PAIRED_END_UMI/fingerprint/SAMPLE_PAIRED_END_UMI.fp.tsv",
+                "analysis/SAMPLE_PAIRED_END_UMI/fingerprint/SAMPLE_PAIRED_END_UMI.fp.vcf",
                 "analysis/SAMPLE_PAIRED_END_UMI/picard",
                 "analysis/SAMPLE_PAIRED_END_UMI/picard/dedup",
                 "analysis/SAMPLE_PAIRED_END_UMI/picard/dedup/SAMPLE_PAIRED_END_UMI.rna_metrics",
@@ -193,7 +195,8 @@
                 "analysis/SAMPLE_SINGLE_END/featurecounts/SAMPLE_SINGLE_END.gene.featureCounts.txt",
                 "analysis/SAMPLE_SINGLE_END/featurecounts/SAMPLE_SINGLE_END.gene.featureCounts.txt.summary",
                 "analysis/SAMPLE_SINGLE_END/fingerprint",
-                "analysis/SAMPLE_SINGLE_END/fingerprint/SAMPLE_SINGLE_END.tsv",
+                "analysis/SAMPLE_SINGLE_END/fingerprint/SAMPLE_SINGLE_END.fp.tsv",
+                "analysis/SAMPLE_SINGLE_END/fingerprint/SAMPLE_SINGLE_END.fp.vcf",
                 "analysis/SAMPLE_SINGLE_END/picard",
                 "analysis/SAMPLE_SINGLE_END/picard/dup",
                 "analysis/SAMPLE_SINGLE_END/picard/dup/SAMPLE_SINGLE_END.rna_metrics",
@@ -213,7 +216,8 @@
                 "SAMPLE_PAIRED_END@SRR5665260.1.36873006@@SAMPLE_PAIRED_END_T1_2.fastp.fastq.gz:md5,314744ed8805b87abb855c8e6b82a4f8",
                 "SAMPLE_PAIRED_END.gene.featureCounts.txt:md5,fd2b9b178d8d63292e7ce281014bc082",
                 "SAMPLE_PAIRED_END.gene.featureCounts.txt.summary:md5,4ee398767be572e0437f07b35acad81c",
-                "SAMPLE_PAIRED_END.tsv:md5,91060633eb95815256d466fa05c3a22c",
+                "SAMPLE_PAIRED_END.fp.tsv:md5,263be788d72a7e459d76f5e4b397747b",
+                "SAMPLE_PAIRED_END.fp.vcf:md5,e7d0d1d5f028b8b9bd6b764062f2a007",
                 "SAMPLE_PAIRED_END.bam_stat.txt:md5,7e95965caeba197d0b417fea3ba87a0c",
                 "SAMPLE_PAIRED_END.inner_distance.txt:md5,ebe9ec6580df318c5a192ef25b4d17d9",
                 "SAMPLE_PAIRED_END.inner_distance_freq.txt:md5,f00aab6a6e950987fe20a6d93b1823f1",
@@ -230,7 +234,8 @@
                 "SAMPLE_PAIRED_END_UMI@SRR5665260.1.36873006@@SAMPLE_PAIRED_END_UMI_T1_2.fastp.fastq.gz:md5,882962186d3e04042b89868e70630b52",
                 "SAMPLE_PAIRED_END_UMI.gene.featureCounts.txt:md5,925573cfd3223a4c66f2b3c6b104c89e",
                 "SAMPLE_PAIRED_END_UMI.gene.featureCounts.txt.summary:md5,fe522391f15498a0fc5d53029370435e",
-                "SAMPLE_PAIRED_END_UMI.tsv:md5,864f97979aadd46bb0ec88e4cacbe264",
+                "SAMPLE_PAIRED_END_UMI.fp.tsv:md5,fcfc3fa0ce37b5872710d49ea8ff18aa",
+                "SAMPLE_PAIRED_END_UMI.fp.vcf:md5,23441134de9669c32425e1de11ba6c5d",
                 "SAMPLE_PAIRED_END_UMI.bam_stat.txt:md5,b435b63ec20c54b175c33b920b79cb96",
                 "SAMPLE_PAIRED_END_UMI.inner_distance.txt:md5,8fb2f83e4a3fae3328033f3323158f48",
                 "SAMPLE_PAIRED_END_UMI.inner_distance_freq.txt:md5,a5bbf1bd05a375bf32d010777015fd42",
@@ -256,8 +261,10 @@
                 "SAMPLE_SINGLE_END@SRR5665260.1.36873006@@SAMPLE_SINGLE_END_T1.fastp.fastq.gz:md5,4d4605641f64c810e550efc464cfc1ce",
                 "SAMPLE_SINGLE_END.gene.featureCounts.txt:md5,92a28b0d6e134bbfa84ce4b2dfc3b23f",
                 "SAMPLE_SINGLE_END.gene.featureCounts.txt.summary:md5,80d397b6ece31195a10daff5cabce31a",
-                "SAMPLE_SINGLE_END.tsv:md5,6341b76cf0e08c7c17d333571fb51ea5",
+                "SAMPLE_SINGLE_END.fp.tsv:md5,f74259f5205afdebdbdd1e41c022933c",
+                "SAMPLE_SINGLE_END.fp.vcf:md5,54dc0c31cf13e356c4d606e39fc62dc8",
                 "SAMPLE_SINGLE_END.bam_stat.txt:md5,d4cde5a2c242bc733dea4f7496c6b7f7",
+                "correlation.tsv:md5,4349a7c13704fbd305dd0478923127ef",
                 "kallisto:md5,f077f8b81234cbd2e475f5cd69069517",
                 "versions.yml:md5,0434e31e19948a166c0c8f4e7497e806",
                 "smallGRCh37.metafusion.gene.bed:md5,4373a0ab0ee589753d29291a7cbd599d",
@@ -286,6 +293,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.3"
         },
-        "timestamp": "2025-03-13T22:59:30.534606"
+        "timestamp": "2025-04-02T10:30:10.541409"
     }
 }

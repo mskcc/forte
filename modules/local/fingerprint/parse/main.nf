@@ -1,4 +1,4 @@
-process FINGERPRINTPARSE {
+process FINGERPRINT_PARSE {
     tag "$meta.id"
     label 'process_single'
 
@@ -11,8 +11,8 @@ process FINGERPRINTPARSE {
     tuple val(meta), path(vcf)
 
     output:
-    tuple val(meta), path("*.tsv"), emit: fp_txt
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path("*.fp.tsv"), emit: fp_txt
+    path "versions.yml"              , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,12 +22,12 @@ process FINGERPRINTPARSE {
     """
     parse_fingerprint_vcf.py \\
         --input ${vcf} \\
-        --output ${prefix}.tsv \\
+        --output ${prefix}.fp.tsv \\
         --samplename ${meta.id}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        fingerprintparse: 0.1.0 
+        parse_fingerprint_vcf.py: 0.1.0 
     END_VERSIONS
     """
 
@@ -38,7 +38,7 @@ process FINGERPRINTPARSE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        fingerprintparse: 0.1.0
+        parse_fingerprint_vcf.py: 0.1.0
     END_VERSIONS
     """
 }
