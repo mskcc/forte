@@ -14,6 +14,7 @@ workflow QC {
     bam
     bai
     multiqc_files
+    multiqc_aggregate_files
     refflat
     rrna_intervals
     rseqc_bed
@@ -81,7 +82,7 @@ workflow QC {
     )
 
     MULTIQC_COLLECT(
-        multiqc_files.map{meta, multiqc_files -> multiqc_files}.collect(),
+        multiqc_files.map{meta, multiqc_files -> multiqc_files}.mix(multiqc_aggregate_files).collect(),
         ch_multiqc_config.collect().ifEmpty([]),
         [],
         [],

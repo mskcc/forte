@@ -141,6 +141,7 @@ workflow FORTE {
             .filter{meta, log ->
                 meta.has_umi && params.dedup_umi_for_kallisto
             }.mix(ALIGN_READS.out.umitools_dedup_log),
+        Channel.empty(),
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
@@ -163,6 +164,7 @@ workflow FORTE {
                         ! (meta.has_umi && params.dedup_umi_for_kallisto)
                     }
             ),
+        FINGERPRINT.out.fingerprint_correlation,
         PREPARE_REFERENCES.out.refflat,
         PREPARE_REFERENCES.out.rrna_interval_list,
         PREPARE_REFERENCES.out.rseqc_bed,
