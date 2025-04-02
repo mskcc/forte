@@ -157,10 +157,8 @@ FORTE uses a custom fork of [Metafusion](https://github.com/mskcc/MetaFusion) to
   - `*.portcullis.log`
   - `portcullis_filtered.pass.junctions.bed`
   - `portcullis_filtered.pass.junctions.tab`
-  - `portcullis_filtered.rules_in.junctions.bed`
-  - `portcullis_filtered.rules_in.junctions.tab`
-  - `portcullis_filtered.rules_out.failed.junctions.tab`
-  - `portcullis_filtered.rules_out.passed.junctions.tab`
+  - `portcullis_filtered.pass.junctions.exon.gff3`
+  - `portcullis_filtered.pass.junctions.intron.gff3`
 
 </details>
 
