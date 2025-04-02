@@ -233,6 +233,9 @@
         },
         "clinicalgenes": {
             "type": "string"
+        },
+        "fingerprint": {
+            "type": "string"
         }
     }
 }
