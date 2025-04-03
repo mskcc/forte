@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/mskcc/forte/master/assets/schema_input.json",
     "title": "mskcc/forte pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
@@ -10,25 +10,63 @@
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces"
+                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "meta": ["id", "sample"]
             },
             "fastq_1": {
                 "type": "string",
+                "format": "file-path",
+                "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
             "fastq_2": {
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-                "anyOf": [
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+            },
+            "umi": {
+                "oneOf": [
                     {
                         "type": "string",
-                        "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+                        "pattern": "^[NXC]+$"
                     },
                     {
-                        "type": "string",
-                        "maxLength": 0
+                        "type": "integer",
+                        "minimum": 1
                     }
-                ]
+                ],
+                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "meta": ["umi"]
+            },
+            "umi2": {
+                "oneOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^[NXC]+$"
+                    },
+                    {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                ],
+                "errorMessage": "UMI pattern must contain a string consisting of Ns, Cs or Xs, or an integer",
+                "meta": ["umi2"]
+            },
+            "strand": {
+                "type": "string",
+                "enum": ["yes", "no", "reverse"],
+                "errorMessage": "Strand must be 'yes', 'no', or 'reverse'",
+                "meta": ["strandedness"],
+                "default": "no"
+            },
+            "bait": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Bait name should not contain spaces",
+                "meta": ["bait"]
             }
         },
         "required": ["sample", "fastq_1"]

@@ -1,7 +1,11 @@
-work/*
-runs/*
-logs/*
-*log
-.nextflow.log*
 .nextflow*
-results/*
+work/
+data/
+results/
+.DS_Store
+testing/
+testing*
+*.pyc
+null/
+.nf-test*
+.nf-test/

@@ -7,80 +7,108 @@
 ----------------------------------------------------------------------------------------
 */
 
-nextflow.enable.dsl = 2
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.fasta                  = WorkflowMain.getGenomeAttribute(params, 'fasta')
-params.gtf                    = WorkflowMain.getGenomeAttribute(params, 'gtf')
-params.starfusion_url         = WorkflowMain.getGenomeAttribute(params, 'starfusion_url')
-params.refflat                = WorkflowMain.getGenomeAttribute(params, 'refflat')
-params.baits                  = WorkflowMain.getGenomeAttribute(params, 'baits')
-params.cdna                   = WorkflowMain.getGenomeAttribute(params, 'cdna')
-params.arriba_blacklist       = WorkflowMain.getGenomeAttribute(params, 'arriba_blacklist')
-params.arriba_known_fusions   = WorkflowMain.getGenomeAttribute(params, 'arriba_known_fusions')
-params.arriba_protein_domains = WorkflowMain.getGenomeAttribute(params, 'arriba_protein_domains')
-params.metafusion_blocklist   = WorkflowMain.getGenomeAttribute(params, 'metafusion_blocklist')
-params.metafusion_gene_bed    = WorkflowMain.getGenomeAttribute(params, 'metafusion_gene_bed')
-params.metafusion_gene_info   = WorkflowMain.getGenomeAttribute(params, 'metafusion_gene_info')
-params.ensembl_version        = WorkflowMain.getGenomeAttribute(params, 'ensembl_version')
-params.transcript_allowlist   = WorkflowMain.getGenomeAttribute(params, 'transcript_allowlist')
-params.clinical_genes         = WorkflowMain.getGenomeAttribute(params, 'clinical_genes')
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE & PRINT PARAMETER SUMMARY
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
 
-include { validateParameters; paramsHelp } from 'plugin/nf-validation'
+include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_forte_pipeline'
 
-// Print help message if needed
-if (params.help) {
-    def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-    def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-    def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GRCh37 -profile docker"
-    log.info logo + paramsHelp(command) + citation + NfcoreTemplate.dashedLine(params.monochrome_logs)
-    System.exit(0)
-}
-
-// Validate input parameters
-if (params.validate_params) {
-    validateParameters()
-}
-
-WorkflowMain.initialise(workflow, params, log)
+params.fasta                  = getGenomeAttribute('fasta')
+params.gtf                    = getGenomeAttribute('gtf')
+params.starfusion_url         = getGenomeAttribute('starfusion_url')
+params.refflat                = getGenomeAttribute('refflat')
+params.baits                  = getGenomeAttribute('baits')
+params.cdna                   = getGenomeAttribute('cdna')
+params.arriba_blacklist       = getGenomeAttribute('arriba_blacklist')
+params.arriba_known_fusions   = getGenomeAttribute('arriba_known_fusions')
+params.arriba_protein_domains = getGenomeAttribute('arriba_protein_domains')
+params.metafusion_blocklist   = getGenomeAttribute('metafusion_blocklist')
+params.metafusion_gene_bed    = getGenomeAttribute('metafusion_gene_bed')
+params.metafusion_gene_info   = getGenomeAttribute('metafusion_gene_info')
+params.ensembl_version        = getGenomeAttribute('ensembl_version')
+params.transcript_allowlist   = getGenomeAttribute('transcript_allowlist')
+params.clinical_genes         = getGenomeAttribute('clinical_genes')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOW FOR PIPELINE
+    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { FORTE } from './workflows/forte'
+include { FORTE                   } from './workflows/forte'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_forte_pipeline'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_forte_pipeline'
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    NAMED WORKFLOWS FOR PIPELINE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
 //
-// WORKFLOW: Run main mskcc/forte analysis pipeline
+// WORKFLOW: Run main analysis pipeline depending on type of input
 //
 workflow MSKCC_FORTE {
-    FORTE ()
-}
 
+    take:
+    samplesheet // channel: samplesheet read in from --input
+    maf_samplesheet
+
+    main:
+
+    //
+    // WORKFLOW: Run pipeline
+    //
+    FORTE (
+        samplesheet,
+        maf_samplesheet
+    )
+    emit:
+    multiqc_report = FORTE.out.multiqc_report // channel: /path/to/multiqc_report.html
+}
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN ALL WORKFLOWS
+    RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-//
-// WORKFLOW: Execute a single named workflow for the pipeline
-// See: https://github.com/nf-core/rnaseq/issues/619
-//
 workflow {
-    MSKCC_FORTE ()
+
+    main:
+    //
+    // SUBWORKFLOW: Run initialisation tasks
+    //
+    PIPELINE_INITIALISATION (
+        params.version,
+        params.validate_params,
+        params.monochrome_logs,
+        args,
+        params.outdir,
+        params.input
+    )
+
+    //
+    // WORKFLOW: Run main workflow
+    //
+    MSKCC_FORTE (
+        PIPELINE_INITIALISATION.out.samplesheet,
+        PIPELINE_INITIALISATION.out.maf_samplesheet
+    )
+    //
+    // SUBWORKFLOW: Run completion tasks
+    //
+    PIPELINE_COMPLETION (
+        params.email,
+        params.email_on_fail,
+        params.plaintext_email,
+        params.outdir,
+        params.monochrome_logs,
+        params.hook_url,
+        MSKCC_FORTE.out.multiqc_report
+    )
 }
 
 /*
