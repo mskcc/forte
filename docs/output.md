@@ -138,8 +138,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - `*_metafusion_cluster.unfiltered.cff`
     - `final.n1.cluster`
     - `problematic_chromosomes.cff`
-- `analysis/<sample>/agfusion_clinical`
-  -`*.expanded_agfusion_transcripts.tsv`
+- `analysis/<sample>/agfusion_clinical` -`*.expanded_agfusion_transcripts.tsv`
 
 </details>
 
