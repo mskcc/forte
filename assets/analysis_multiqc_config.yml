@@ -22,10 +22,10 @@ custom_data:
           format: "{:,.0f}"
           description: "Kallisto: Number of genes with detected expression"
   fingerprint:
-    plot_type: 'heatmap'
-    file_format: 'tsv'
-    description: 'Heatmap of all fingerprints within the batch'
-    section_name: 'Fingerprint correlation'
+    plot_type: "heatmap"
+    file_format: "tsv"
+    description: "Heatmap of all fingerprints within the batch"
+    section_name: "Fingerprint correlation"
     pconfig:
       id: fingerprint
       namespace: fingerprinting
