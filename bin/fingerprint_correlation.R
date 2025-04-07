@@ -69,9 +69,9 @@ for (i in 1:nrow(file_paths)) {
     if (file.exists(file_path)) {
         data <- fread(file_path)
         data[, paste0(sample_name,"_Depth") := sum(as.integer(gsub(".*:","",strsplit(get(paste0(sample_name,"_Counts"))," ")[[1]]))) ]
-	print(head(data))
+        print(head(data))
         combined_data[[sample_name]] <- data
-	samplenames <- c(samplenames,sample_name)
+        samplenames <- c(samplenames,sample_name)
     } else {
         warning(paste("File not found:", file_path))
         combined_data[[sample_name]] <- NULL # or NA, or any other placeholder
@@ -86,7 +86,7 @@ combined_data_tab <- do.call(cbind, combined_data)
 
 combinations <- combn(samplenames, 2)
 
-comparison.mtx <- matrix(1, nrow = length(samplenames), ncol = length(samplenames)) 
+comparison.mtx <- matrix(1, nrow = length(samplenames), ncol = length(samplenames))
 rownames(comparison.mtx) <- samplenames
 colnames(comparison.mtx) <- samplenames
 
@@ -96,8 +96,8 @@ for (j in 1:dim(combinations)[[2]]){
     keepCols <- c(paste0(sampleA,".",sampleA,"_Genotypes"),paste0(sampleB,".",sampleB,"_Genotypes"), paste0(sampleA,".",sampleA,"_Depth"),paste0(sampleB,".",sampleB,"_Depth"))
     slice <- combined_data_tab[,..keepCols]
     slice <- data.frame(slice)
-    slice <- slice[slice[,1] != "--" & slice[,2] != "--"  & slice[,3] > 20 & slice[,4] > 20,] 
-    
+    slice <- slice[slice[,1] != "--" & slice[,2] != "--"  & slice[,3] > 20 & slice[,4] > 20,]
+
     total <- dim(slice)[1]
     match <- sum(slice[,1] == slice[,2])
     comparison.mtx[sampleA,sampleB] <- match/total

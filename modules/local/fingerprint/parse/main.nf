@@ -27,7 +27,7 @@ process FINGERPRINT_PARSE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        parse_fingerprint_vcf.py: 0.1.0 
+        parse_fingerprint_vcf.py: 0.1.0
     END_VERSIONS
     """
 
