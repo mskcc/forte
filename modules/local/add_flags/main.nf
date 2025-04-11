@@ -31,7 +31,7 @@ process ADD_FLAG {
         $sample
 
     cat *_metafusion_cluster.unfiltered.cff \\
-        | head -1 > header.txt
+        | awk 'FNR <= 1' > header.txt
     cat *_metafusion_cluster.unfiltered.cff \\
         | grep -iFwf $clinical_genes > tmp_clinicalgenes.txt
     cat header.txt tmp_clinicalgenes.txt > ${sample}_metafusion_cluster.unfiltered.clinical.cff

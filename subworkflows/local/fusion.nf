@@ -141,12 +141,6 @@ workflow FUSION {
     )
     ch_versions = ch_versions.mix(AGFUSION_BATCH.out.versions.first())
 
-    AGFUSION_CLINICAL(
-        ADD_FLAG.out.unfiltered_clinical_cff,
-        agfusion_db,
-        pyensembl_cache
-    )
-
     if (params.run_oncokb_fusionannotator) {
         CFF_FINALIZE(
             ADD_FLAG.out.unfiltered_cff
@@ -167,6 +161,12 @@ workflow FUSION {
             transcript_allowlist
         )
     }
+
+    AGFUSION_CLINICAL(
+        ADD_FLAG.out.unfiltered_clinical_cff,
+        agfusion_db,
+        pyensembl_cache
+    )
 
     ADD_FLAG_AGFUSION(
         ADD_FLAG.out.unfiltered_cff
