@@ -35,12 +35,14 @@ parse_args <- function(x){
 args_opt <- parse_args(paste(args,collapse=" "))
 
 abundance <- read.table(args_opt$abundance, header=T)
+abundance$target_id <- sapply(strsplit(abundance$target_id, "\\."), function(x) x[1])
 gtf <- args_opt$gtf
 Sample <- args_opt$sample
 
 gtf_df <- as.data.frame(rtracklayer::import(gtf))
 
 gtf_df <- unique(gtf_df[,c("transcript_id","gene_id")])
+gtf_df$transcript_id <- sapply(strsplit(gtf_df$transcript_id, "\\."), function(x) x[1])
 
 abundance <- merge(
     abundance,
