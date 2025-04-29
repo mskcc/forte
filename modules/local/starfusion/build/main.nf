@@ -13,7 +13,7 @@ process STARFUSION_BUILD {
 
     script:
     """
-    if [ -d /usr/local/src/STAR-Fusion/ctat-genome-lib-builder/ ] ; then 
+    if [ -d /usr/local/src/STAR-Fusion/ctat-genome-lib-builder/ ] ; then
         export PATH="/usr/local/src/STAR-Fusion/ctat-genome-lib-builder/:\$PATH"
     fi
     export TMPDIR=/tmp
