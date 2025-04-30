@@ -2,13 +2,14 @@
     "name": "mskcc/forte",
     "homePage": "https://github.com/mskcc/forte",
     "repos": {
-        "git@github.com:mskcc-omics-workflows/modules.git": {
+        "https://github.com/mskcc-omics-workflows/modules.git": {
             "modules": {
                 "msk": {
                     "gbcms": {
                         "branch": "main",
                         "git_sha": "a1cac683a67fbc9d04e03f805475cda285a96686",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/msk/gbcms/gbcms.diff"
                     }
                 }
             }
@@ -73,7 +74,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "cf17ca47590cc578dfb47db1c2a44ef86f89976d",
+                        "git_sha": "f0719ae309075ae4a291533883847c3f7c441dad",
                         "installed_by": ["modules"]
                     },
                     "picard/collecthsmetrics": {

@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#139](https://github.com/mskcc/forte/pull/139) - Add nftests and CI workflow
 
+- [#142](https://github.com/mskcc/forte/pull/142) - Template update from nf-core/tools v3.2.0
+
 ### `Dependencies`
 
 ### `Deprecated`
