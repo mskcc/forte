@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#142](https://github.com/mskcc/forte/pull/142) - Template update from nf-core/tools v3.2.0
 
+- [#148](https://github.com/mskcc/forte/pull/148) - Consolidate arriba bam alignment and primary bam alignment into a single process
+
 - [#149](https://github.com/mskcc/forte/pull/149) - Temporary downgrade of nf-schema to 2.2.0 to allow tests to complete
 
 ### `Dependencies`
