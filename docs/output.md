@@ -50,7 +50,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - `*.Log.out`
     - `*.Log.final.out`
     - `*.Log.progress.out`
-    - `*.ReadsPerGene.out.tab`
     - `*.SJ.out.tab`
 - `analysis/<sample>/umitools/dedup/`
   - `*.dedup.bam`

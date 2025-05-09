@@ -1,25 +1,26 @@
-include { STAR_ALIGN as STAR_FOR_ARRIBA         } from '../../modules/nf-core/star/align/main'
-include { ARRIBA_ARRIBA                         } from '../../modules/nf-core/arriba/arriba/main'
-include { STAR_ALIGN as STAR_FOR_STARFUSION     } from '../../modules/nf-core/star/align/main'
-include { STARFUSION                            } from '../../modules/local/starfusion/detect/main'
-include { FUSIONCATCHER_DETECT                  } from '../../modules/local/fusioncatcher/detect/main'
-include { ONCOKB_FUSIONANNOTATOR                } from '../../modules/local/oncokb/fusionannotator/main'
-include { AGFUSION_BATCH                        } from '../../modules/local/agfusion/batch/main'
+include { ARRIBA_ARRIBA                     } from '../../modules/nf-core/arriba/arriba/main'
+include { STAR_ALIGN as STAR_FOR_STARFUSION } from '../../modules/nf-core/star/align/main'
+include { STARFUSION                        } from '../../modules/local/starfusion/detect/main'
+include { FUSIONCATCHER_DETECT              } from '../../modules/local/fusioncatcher/detect/main'
+include { ONCOKB_FUSIONANNOTATOR            } from '../../modules/local/oncokb/fusionannotator/main'
+include { AGFUSION_BATCH                    } from '../../modules/local/agfusion/batch/main'
 include { AGFUSION_BATCH as AGFUSION_CLINICAL   } from '../../modules/local/agfusion/batch/main'
-include { TO_CFF as ARRIBA_TO_CFF               } from '../../modules/local/convert_to_cff/main'
-include { TO_CFF as FUSIONCATCHER_TO_CFF        } from '../../modules/local/convert_to_cff/main'
-include { TO_CFF as STARFUSION_TO_CFF           } from '../../modules/local/convert_to_cff/main'
-include { CAT_CAT as MERGE_CFF                  } from '../../modules/nf-core/cat/cat/main'
-include { METAFUSION_RUN                        } from '../../modules/local/metafusion/run/main'
-include { ADD_FLAG                              } from '../../modules/local/add_flags/main'
-include { CFF_ANNOTATE as CFF_FINALIZE          } from '../../modules/local/cff_annotate/main'
+include { TO_CFF as ARRIBA_TO_CFF           } from '../../modules/local/convert_to_cff/main'
+include { TO_CFF as FUSIONCATCHER_TO_CFF    } from '../../modules/local/convert_to_cff/main'
+include { TO_CFF as STARFUSION_TO_CFF       } from '../../modules/local/convert_to_cff/main'
+include { CAT_CAT as MERGE_CFF              } from '../../modules/nf-core/cat/cat/main'
+include { METAFUSION_RUN                    } from '../../modules/local/metafusion/run/main'
+include { ADD_FLAG                          } from '../../modules/local/add_flags/main'
+include { CFF_ANNOTATE as CFF_FINALIZE      } from '../../modules/local/cff_annotate/main'
 include { CFF_ANNOTATE as ADD_FLAG_AGFUSION     } from  '../../modules/local/cff_annotate/main'
+
 
 workflow FUSION {
 
     take:
     reads
     reads_untrimmed
+    bam
     star_index
     fasta
     gtf
@@ -42,18 +43,8 @@ workflow FUSION {
     //gene_bed = params.metafusion_gene_bed
     //blocklist = params.metafusion_blocklist
 
-    STAR_FOR_ARRIBA(
-        reads,
-        star_index,
-        gtf,
-        false,
-        [],
-        []
-    )
-    ch_versions = ch_versions.mix(STAR_FOR_ARRIBA.out.versions.first())
-
     ARRIBA_ARRIBA(
-        STAR_FOR_ARRIBA.out.bam,
+        bam,
         fasta,
         gtf,
         arriba_blacklist.map{[[:],it]},
