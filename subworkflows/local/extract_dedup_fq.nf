@@ -1,4 +1,4 @@
-include { SAMTOOLS_BAM2FQ } from '../../modules/nf-core/samtools/bam2fq/main'
+include { GATK4_SAMTOFASTQ } from '../../modules/nf-core/gatk4/samtofastq/main'   
 
 workflow EXTRACT_DEDUP_FQ {
     take:
@@ -7,16 +7,12 @@ workflow EXTRACT_DEDUP_FQ {
     main:
     ch_versions = Channel.empty()
 
-    SAMTOOLS_BAM2FQ(
-        bam,
-        true
+    GATK4_SAMTOFASTQ(
+        bam
     )
-    ch_versions = ch_versions.mix(SAMTOOLS_BAM2FQ.out.versions.first())
+    ch_versions = ch_versions.mix(GATK4_SAMTOFASTQ.out.versions.first())
 
-    dedup_reads = SAMTOOLS_BAM2FQ.out.reads
-        .map{ meta, reads ->
-            [meta, reads.findAll{ !(it.getName().endsWith("singleton.fq.gz") || it.getName().endsWith("other.fq.gz")) }]
-        }
+    dedup_reads = GATK4_SAMTOFASTQ.out.fastq
 
     emit:
     dedup_reads  = dedup_reads
