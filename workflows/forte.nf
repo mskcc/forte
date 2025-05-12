@@ -98,6 +98,7 @@ workflow FORTE {
     FUSION(
         PREPROCESS_READS.out.reads_trimmed,
         PREPROCESS_READS.out.reads_untrimmed,
+        ALIGN_READS.out.bam_withdup,
         PREPARE_REFERENCES.out.star_index,
         PREPARE_REFERENCES.out.fasta,
         PREPARE_REFERENCES.out.gtf,
