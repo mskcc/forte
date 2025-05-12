@@ -1,4 +1,4 @@
-include { GATK4_SAMTOFASTQ } from '../../modules/nf-core/gatk4/samtofastq/main'   
+include { GATK4_SAMTOFASTQ } from '../../modules/nf-core/gatk4/samtofastq/main'
 
 workflow EXTRACT_DEDUP_FQ {
     take:
