@@ -38,17 +38,17 @@ process PORTCULLIS_FULL {
         $fasta \\
         $bam > ${prefix}.portcullis.log
 
-    cp ${prefix}/3-filt/*.pass.junctions.bed .
-    cp ${prefix}/3-filt/*.pass.junctions.tab .
+    cp ${prefix}/3-filt/*.pass.junctions.bed ${prefix}.pass.junctions.bed
+    cp ${prefix}/3-filt/*.pass.junctions.tab ${prefix}.pass.junctions.tab
     if [ -f ${prefix}/3-filt/*.pass.junctions.intron.gff3 ] ; then
-        cp ${prefix}/3-filt/*.pass.junctions.intron.gff3 .
+        cp ${prefix}/3-filt/*.pass.junctions.intron.gff3 ${prefix}.pass.junctions.intron.gff3
     fi
     if [ -f ${prefix}/3-filt/*.pass.junctions.exon.gff3 ] ; then
-        cp ${prefix}/3-filt/*.pass.junctions.exon.gff3 .
+        cp ${prefix}/3-filt/*.pass.junctions.exon.gff3 ${prefix}.pass.junctions.exon.gff3
     fi
     if [ -f ${prefix}/2-junc/*.spliced.bam ] ; then
-        cp ${prefix}/2-junc/*.spliced.bam.bai .
-        cp ${prefix}/2-junc/*.spliced.bam .
+        cp ${prefix}/2-junc/*.spliced.bam.bai ${prefix}.spliced.bam.bai
+        cp ${prefix}/2-junc/*.spliced.bam ${prefix}.spliced.bam
     fi
 
     cat <<-END_VERSIONS > versions.yml
