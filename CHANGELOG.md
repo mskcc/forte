@@ -39,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#149](https://github.com/mskcc/forte/pull/149) - Temporary downgrade of nf-schema to 2.2.0 to allow tests to complete
 
+- [#151](https://github.com/mskcc/forte/pull/151) - Replace samtools bam2fq with gatk4 samtofastq for better handling of paired reads in a position sorted bam
+
 ### `Dependencies`
 
 ### `Deprecated`
