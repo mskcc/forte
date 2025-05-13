@@ -231,7 +231,10 @@
         "ensembl_version": {
             "type": "integer"
         },
-        "clinicalgenes": {
+        "transcript_allowlist": {
+            "type": "string"
+        },
+        "clinical_genes": {
             "type": "string"
         },
         "fingerprint": {
