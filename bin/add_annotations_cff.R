@@ -11,7 +11,7 @@ suppressPackageStartupMessages({
 
 usage <- function() {
     message("Usage:")
-    message("add_annotations_cff.R --mode <annot/agfusion> --cff-file <file.cff> --agfusion-file <agfusion.tsv> --oncokb-file <oncokb.tsv> --out-prefix <prefix> --transcript_allowlist <transcript_allowlist.txt> ")
+    message("add_annotations_cff.R --mode <annot/agfusion> --cff <file.cff> --agfusion <agfusion.tsv> --oncokb-file <oncokb.tsv> --out-prefix <prefix> --transcript_allowlist <transcript_allowlist.txt> ")
     message("Mode: agfusion must include transcript_allowlist")
 }
 
