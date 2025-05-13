@@ -92,6 +92,12 @@
                         "git_sha": "54f28e020daf9215ab000da7af3b273e85639855",
                         "installed_by": ["modules"]
                     },
+                    "portcullis/full": {
+                        "branch": "master",
+                        "git_sha": "1a10aef549614b534659f0a5c367a5b1bc5e5932",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/portcullis/full/portcullis-full.diff"
+                    },
                     "rseqc/bamstat": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
