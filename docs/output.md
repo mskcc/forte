@@ -15,6 +15,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Quantification](#quantification)
 - [Fusion Calling](#fusion-calling)
 - [Fusion Merging and Annotation](#fusion-merging-and-annotation)
+- [Splicing](#splicing)
 - [QC](#qc)
 - [Fillouts](#fillouts)
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
@@ -148,6 +149,22 @@ FORTE uses a custom fork of [Metafusion](https://github.com/mskcc/MetaFusion) to
 `*.expanded_agfusion_transcripts.tsv` file is available for manual review of all possible frame status's across all transcript combinations for a select list of clinical genes within `assests/clinical_genes.txt`.
 
 [FusionAnnotator.py from the oncokb-annotator](https://github.com/oncokb/oncokb-annotator/blob/master/FusionAnnotator.py) is also run and added to the final cff file.
+
+### Splicing
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `analysis/<sample>/portcullis/`
+  - `*.portcullis.log`
+  - `portcullis_filtered.pass.junctions.bed`
+  - `portcullis_filtered.pass.junctions.tab`
+  - `portcullis_filtered.pass.junctions.exon.gff3`
+  - `portcullis_filtered.pass.junctions.intron.gff3`
+
+</details>
+
+[Portcullis](https://portcullis.readthedocs.io/en/latest/) analyzes and quantifies splice junctions from a BAM file.
 
 ### QC
 

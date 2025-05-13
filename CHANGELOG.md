@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#128](https://github.com/mskcc/forte/pull/128) - full support for GRCh38 added
 
+- [#141](https://github.com/mskcc/forte/pull/141) - Add portcullis
+
 - [#138](https://github.com/mskcc/forte/pull/128) - enable clinical gene expansion in agfusion
 
 ### `Fixed`

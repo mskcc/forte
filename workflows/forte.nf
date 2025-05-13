@@ -18,6 +18,7 @@ include { EXTRACT_DEDUP_FQ                  } from '../subworkflows/local/extrac
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
 include { FUSION                            } from '../subworkflows/local/fusion'
 include { FILLOUT                           } from '../subworkflows/local/fillout'
+include { SPLICING                          } from '../subworkflows/local/splicing'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -115,6 +116,14 @@ workflow FORTE {
         params.transcript_allowlist
     )
     ch_versions = ch_versions.mix(FUSION.out.ch_versions)
+
+    SPLICING(
+        ALIGN_READS.out.bam,
+        PREPARE_REFERENCES.out.star_index.map{meta, star_index ->
+            [meta, file(star_index.toString() + "/sjdbList.out.tab")]
+        },
+        PREPARE_REFERENCES.out.fasta
+    )
 
     FILLOUT(
         ALIGN_READS.out.bam,
