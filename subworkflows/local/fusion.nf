@@ -4,6 +4,7 @@ include { STARFUSION                        } from '../../modules/local/starfusi
 include { FUSIONCATCHER_DETECT              } from '../../modules/local/fusioncatcher/detect/main'
 include { ONCOKB_FUSIONANNOTATOR            } from '../../modules/local/oncokb/fusionannotator/main'
 include { AGFUSION_BATCH                    } from '../../modules/local/agfusion/batch/main'
+include { AGFUSION_BATCH as AGFUSION_CLINICAL   } from '../../modules/local/agfusion/batch/main'
 include { TO_CFF as ARRIBA_TO_CFF           } from '../../modules/local/convert_to_cff/main'
 include { TO_CFF as FUSIONCATCHER_TO_CFF    } from '../../modules/local/convert_to_cff/main'
 include { TO_CFF as STARFUSION_TO_CFF       } from '../../modules/local/convert_to_cff/main'
@@ -11,6 +12,8 @@ include { CAT_CAT as MERGE_CFF              } from '../../modules/nf-core/cat/ca
 include { METAFUSION_RUN                    } from '../../modules/local/metafusion/run/main'
 include { ADD_FLAG                          } from '../../modules/local/add_flags/main'
 include { CFF_ANNOTATE as CFF_FINALIZE      } from '../../modules/local/cff_annotate/main'
+include { CFF_ANNOTATE as ADD_FLAG_AGFUSION     } from  '../../modules/local/cff_annotate/main'
+
 
 workflow FUSION {
 
@@ -31,7 +34,8 @@ workflow FUSION {
     arriba_blacklist
     arriba_known_fusions
     arriba_protein_domains
-    clinicalgenes
+    clinical_genes
+    transcript_allowlist
 
     main:
     ch_versions = Channel.empty()
@@ -106,7 +110,7 @@ workflow FUSION {
         gene_info.map{ it[1] }.first(),
         fasta.map{ it[1] }.first(),
         blocklist,
-        clinicalgenes
+        transcript_allowlist
     )
 
     ADD_FLAG(
@@ -114,7 +118,8 @@ workflow FUSION {
             .join(METAFUSION_RUN.out.cis, by:0)
             .join(METAFUSION_RUN.out.cff, by:0)
             .join(METAFUSION_RUN.out.problem_chrom, by:0)
-            .join(METAFUSION_RUN.out.filters, by:0)
+            .join(METAFUSION_RUN.out.filters, by:0),
+        clinical_genes
     )
 
     ONCOKB_FUSIONANNOTATOR(ADD_FLAG.out.unfiltered_cff)
@@ -132,6 +137,10 @@ workflow FUSION {
             ADD_FLAG.out.unfiltered_cff
                 .join(ONCOKB_FUSIONANNOTATOR.out.oncokb_fusions, by:0)
                 .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
+                .map{ meta, cff, oncokb, agfusion_file ->
+                    [ meta, cff, oncokb, agfusion_file ]
+                },
+            transcript_allowlist
         )
     } else {
         CFF_FINALIZE(
@@ -139,14 +148,33 @@ workflow FUSION {
                 .join(AGFUSION_BATCH.out.fusion_transcripts_tsv, by:0)
                 .map{ meta, cff, agfusion_file ->
                     [ meta, cff, [], agfusion_file ]
-                }
+                },
+            transcript_allowlist
         )
     }
+
+    AGFUSION_CLINICAL(
+        ADD_FLAG.out.unfiltered_clinical_cff,
+        agfusion_db,
+        pyensembl_cache
+    )
+
+    ADD_FLAG_AGFUSION(
+        ADD_FLAG.out.unfiltered_cff
+            .join(AGFUSION_CLINICAL.out.fusion_transcripts_tsv, by:0)
+            .map{ meta, cff, agfusion_file ->
+                    [ meta, cff, [], agfusion_file]
+                },
+        transcript_allowlist
+    )
+
     ch_versions = ch_versions.mix(ADD_FLAG.out.versions.first())
     ch_versions = ch_versions.mix(METAFUSION_RUN.out.versions.first())
     ch_versions = ch_versions.mix(ARRIBA_TO_CFF.out.versions.first())
     ch_versions = ch_versions.mix(FUSIONCATCHER_TO_CFF.out.versions.first())
     ch_versions = ch_versions.mix(STARFUSION_TO_CFF.out.versions.first())
+    ch_versions = ch_versions.mix(ADD_FLAG_AGFUSION.out.versions.first())
+
 
     emit:
     ch_versions
