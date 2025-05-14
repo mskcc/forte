@@ -22,6 +22,9 @@
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.5.0.0"
                 },
+                "GATK4_SAMTOFASTQ": {
+                    "gatk4": "4.6.1.0"
+                },
                 "KALLISTO_INDEX": {
                     "kallisto": "0.46.2"
                 },
@@ -33,9 +36,6 @@
                 },
                 "RSEQC_INNERDISTANCE": {
                     "rseqc": "3.0.1"
-                },
-                "SAMTOOLS_BAM2FQ": {
-                    "samtools": "1.16.1"
                 },
                 "SAMTOOLS_INDEX": {
                     "samtools": "1.16.1"
