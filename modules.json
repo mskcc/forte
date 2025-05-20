@@ -57,6 +57,11 @@
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
+                    "gatk4/samtofastq": {
+                        "branch": "master",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "installed_by": ["modules"]
+                    },
                     "gunzip": {
                         "branch": "master",
                         "git_sha": "3a5fef109d113b4997c9822198664ca5f2716208",
@@ -87,6 +92,12 @@
                         "branch": "master",
                         "git_sha": "54f28e020daf9215ab000da7af3b273e85639855",
                         "installed_by": ["modules"]
+                    },
+                    "portcullis/full": {
+                        "branch": "master",
+                        "git_sha": "1a10aef549614b534659f0a5c367a5b1bc5e5932",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/portcullis/full/portcullis-full.diff"
                     },
                     "rseqc/bamstat": {
                         "branch": "master",
@@ -127,11 +138,6 @@
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["bam_rseqc", "modules"]
-                    },
-                    "samtools/bam2fq": {
-                        "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules"]
                     },
                     "samtools/faidx": {
                         "branch": "master",

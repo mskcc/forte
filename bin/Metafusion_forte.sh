@@ -15,7 +15,7 @@ RT_call_filter=1
 blck_filter=1
 ANC_filter=1
 usage() {
-    echo "Usage: Metafusion_forte.sh --num_tools=<minNumToolsCalled> --genome_fasta <FASTA adds SEQ to fusion>  --recurrent_bedpe <blacklistFusions>  --outdir <outputDirectory> --cff <cffFile> --gene_bed <geneBedFile> --gene_info <geneInfoFile> --clinical_genes <clinicalGenes>" 1>&2;
+    echo "Usage: Metafusion_forte.sh --num_tools=<minNumToolsCalled> --genome_fasta <FASTA adds SEQ to fusion>  --recurrent_bedpe <blacklistFusions>  --outdir <outputDirectory> --cff <cffFile> --gene_bed <geneBedFile> --gene_info <geneInfoFile> --clinical_genes <transcript_allowlist>" 1>&2;
     exit 1;
 }
 
