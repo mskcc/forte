@@ -33,7 +33,7 @@ process ADD_FLAG {
     cat *_metafusion_cluster.unfiltered.cff \\
         | awk 'FNR <= 1' > header.txt
     cat *_metafusion_cluster.unfiltered.cff \\
-        | grep -iFwf $clinical_genes > tmp_clinicalgenes.txt
+        | grep -iFwf $clinical_genes | awk '\$20 != "NA" && \$22 != "NA"' > tmp_clinicalgenes.txt
     cat header.txt tmp_clinicalgenes.txt > ${sample}_metafusion_cluster.unfiltered.clinical.cff
 
     cat <<-END_VERSIONS > versions.yml
