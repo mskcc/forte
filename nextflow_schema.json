@@ -145,6 +145,10 @@
         "multiqc_methods_description": {
             "type": "string"
         },
+        "multiqc_export_analysis_plots": {
+            "type": "boolean",
+            "default": true
+        },
         "publish_dir_mode": {
             "type": "string",
             "default": "link"
