@@ -47,6 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#154](https://github.com/mskcc/forte/pull/151) - Fix publishing of sample-level and batch-level multiqc reports and add parameter to turn off plot export in multiqc
 
+- [#160](https://github.com/mskcc/forte/pull/160) - Fix grouping of multiple pairs of fastqs in a single sample
+
 ### `Dependencies`
 
 ### `Deprecated`
