@@ -1,0 +1,37 @@
+nextflow_pipeline {
+
+    name "Test Pipeline"
+    script "../main.nf"
+    config "tests/pipeline_multifq.config"
+
+    test("Run with multiple fq per sample") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            def stable_name = getAllFilesFromDir(outputDir, relative:true, includeDir: true, include:['analysis/**/*'])
+            def stable_path = getAllFilesFromDir(outputDir, ignore: ['pipeline_info/**','analysis/**/*Log*.out','analysis/**/*.rna_metrics','{analysis,multiqc}/**/*.{html,json,pdf}','analysis/**/*.fastp.log','references/**/Log.out','multiqc/**','analysis/**/*.umi_extract.log','analysis/**/*portcullis.log','analysis/*/multiqc/**'])
+            assertAll(
+                // workflow completes with success
+                { assert workflow.success },
+                // Number of successful tasks
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeNextflowVersion("$outputDir/pipeline_info/forte_software_mqc_versions.yml"),
+                    stable_name,
+                    stable_path,
+                    path("$outputDir/multiqc/dedupbam_multiqc_report_data/multiqc_general_stats.txt"),
+                    path("$outputDir/multiqc/dupbam_multiqc_report_data/multiqc_general_stats.txt"),
+                    path("$outputDir/multiqc/dedupbam_multiqc_report_data/multiqc_general_stats.txt").readLines().size(),
+                    path("$outputDir/multiqc/dupbam_multiqc_report_data/multiqc_general_stats.txt").readLines().size()
+                ).match() }
+            )
+        }
+
+    }
+
+}
