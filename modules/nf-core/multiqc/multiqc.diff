@@ -1,0 +1,20 @@
+Changes in component 'nf-core/multiqc'
+'modules/nf-core/multiqc/meta.yml' is unchanged
+Changes in 'multiqc/main.nf':
+--- modules/nf-core/multiqc/main.nf
++++ modules/nf-core/multiqc/main.nf
+@@ -7,7 +7,7 @@
+         'biocontainers/multiqc:1.28--pyhdfd78af_0' }"
+ 
+     input:
+-    path  multiqc_files, stageAs: "?/*"
++    tuple val(meta), path(multiqc_files, stageAs: "?/*")
+     path(multiqc_config)
+     path(extra_multiqc_config)
+     path(multiqc_logo)
+
+'modules/nf-core/multiqc/environment.yml' is unchanged
+'modules/nf-core/multiqc/tests/main.nf.test' is unchanged
+'modules/nf-core/multiqc/tests/nextflow.config' is unchanged
+'modules/nf-core/multiqc/tests/main.nf.test.snap' is unchanged
+************************************************************
