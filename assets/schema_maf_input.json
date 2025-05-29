@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/mskcc/forte/master/assets/schema_maf_input.json",
+    "title": "mskcc/forte pipeline - params.maf_input schema",
+    "description": "Schema for the file provided with params.maf_input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "sample": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "meta": ["id", "sample"]
+            },
+            "maf": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.maf",
+                "errorMessage": "MAF file must be provided, cannot contain spaces and must have extension '.maf'"
+            }
+        },
+        "required": ["sample", "maf"]
+    }
+}

@@ -4,8 +4,8 @@ process COMBINE_FILLOUTS {
 
     conda "conda-forge::r-tidyverse:2.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-            'ghcr.io/rocker-org/devcontainer/tidyverse:4' :
-            'ghcr.io/rocker-org/devcontainer/tidyverse:4' }"
+            'ghcr.io/rocker-org/tidyverse:4.4.2' :
+            'ghcr.io/rocker-org/tidyverse:4.4.2' }"
 
     input:
     tuple val(meta), path(fillout_maf), path(original_maf)

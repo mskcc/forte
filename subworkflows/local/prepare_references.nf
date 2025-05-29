@@ -35,7 +35,7 @@ workflow PREPARE_REFERENCES {
 
     if (params.genome == "GRCh38" ){
         FASTAREMOVEPREFIX(fasta)
-	fasta = FASTAREMOVEPREFIX.out.fasta
+        fasta = FASTAREMOVEPREFIX.out.fasta
     }
 
     if (params.gtf.endsWith(".gz")){
