@@ -45,6 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#151](https://github.com/mskcc/forte/pull/151) - Replace samtools bam2fq with gatk4 samtofastq for better handling of paired reads in a position sorted bam
 
+- [#159](https://github.com/mskcc/forte/pull/159) - Exclude any fusion with NA as one of the genes from agfusion clinical run
+
 ### `Dependencies`
 
 ### `Deprecated`
