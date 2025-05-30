@@ -49,6 +49,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#160](https://github.com/mskcc/forte/pull/160) - Fix grouping of multiple pairs of fastqs in a single sample
 
+- [#159](https://github.com/mskcc/forte/pull/159) - Exclude any fusion with NA as one of the genes from agfusion clinical run
+
+
 ### `Dependencies`
 
 ### `Deprecated`
