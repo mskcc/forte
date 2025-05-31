@@ -2,9 +2,9 @@ nextflow_pipeline {
 
     name "Test Pipeline"
     script "../main.nf"
-    config "tests/pipeline.config"
+    config "tests/pipeline_multifq.config"
 
-    test("Should run without failures") {
+    test("Run with multiple fq per sample") {
 
         when {
             params {

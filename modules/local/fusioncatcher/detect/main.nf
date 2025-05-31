@@ -9,7 +9,7 @@ process FUSIONCATCHER_DETECT {
         'docker.io/clinicalgenomics/fusioncatcher:1.33' }"
 
     input:
-    tuple val(meta), path(fasta)
+    tuple val(meta), path(fasta, stageAs: 'input??/*')
     path reference
 
     output:
