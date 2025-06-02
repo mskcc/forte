@@ -45,6 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#151](https://github.com/mskcc/forte/pull/151) - Replace samtools bam2fq with gatk4 samtofastq for better handling of paired reads in a position sorted bam
 
+- [#162](https://github.com/mskcc/forte/pull/162) - Configure Juno/Terra settings to use LSF per-core memory limits and remove deprecated check_max and round_memory functions
+
 - [#154](https://github.com/mskcc/forte/pull/151) - Fix publishing of sample-level and batch-level multiqc reports and add parameter to turn off plot export in multiqc
 
 - [#160](https://github.com/mskcc/forte/pull/160) - Fix grouping of multiple pairs of fastqs in a single sample
