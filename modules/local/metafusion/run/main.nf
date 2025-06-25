@@ -30,16 +30,24 @@ process METAFUSION_RUN {
     args = task.ext.args ?: ""
     def sample = "${meta.sample}"
     """
-    export TMPDIR=\$TMPDIR
-    Metafusion_forte.sh \\
-        --cff $cff \\
-        --outdir . \\
-        --gene_bed $genebed \\
-        --gene_info $info \\
-        --genome_fasta $fasta \\
-        --recurrent_bedpe $blocklist \\
-        --clinical_genes $transcript_allowlist \\
-        ${args}
+    if [ -s $cff ]; then
+        export TMPDIR=\$TMPDIR
+        Metafusion_forte.sh \\
+            --cff $cff \\
+            --outdir . \\
+            --gene_bed $genebed \\
+            --gene_info $info \\
+            --genome_fasta $fasta \\
+            --recurrent_bedpe $blocklist \\
+            --clinical_genes $transcript_allowlist \\
+            ${args}
+    else
+        touch filters.txt
+        touch problematic_chromosomes.cff
+        touch cis-sage.cluster
+        touch empty.exons
+        touch final.empty.cluster
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

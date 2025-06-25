@@ -35,7 +35,7 @@ process CFF_ANNOTATE {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -n1)
-        add_annotations_cff.R: 0.0.2
+        add_annotations_cff.R: 0.0.3
     END_VERSIONS
     """
 }

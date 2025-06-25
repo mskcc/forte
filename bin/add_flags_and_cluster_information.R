@@ -2,7 +2,7 @@
 # __author__      = "Alexandria Dymun"
 # __email__       = "pintoa1@mskcc.org"
 # __contributor__ = "Anne Marie Noronha (noronhaa@mskcc.org)"
-# __version__     = "0.0.1"
+# __version__     = "0.0.2"
 # __status__      = "Dev"
 
 
@@ -17,6 +17,7 @@ library(data.table)
     }
 
     unfiltered_cff <- fread(args[1],data.table = F)
+    sample_name <- args[6]
     header_cff <-
         c(
             "gene5_chr",
@@ -61,6 +62,21 @@ library(data.table)
             "refseq_transcript_id_5",
             "refseq_transcript_id_3"
         )
+
+    if(nrow(unfiltered_cff) == 0){
+        unfiltered_cff <- data.frame(matrix(ncol = length(c(header_cff,"Metafusion_flag","cluster")),nrow = 0))
+        colnames(unfiltered_cff) <- c(header_cff,"Metafusion_flag","cluster")
+        write.table(
+        unfiltered_cff,
+        paste0(sample_name, "_metafusion_cluster.unfiltered.cff"),
+        row.names = F,
+        append = F,
+        quote = F,
+        sep = "\t"
+        )
+        q()
+    }
+
     colnames(unfiltered_cff) <- header_cff
     cluster <- fread(args[2],data.table = F)
     header_cluster <-
@@ -87,8 +103,6 @@ library(data.table)
         select(c(FID,CID)) %>%
         tidyr::separate_rows(FID,sep=",")
 
-
-    sample_name <- args[6]
 
     cis_sage <- tryCatch({fread(args[3],data.table = F)},warning = function(cond){return( NULL)})
     if(!is.null(cis_sage)){
