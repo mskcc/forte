@@ -30,7 +30,6 @@ process METAFUSION_RUN {
     args = task.ext.args ?: ""
     def sample = "${meta.sample}"
     """
-    export TMPDIR=\$TMPDIR
     if [ -s $cff ]; then
         export TMPDIR=\$TMPDIR
         Metafusion_forte.sh \\
