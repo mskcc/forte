@@ -2,7 +2,7 @@
 # __author__      = "Anne Marie Noronha"
 # __email__       = "noronhaa@mskcc.org"
 #__contributor__ = "Alexandria Dymun (pintoa1@mskcc.org)"
-# __version__     = "0.0.3"
+# __version__     = "0.0.2"
 
 
 suppressPackageStartupMessages({
