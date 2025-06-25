@@ -42,6 +42,7 @@ process METAFUSION_RUN {
             --clinical_genes $transcript_allowlist \\
             ${args}
     else
+        echo "No fusions found by callers, returning empty files"
         touch filters.txt
         touch problematic_chromosomes.cff
         touch cis-sage.cluster
