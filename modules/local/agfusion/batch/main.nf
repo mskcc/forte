@@ -39,7 +39,7 @@ process AGFUSION_BATCH {
         awk -F"," 'NR != 1 && FNR == 1 {next;}{print}' ${prefix}/*/*.fusion_transcripts.csv > ${prefix}.fusion_transcripts.csv
         cat ${prefix}.fusion_transcripts.csv | tr "," "\\t" > ${prefix}.fusion_transcripts.tsv
     else
-        echo -e "3'_transcript\t5'_transcript\t5'_gene\t3'_gene\t5'_breakpoint\t3'_breakpoint\t5'_strand\t3'_strand\t5'_transcript_biotype\t3'_transcript_biotype" > ${prefix}.fusion_transcripts.tsv
+        echo -e "3'_transcript\t5'_transcript\t5'_gene\t3'_gene\t5'_breakpoint\t3'_breakpoint\t5'_strand\t3'_strand\t5'_transcript_biotype\t3'_transcript_biotype\tFusion_effect" > ${prefix}.fusion_transcripts.tsv
     fi
 
     cat <<-END_VERSIONS > versions.yml

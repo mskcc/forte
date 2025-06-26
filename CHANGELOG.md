@@ -53,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#159](https://github.com/mskcc/forte/pull/159) - Exclude any fusion with NA as one of the genes from agfusion clinical run
 
+- [#164](https://github.com/mskcc/forte/pull/164) - Allow samples with no fusions to pass through final steps of fusion pipeline
+
 ### `Dependencies`
 
 ### `Deprecated`
