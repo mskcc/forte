@@ -61,7 +61,7 @@ rna_fillout_formatting <- function(opt){
 
     maf <- fread(opt$maf, data.table = FALSE) %>%
         mutate(
-            loc_spec = str_c(Chromosome,':',Start_Position,':',End_Position,':',Reference_Allele,':',Tumor_Seq_Allele2)
+            loc_spec = str_c(gsub("chr","",Chromosome),':',Start_Position,':',End_Position,':',Reference_Allele,':',Tumor_Seq_Allele2)
         )
     merged_maf <- merge(maf, fillout_maf, by = c("loc_spec"), all = T)
     merged_maf$RNA_ID <- opt$rna_sample_id
