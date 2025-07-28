@@ -43,6 +43,8 @@ if (length(setdiff(required_args,names(opt))) > 0) {
 maf <- fread(opt$maf, data.table = F)
 maf <- maf %>%
     mutate(
+        #Parse off chr prefix
+        Chromosome = gsub("chr","",Chromosome),
         # Using the Hugo Symbol column as an ID column because GBCMS does not allow users to control which columns should be kept.
         Hugo_Symbol = str_c(Chromosome,':',Start_Position,':',End_Position,':',Reference_Allele,':',Tumor_Seq_Allele2)
     )

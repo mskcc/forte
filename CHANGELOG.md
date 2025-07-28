@@ -55,6 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#164](https://github.com/mskcc/forte/pull/164) - Allow samples with no fusions to pass through final steps of fusion pipeline
 
+- [#168](https://github.com/mskcc/forte/pull/168) - Move fillout commands to bin, remove chr prefix from chromosome if exists in provided MAF
+
 ### `Dependencies`
 
 ### `Deprecated`
