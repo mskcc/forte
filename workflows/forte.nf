@@ -18,6 +18,7 @@ include { EXTRACT_DEDUP_FQ                  } from '../subworkflows/local/extrac
 include { QUANTIFICATION                    } from '../subworkflows/local/quantification'
 include { FUSION                            } from '../subworkflows/local/fusion'
 include { FILLOUT                           } from '../subworkflows/local/fillout'
+include { VARIANT_CALLING                   } from '../subworkflows/local/variant_calling'
 include { SPLICING                          } from '../subworkflows/local/splicing'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -133,6 +134,14 @@ workflow FORTE {
         PREPARE_REFERENCES.out.fasta_fai.map{ it[1] }.first()
     )
     ch_versions = ch_versions.mix(FILLOUT.out.ch_versions)
+
+    VARIANT_CALLING(
+        ALIGN_READS.out.bam,
+        ALIGN_READS.out.bai,
+        PREPARE_REFERENCES.out.fasta,
+        PREPARE_REFERENCES.out.fasta_fai,
+        PREPARE_REFERENCES.out.fasta_dict
+    )
 
     QC_DEDUP(
         ALIGN_READS.out.bam_dedup,
