@@ -1,21 +1,21 @@
 #!/usr/local/bin/Rscript
-
 # __author__      = "Alexandria Dymun"
 # __email__       = "pintoa1@mskcc.org"
 # __contributor__ = "Caryn Hale (halec@mskcc.org)"
-# __version__     = "0.0.1"
+# __version__     = "0.0.2"
 
 
 suppressPackageStartupMessages({
     library(dplyr)
     library(data.table)
     library(purrr)
+    library(tidyr)
 })
 
 usage <- function() {
     message("Usage:")
     message(
-        "fusion_filtering.R --cff <*.final.cff> --starfusion <*.starfusion.abridged.coding_effect.tsv> --fusioncatcher <*.fusioncatcher.fusion-genes.txt> --arriba <*.fusions.tsv> --clinical_genes <clinical_genes.txt> --out_prefix <prefix>"
+        "filter_fusion_calls_forte.R --cff <*.final.cff> --starfusion <*.starfusion.abridged.coding_effect.tsv> --fusioncatcher <*.fusioncatcher.fusion-genes.txt> --arriba <*.fusions.tsv> --clinical_genes <clinical_genes.txt> --out_prefix <prefix>"
     )
 }
 
@@ -89,24 +89,28 @@ parse_args <- function(x) {
 
 args_opt <- parse_args(paste(args, collapse = " "))
 
-possible_args = c("cff",
-                  "starfusion",
-                  "fusioncatcher",
-                  "arriba",
-                  "clinical_genes",
-                  "out_prefix")
+possible_args = c(
+    "cff",
+    "starfusion",
+    "fusioncatcher",
+    "arriba",
+    "clinical_genes",
+    "out_prefix"
+)
 if (length(setdiff(names(args_opt), possible_args)) > 0) {
     message("Invalid options")
     usage()
     quit()
 }
 
-required_args <- c("cff",
-                   "starfusion",
-                   "fusioncatcher",
-                   "arriba",
-                   "clinical_genes",
-                   "out_prefix")
+required_args <- c(
+    "cff",
+    "starfusion",
+    "fusioncatcher",
+    "arriba",
+    "clinical_genes",
+    "out_prefix"
+)
 if (length(setdiff(required_args, names(args_opt))) > 0) {
     message("Missing required arguments")
     usage()
@@ -345,19 +349,23 @@ get_cluster_action <- function(cluster_df) {
     ) %in% clinical_genes$V1), NA, "NO_SIG_GENE")
     # Any breakpoint in the cluster is identified as a false positive by a tool is FP
     fp <- ifelse(all(is.na(cluster_df$FP_flag)), NA, "FP")
-    cis_sage <- ifelse(any(grepl("cis", cluster_df$cluster)), "CIS_SAGE", NA)
+    ## only cis_sage if not in the allow list of cis-sage
+    cis_sage <- ifelse(any(grepl("cis", cluster_df$cluster)) &
+                           !any(cluster_df$symbol_id %in% cis_sage_allow),
+                       "CIS_SAGE",
+                       NA)
 
 
     reason <- paste(na.omit(c(
         clinical_gene, read_support, caller_count, fp, cis_sage
     )), collapse = ",")
-    action  <- ifelse(reason == "",
-                      "REPORT",
-                      ifelse(
-                          reason == "NO_SIG_GENE",
-                          "NOVEL",
-                          ifelse(reason == "CIS_SAGE", "READ_THROUGH", "drop")
-                      ))
+    action  <- case_when(
+        reason == "" ~ "REPORT",
+        reason == "NO_SIG_GENE" ~ "NOVEL",
+        reason == "CIS_SAGE" ~ "READ_THROUGH",
+        .default = "drop"
+    )
+
     return(c('action' = action, 'reason' = reason))
 }
 
@@ -434,7 +442,6 @@ format_final_out <- function(cluster_df) {
 
 }
 
-
 cff = fread(args_opt$cff, data.table = F)
 output_headers <- c(
     "sample",
@@ -453,11 +460,46 @@ output_headers <- c(
     "tx3",
     "Fusion_effect"
 )
+cvr_output_headers <- c(
+    "TumorId",
+    "Chr1",
+    "Pos1",
+    "Str1",
+    "Chr2",
+    "Pos2",
+    "Str2",
+    "Gene1",
+    "Transcript1",
+    "Site1Description",
+    "Gene2",
+    "Transcript2",
+    "Site2Description",
+    "Fusion",
+    "TotalReadSupport",
+    "CallMethod",
+    "FrameCallMethod",
+    "Note",
+    "Annotation",
+    'Position',
+    'oncokb_sv_type',
+    "Significance"
+)
+
 if (nrow(cff) == 0) {
     final_outputfile <- data.frame(matrix(nrow = 0, ncol = length(output_headers)))
     colnames(final_outputfile) <- output_headers
+    final_outputfile_cvr <- data.frame(matrix(nrow = 0, ncol = length(cvr_output_headers)))
+    colnames(final_outputfile_cvr) <- cvr_output_headers
     cis_sage_output <- data.frame(matrix(nrow = 0, ncol = length(output_headers)))
     colnames(cis_sage_output) <- output_headers
+
+    write.table(
+        final_outputfile_cvr,
+        file = paste0(args_opt$out_prefix, "_filtered_fusions_cvr.tsv"),
+        quote = F,
+        row.names = F,
+        sep = "\t"
+    )
 
     write.table(
         final_outputfile,
@@ -599,7 +641,7 @@ cff <- cff  %>% mutate(
         gene3_strand
     ),
     symbol_id = paste(reann_gene5_symbol, reann_gene3_symbol, sep =
-                          ":"),
+                          "::"),
     reciprocal_id = paste(reann_gene3_symbol, reann_gene5_symbol, sep = ":")
 ) %>% arrange(cluster) %>%
     group_by(cluster, symbol_id)  %>%  mutate(reciprocal_cluster_id = cur_group_id())
@@ -648,6 +690,27 @@ final_outputfile <- final_outputfile %>% filter(!grepl("cis_sage", cluster) |
                                                     fusion %in% cis_sage_allow |
                                                     (grepl("cis_sage", cluster) &
                                                          !grepl("NO_SIG_GENE", reason)))
+
+final_outputfile_cvr <- final_outputfile %>% filter(action == "REPORT") %>% select(sample,
+                                                                                   tool,
+                                                                                   fusion,
+                                                                                   total_support,
+                                                                                   breakpoint,
+                                                                                   frame_status_cl,
+                                                                                   tx5,
+                                                                                   tx3)
+final_outputfile_cvr <- final_outputfile_cvr %>% separate_wider_delim(fusion, "::", names = c("Gene1", "Gene2")) %>%
+    separate_wider_delim(breakpoint, "|", names = c("bp1", "bp2")) %>%
+    separate_wider_delim(bp1, ":", names = c("Chr1", "Pos1", "Str1")) %>%
+    separate_wider_delim(bp2, ":", names = c("Chr2", "Pos2", "Str2"))
+setnames(final_outputfile_cvr,c('sample',"tx5","tx3","frame_status_cl","total_support","tool"), c("TumorId","Transcript1","Transcript2","FrameCallMethod","TotalReadSupport", "CallMethod"))
+add_these <- setdiff(cvr_output_headers, colnames(final_outputfile_cvr))
+final_outputfile_cvr[,add_these] <- NA
+final_outputfile_cvr <- final_outputfile_cvr[,cvr_output_headers]
+
+
+
+
 write.table(
     final_outputfile,
     file = paste0(args_opt$out_prefix, "_filtered_fusions.tsv"),
@@ -655,6 +718,15 @@ write.table(
     row.names = F,
     sep = "\t"
 )
+
+write.table(
+    final_outputfile_cvr,
+    file = paste0(args_opt$out_prefix, "_filtered_fusions.tsv"),
+    quote = F,
+    row.names = F,
+    sep = "\t"
+)
+
 write.table(
     cis_sage_output,
     file = paste0(args_opt$out_prefix, "_cis_sage_fusions.tsv"),

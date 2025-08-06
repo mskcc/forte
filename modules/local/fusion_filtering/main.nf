@@ -35,7 +35,7 @@ process FUSION_FILTER {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -n1)
-        fusion_filtering.R: 0.0.1
+        fusion_filtering.R: 0.0.2
     END_VERSIONS
     """
 }
