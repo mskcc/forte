@@ -2,7 +2,7 @@
 # __author__      = "Alexandria Dymun"
 # __email__       = "pintoa1@mskcc.org"
 # __contributor__ = "Caryn Hale (halec@mskcc.org)"
-# __version__     = "0.0.1"
+# __version__     = "0.0.2"
 
 
 suppressPackageStartupMessages({
