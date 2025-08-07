@@ -15,7 +15,7 @@ suppressPackageStartupMessages({
 usage <- function() {
     message("Usage:")
     message(
-        "filter_fusion_calls_forte.R --cff <*.final.cff> --starfusion <*.starfusion.abridged.coding_effect.tsv> --fusioncatcher <*.fusioncatcher.fusion-genes.txt> --arriba <*.fusions.tsv> --clinical_genes <clinical_genes.txt> --out_prefix <prefix>"
+        "fusion_filtering.R --cff <*.final.cff> --starfusion <*.starfusion.abridged.coding_effect.tsv> --fusioncatcher <*.fusioncatcher.fusion-genes.txt> --arriba <*.fusions.tsv> --clinical_genes <clinical_genes.txt> --out_prefix <prefix>"
     )
 }
 
@@ -79,7 +79,7 @@ parse_args <- function(x) {
         length(z) <- 2
         z
     })
-    
+
     parsed_args <- structure(lapply(args_vals, function(x)
         x[2]),
         names = lapply(args_vals, function(x)
@@ -211,7 +211,7 @@ select_breakpoint <- function(cluster_df) {
         one_symbol = (!gene5_ensg &
                           gene3_ensg) | (gene5_ensg & !gene3_ensg)
     )
-    
+
     ## if any of the annotations have at least one symbol, select that annotation
     ### select both symbol breakpoint first
     if (any(br$both_symbol) & unique_brs > 1) {
@@ -250,8 +250,8 @@ select_breakpoint <- function(cluster_df) {
             filter(fusion_effect_val == max(fusion_effect_val))
         unique_brs <-  length(unique(br$breakpoint_key))
     }
-    
-    
+
+
     ## if still multiple select annotation with lowest transcript ID, sometimes no transcript is selected
     br <- br %>% mutate(trans5_num = as.numeric(gsub("ENST", "", gene5_transcript_id)),
                         trans3_num = as.numeric(gsub("ENST", "", gene3_transcript_id))) %>%
@@ -309,7 +309,7 @@ get_fusion_info <- function(br) {
                         trans3_num = as.numeric(gsub("ENST", "", gene3_transcript_id))) %>%
         filter(case_when(is.na(trans5_num) ~ T, trans5_num == min(trans5_num) ~ T)) %>%
         filter(case_when(is.na(trans3_num) ~ T, trans3_num == min(trans3_num) ~ T))
-    
+
     five_prime_gene <- ifelse(is.na(unique(br$reann_gene5_symbol)), ".", unique(br$reann_gene5_symbol))
     three_prime_gene <- ifelse(is.na(unique(br$reann_gene3_symbol)), ".", unique(br$reann_gene3_symbol))
     Fusion_effect <- unique(br$Fusion_effect)
@@ -317,7 +317,7 @@ get_fusion_info <- function(br) {
     tx3 <- unique(br$gene3_transcript_id)
     reciprocal_cluster_id <- unique(br$reciprocal_cluster_id)
     reciprocal_cluster <- unique(br$reciprocal_cluster)
-    
+
     out <- c(
         "Fusion" = paste0(five_prime_gene, "::", three_prime_gene),
         "tx5" = tx5,
@@ -326,7 +326,7 @@ get_fusion_info <- function(br) {
         "reciprocal_cluster_id" = reciprocal_cluster_id,
         "reciprocal_cluster" = reciprocal_cluster
     )
-    
+
     return(out)
 }
 
@@ -350,8 +350,8 @@ get_cluster_action <- function(cluster_df) {
                            !any(cluster_df$symbol_id %in% cis_sage_allow),
                        "CIS_SAGE",
                        NA)
-    
-    
+
+
     reason <- paste(na.omit(c(
         clinical_gene, read_support, caller_count, fp, cis_sage
     )), collapse = ",")
@@ -361,7 +361,7 @@ get_cluster_action <- function(cluster_df) {
         reason == "CIS_SAGE" ~ "READ_THROUGH",
         .default = "drop"
     )
-    
+
     return(c('action' = action, 'reason' = reason))
 }
 
@@ -382,7 +382,7 @@ format_final_out <- function(cluster_df) {
     fp_tools <- ifelse(any(!is.na(cluster_df$FP_flag)), paste(na.omit(unique(
         gsub("\\:.*", "", cluster_df$FP_flag)
     )), collapse = ","), NA)
-    
+
     ### ensure getting high quality breakpoints for non-dropped fusions
     if (cluster_action['action'] != "drop") {
         cluster_df <- cluster_df[cluster_df$total_support >= 5, ]
@@ -403,10 +403,10 @@ format_final_out <- function(cluster_df) {
             br_key <- unique(gsub("(\\-\\||\\+\\|)", "?|", br_key))
         }
     }
-    
+
     ### get the fusion name related to the chosen breakpoint
     fusion <- get_fusion_info(br)
-    
+
     ### get the tools with the particular breakpoint that are inframe
     frame_status_br_inframe <- unique(c(br$tool[br$Tool_Inframe], na.omit(ifelse(
         any(grepl("in-frame", br$Fusion_effect)), "agfusion", NA
@@ -414,7 +414,7 @@ format_final_out <- function(cluster_df) {
     frame_status_br <- get_tool_code(frame_status_br_inframe)
     ### need to select max total support if the same breakpoint exists in multiple tools
     total_support <- max(br$total_support)
-    
+
     out <- data.frame(
         "sample" = unique(cluster_df$sample),
         "cluster" = unique(cluster_df$cluster),
@@ -435,7 +435,7 @@ format_final_out <- function(cluster_df) {
         "reciprocal_cluster_id" = fusion[["reciprocal_cluster_id"]]
     )
     return(out)
-    
+
 }
 
 cff = fread(args_opt$cff, data.table = F)
@@ -488,7 +488,7 @@ if (nrow(cff) == 0) {
     colnames(final_outputfile_cvr) <- cvr_output_headers
     cis_sage_output <- data.frame(matrix(nrow = 0, ncol = length(output_headers)))
     colnames(cis_sage_output) <- output_headers
-    
+
     write.table(
         final_outputfile_cvr,
         file = paste0(args_opt$out_prefix, "_filtered_fusions_cvr.tsv"),
@@ -496,7 +496,7 @@ if (nrow(cff) == 0) {
         row.names = F,
         sep = "\t"
     )
-    
+
     write.table(
         final_outputfile,
         file = paste0(args_opt$out_prefix, "_filtered_fusions.tsv"),
@@ -664,13 +664,13 @@ final_outputfile <- map_dfr(unique(cff$cluster), function(cluster_info) {
     ## reciprocal clusters need to be handled separately and carefully (do not wnat to return reciprocalcluster when a better breakpoint annotation exists)
     cluster_df <- cff[cff$cluster == cluster_info, ]
     out <- format_final_out(cluster_df)
-    
+
     reciprocal_cluster_exists <- cluster_df[cluster_df$reciprocal_cluster == out[["reciprocal_cluster"]] &
                                                 !is.na(cluster_df$reciprocal_cluster), ]
     if (length(unique(reciprocal_cluster_exists$reciprocal_cluster_id)) > 1) {
         cluster_df_2 <- reciprocal_cluster_exists[reciprocal_cluster_exists$reciprocal_cluster_id != out[["reciprocal_cluster_id"]], ]
         out2 <- format_final_out(cluster_df_2)
-        
+
         out <- rbind(out, out2)
     }
     out <- out[, output_headers]
@@ -696,7 +696,7 @@ final_outputfile_cvr <- final_outputfile %>% filter(action == "REPORT") %>% sele
                                                                                    tx5,
                                                                                    tx3)
 final_outputfile_cvr <- final_outputfile_cvr %>% separate_wider_delim(fusion, "::", names = c("Gene1", "Gene2")) %>%
-    
+
     separate_wider_delim(breakpoint, "|", names = c("bp1", "bp2")) %>%
     separate_wider_delim(bp1, ":", names = c("Chr1", "Pos1", "Str1")) %>%
     separate_wider_delim(bp2, ":", names = c("Chr2", "Pos2", "Str2"))
@@ -722,6 +722,9 @@ setnames(
 add_these <- setdiff(cvr_output_headers, colnames(final_outputfile_cvr))
 final_outputfile_cvr[, add_these] <- NA
 final_outputfile_cvr <- final_outputfile_cvr[, cvr_output_headers]
+
+
+
 
 write.table(
     final_outputfile,
