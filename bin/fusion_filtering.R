@@ -723,9 +723,6 @@ add_these <- setdiff(cvr_output_headers, colnames(final_outputfile_cvr))
 final_outputfile_cvr[, add_these] <- NA
 final_outputfile_cvr <- final_outputfile_cvr[, cvr_output_headers]
 
-
-
-
 write.table(
     final_outputfile,
     file = paste0(args_opt$out_prefix, "_filtered_fusions.tsv"),
