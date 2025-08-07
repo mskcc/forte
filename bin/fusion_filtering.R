@@ -695,8 +695,7 @@ final_outputfile_cvr <- final_outputfile %>% filter(action == "REPORT") %>% sele
                                                                                    frame_status_cl,
                                                                                    tx5,
                                                                                    tx3)
-final_outputfile_cvr <- final_outputfile_cvr %>% separate_wider_delim(fusion, "::", names = c("Gene1", "Gene2")) %>%
-
+final_outputfile_cvr <- final_outputfile_cvr %>% mutate(breakpoint = gsub("chr","",breakpoint)) %>% separate_wider_delim(fusion, "::", names = c("Gene1", "Gene2")) %>%
     separate_wider_delim(breakpoint, "|", names = c("bp1", "bp2")) %>%
     separate_wider_delim(bp1, ":", names = c("Chr1", "Pos1", "Str1")) %>%
     separate_wider_delim(bp2, ":", names = c("Chr2", "Pos2", "Str2"))
