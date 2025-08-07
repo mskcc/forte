@@ -15,7 +15,7 @@ suppressPackageStartupMessages({
 usage <- function() {
     message("Usage:")
     message(
-        "fusion_filtering.R --cff <*.final.cff> --starfusion <*.starfusion.abridged.coding_effect.tsv> --fusioncatcher <*.fusioncatcher.fusion-genes.txt> --arriba <*.fusions.tsv> --clinical_genes <clinical_genes.txt> --out_prefix <prefix>"
+        "filter_fusion_calls_forte.R --cff <*.final.cff> --starfusion <*.starfusion.abridged.coding_effect.tsv> --fusioncatcher <*.fusioncatcher.fusion-genes.txt> --arriba <*.fusions.tsv> --clinical_genes <clinical_genes.txt> --out_prefix <prefix>"
     )
 }
 
@@ -638,7 +638,7 @@ cff <- cff  %>% mutate(
     ),
     symbol_id = paste(reann_gene5_symbol, reann_gene3_symbol, sep =
                           "::"),
-    reciprocal_id = paste(reann_gene3_symbol, reann_gene5_symbol, sep = ":")
+    reciprocal_id = paste(reann_gene3_symbol, reann_gene5_symbol, sep = "::")
 ) %>% arrange(cluster) %>%
     group_by(cluster, symbol_id)  %>%  mutate(reciprocal_cluster_id = cur_group_id())
 
@@ -722,9 +722,6 @@ setnames(
 add_these <- setdiff(cvr_output_headers, colnames(final_outputfile_cvr))
 final_outputfile_cvr[, add_these] <- NA
 final_outputfile_cvr <- final_outputfile_cvr[, cvr_output_headers]
-
-
-
 
 write.table(
     final_outputfile,
