@@ -736,7 +736,7 @@ write.table(
 
 write.table(
     final_outputfile_cvr,
-    file = paste0(args_opt$out_prefix, "_filtered_fusions.tsv"),
+    file = paste0(args_opt$out_prefix, "_filtered_fusions_cvr.tsv"),
     quote = F,
     row.names = F,
     sep = "\t"
