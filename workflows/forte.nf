@@ -137,11 +137,12 @@ workflow FORTE {
 
     VARIANT_CALLING(
         ALIGN_READS.out.bam,
-        ALIGN_READS.out.bai,
         PREPARE_REFERENCES.out.fasta,
         PREPARE_REFERENCES.out.fasta_fai,
         PREPARE_REFERENCES.out.fasta_dict
     )
+    ch_versions = ch_versions.mix(FILLOUT.out.ch_versions)
+
 
     QC_DEDUP(
         ALIGN_READS.out.bam_dedup,

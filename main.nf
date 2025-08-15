@@ -31,6 +31,8 @@ params.metafusion_gene_info   = getGenomeAttribute('metafusion_gene_info')
 params.ensembl_version        = getGenomeAttribute('ensembl_version')
 params.transcript_allowlist   = getGenomeAttribute('transcript_allowlist')
 params.clinical_genes         = getGenomeAttribute('clinical_genes')
+params.dbsnp                  = getGenomeAttribute('dbsnp')
+params.dbsnpIndex             = getGenomeAttribute('dbsnpIndex')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
