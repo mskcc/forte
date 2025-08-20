@@ -1,10 +1,10 @@
-include { PICARD_MARKDUPLICATES } from '../../modules/nf-core/picard/markduplicates/main'
-include { GATK4_SPLITNCIGARREADS } from '../../modules/nf-core/gatk4/splitncigarreads/main'                                                                                                                                               
-include { SAMTOOLS_INDEX as  SAMTOOLS_INDEX1      } from '../../modules/nf-core/samtools/index/main'                                                                                                                                               
-include { SAMTOOLS_INDEX as  SAMTOOLS_INDEX2      } from '../../modules/nf-core/samtools/index/main'                                                                                                                                               
-include { GATK4_BASERECALIBRATOR } from '../../modules/nf-core/gatk4/baserecalibrator/main'                                                                                                                                               
-include { GATK4_APPLYBQSR        } from '../../modules/nf-core/gatk4/applybqsr/main'                                                                                                                                                             
-include { GATK4_MUTECT2          } from '../../modules/nf-core/gatk4/mutect2/main'                                                                                                                                                                 
+include { PICARD_MARKDUPLICATES                   } from '../../modules/nf-core/picard/markduplicates/main'
+include { GATK4_SPLITNCIGARREADS                  } from '../../modules/nf-core/gatk4/splitncigarreads/main'                                                                                                                                               
+include { SAMTOOLS_INDEX as  SAMTOOLS_INDEX_CIGAR } from '../../modules/nf-core/samtools/index/main'                                                                                                                                               
+include { SAMTOOLS_INDEX as  SAMTOOLS_INDEX_BQSR  } from '../../modules/nf-core/samtools/index/main'                                                                                                                                               
+include { GATK4_BASERECALIBRATOR                  } from '../../modules/nf-core/gatk4/baserecalibrator/main'                                                                                                                                               
+include { GATK4_APPLYBQSR                         } from '../../modules/nf-core/gatk4/applybqsr/main'                                                                                                                                                             
+include { GATK4_MUTECT2                           } from '../../modules/nf-core/gatk4/mutect2/main'                                                                                                                                                                 
 
 workflow VARIANT_CALLING {
 
@@ -38,14 +38,14 @@ workflow VARIANT_CALLING {
     ch_versions = ch_versions.mix(GATK4_SPLITNCIGARREADS.out.versions.first())
 
 
-    SAMTOOLS_INDEX1(
+    SAMTOOLS_INDEX_CIGAR(
         GATK4_SPLITNCIGARREADS.out.bam
     )
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX1.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_INDEX_CIGAR.out.versions.first())
 
     GATK4_BASERECALIBRATOR(
         GATK4_SPLITNCIGARREADS.out.bam
-            .join(SAMTOOLS_INDEX1.out.bai, by:0)
+            .join(SAMTOOLS_INDEX_CIGAR.out.bai, by:0)
             .map{ meta, bam, bai ->
                 [meta, bam, bai, [] ]
             },
@@ -59,7 +59,7 @@ workflow VARIANT_CALLING {
 
     GATK4_APPLYBQSR(
         GATK4_SPLITNCIGARREADS.out.bam
-            .join(SAMTOOLS_INDEX1.out.bai, by:0)
+            .join(SAMTOOLS_INDEX_CIGAR.out.bai, by:0)
             .join(GATK4_BASERECALIBRATOR.out.table, by:0)
             .map{ meta, bam, bai, table ->
                 [ meta, bam, bai , table, [] ]
@@ -79,13 +79,13 @@ workflow VARIANT_CALLING {
     )
     ch_versions = ch_versions.mix(GATK4_APPLYBQSR.out.versions.first())
 
-    SAMTOOLS_INDEX2(
+    SAMTOOLS_INDEX_BQSR(
         GATK4_APPLYBQSR.out.bam
     )
 
     GATK4_MUTECT2(
         GATK4_APPLYBQSR.out.bam
-            .join(SAMTOOLS_INDEX1.out.bai, by:0)
+            .join(SAMTOOLS_INDEX_BQSR.out.bai, by:0)
             .map{ meta, bam, bai ->
                 [meta, bam, bai, [] ]
             },

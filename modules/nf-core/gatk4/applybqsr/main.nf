@@ -23,7 +23,7 @@ process GATK4_APPLYBQSR {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}.cram"
+    def prefix = task.ext.prefix ?: "${meta.id}.bqsr.bam"
     def interval_command = intervals ? "--intervals $intervals" : ""
 
     def avail_mem = 3072
