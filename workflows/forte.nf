@@ -122,7 +122,8 @@ workflow FORTE {
         PREPARE_REFERENCES.out.star_index.map{meta, star_index ->
             [meta, file(star_index.toString() + "/sjdbList.out.tab")]
         },
-        PREPARE_REFERENCES.out.fasta
+        PREPARE_REFERENCES.out.fasta,
+        params.reportable_junctions
     )
 
     FILLOUT(
