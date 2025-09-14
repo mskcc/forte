@@ -21,6 +21,7 @@ include { METAFUSION_GENEBED             } from '../../modules/local/metafusion/
 include { METAFUSION_GENEINFO            } from '../../modules/local/metafusion/geneinfo/main'
 include { FASTAREMOVEPREFIX              } from '../../modules/local/fastaremoveprefix/main'
 
+
 workflow PREPARE_REFERENCES {
 
     main:

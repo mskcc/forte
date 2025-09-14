@@ -14,7 +14,8 @@ include { ADD_FLAG                            } from '../../modules/local/add_fl
 include { CFF_ANNOTATE as CFF_FINALIZE        } from '../../modules/local/cff_annotate/main'
 include { CFF_ANNOTATE as ADD_FLAG_AGFUSION   } from  '../../modules/local/cff_annotate/main'
 include { FUSION_FILTER                       } from  '../../modules/local/fusion_filtering/main'
-
+include { ANNOTATION_RUN                     } from '../../modules/local/annotation/run/main'
+include { REFS_ANNOTATIONS                     } from '../../modules/local/annotation/refs/main'
 
 workflow FUSION {
 
@@ -160,6 +161,26 @@ workflow FUSION {
              .join(FUSIONCATCHER_DETECT.out.fusions, by:0)
              .join(ARRIBA_ARRIBA.out.fusions, by:0),
         clinical_genes
+    )
+
+    REFS_ANNOTATIONS(
+        params.genome,
+        params.ensembl_version,
+        params.baits.idt_v2.baits,
+        params.gtf,
+        params.genomes.(params.genome).ucsc_Pfam
+    )
+
+    ANNOTATION_RUN(
+        FUSION_FILTER.out.filtered_fusions,
+        REFS_ANNOTATIONS.out.reference_transcripts,
+        REFS_ANNOTATIONS.out.sv_table,
+        REFS_ANNOTATIONS.out.refFlat,
+        REFS_ANNOTATIONS.out.refFlat_summary,
+        REFS_ANNOTATIONS.out.kinase_domains,
+        params.reference_base + '/annotation/tumourSuppressors_IMPACT.txt',
+        params.reference_base + '/annotation/oncokb_known_fusions.txt',
+        params.reference_base + '/annotation/keygenes.txt'
     )
 
     AGFUSION_CLINICAL(
