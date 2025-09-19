@@ -139,6 +139,14 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - `final.n1.cluster`
     - `problematic_chromosomes.cff`
 - `analysis/<sample>/agfusion_clinical` -`*.expanded_agfusion_transcripts.tsv`
+- `analysis/<sample>/annotation`
+  - `*.txt`
+  - `*_metafusion.txt`
+  - `*_functional.txt`
+  - `*_canonical_transcripts.txt`
+  - `*_AllAnnotatedSVs.txt`
+  - `*_AllAnnotatedSVs.novel.txt`
+  - `*_AllAnnotatedSVs.dropped.txt`
 
 </details>
 
@@ -149,6 +157,8 @@ FORTE uses a custom fork of [Metafusion](https://github.com/mskcc/MetaFusion) to
 `*.expanded_agfusion_transcripts.tsv` file is available for manual review of all possible frame status's across all transcript combinations for a select list of clinical genes within `assests/clinical_genes.txt`.
 
 [FusionAnnotator.py from the oncokb-annotator](https://github.com/oncokb/oncokb-annotator/blob/master/FusionAnnotator.py) is also run and added to the final cff file.
+
+The final annotated fusions are produced from a combination of [iAnnotateSV] (https://github.com/rhshah/iAnnotateSV/tree/msk-target) and custom scripts. This includes a note and standard annotation for clinical reports.
 
 ### Splicing
 
