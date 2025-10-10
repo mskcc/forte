@@ -24,12 +24,21 @@ process AGFUSION_DOWNLOAD {
     def agfusion_genome = ['GRCh37','smallGRCh37','hg19'].contains(genome) ? 'hg19' :
         ['GRCh38','hg38'].contains(genome) ? 'hg38' :
         ['GRCm38','mm10'].contains(genome) ? 'mm10' : ''
+    def pyensembl_genome  = agfusion_genome == "hg19" ? "GRCh37" :
+        agfusion_genome == "hg38" ? 'GRCh38' :
+        agfusion_genome == "mm10" ? 'GRCm38' :
+        ''
     def pyensembl_species = ['GRCm38','mm10'].contains(genome) ? 'mus_musculus' : 'homo_sapiens'
+    def pyensembl_species_capitalized = pyensembl_species[0].toUpperCase() + pyensembl_species.substring(1)
     if (ensembl_release < 112) {
         """
         export PYENSEMBL_CACHE_DIR=\$PWD/pyensembl_cache
 
         pyensembl install --species ${pyensembl_species} --release ${ensembl_release}
+
+        if [ ! -f \$PYENSEMBL_CACHE_DIR/pyensembl/${pyensembl_genome}/ensembl${ensembl_release}/${pyensembl_species_capitalized}.${pyensembl_genome}.${ensembl_release}.gtf.gz ] ; then
+            wget https://ftp.ensembl.org/pub/release-${ensembl_release}/gtf/${pyensembl_species}/${pyensembl_species_capitalized}.${pyensembl_genome}.${ensembl_release}.gtf.gz -O \$PYENSEMBL_CACHE_DIR/pyensembl/${pyensembl_genome}/ensembl${ensembl_release}/${pyensembl_species_capitalized}.${pyensembl_genome}.${ensembl_release}.gtf.gz
+        fi
 
         agfusion download -s ${pyensembl_species} -r ${ensembl_release}
 
@@ -43,6 +52,10 @@ process AGFUSION_DOWNLOAD {
         export PYENSEMBL_CACHE_DIR=\$PWD/pyensembl_cache
 
         pyensembl install --species ${pyensembl_species} --release ${ensembl_release}
+
+        if [ ! -f \$PYENSEMBL_CACHE_DIR/pyensembl/${pyensembl_genome}/ensembl${ensembl_release}/${pyensembl_species_capitalized}.${pyensembl_genome}.${ensembl_release}.gtf.gz ] ; then
+            wget https://ftp.ensembl.org/pub/release-${ensembl_release}/gtf/${pyensembl_species}/${pyensembl_species_capitalized}.${pyensembl_genome}.${ensembl_release}.gtf.gz -O \$PYENSEMBL_CACHE_DIR/pyensembl/${pyensembl_genome}/ensembl${ensembl_release}/${pyensembl_species_capitalized}.${pyensembl_genome}.${ensembl_release}.gtf.gz
+        fi
 
         curl http://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37.0/database_files/pfamA.txt.gz > pfamA.txt.gz
         gunzip pfamA.txt.gz
