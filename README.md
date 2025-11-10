@@ -71,6 +71,7 @@ We thank the following people for their extensive assistance in the development 
 - Allison Richards <richara4@mskcc.org>
 - Alexandria Pinto <pintoa1@mskcc.org>
 - Yixiao Gong <gongy@mskcc.org>
+- Kofi Amoah <amoahk1@mskcc.org>
 
 We also thank the following contributors:
 
