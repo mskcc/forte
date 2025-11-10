@@ -3,8 +3,8 @@ process ANNOTATION_RUN {
 	label "process_single"
 
 	container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ? 
-		'docker://100813/target-fusion-annotator':
-		'docker.io/100813/target-fusion-annotator' }"
+		'docker://100813/target-fusion-annotator:1.0.1':
+		'docker.io/100813/target-fusion-annotator:1.0.1' }"
 
 	input:
 	tuple val(meta), val(filtered_fusion) 
