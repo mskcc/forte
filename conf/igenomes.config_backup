@@ -31,30 +31,14 @@ params {
                 }
             }
             metafusion_blocklist = "https://raw.githubusercontent.com/anoronh4/forte-references/main/GRCh37/blocklist_breakpoints.bedpe.gz"
-            transcript_allowlist = "${projectDir}/assets/clinical_allowlist_hg19.txt"
-            clinical_genes = "${projectDir}/assets/clinical_genes.txt"
             ensembl_version = 75
-            ucsc_Pfam = "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/ucscGenePfam.txt.gz"
         }
         'GRCh38' {
-            ensembl_version      = 111
-            fasta                = "${params.igenomes_base}/Homo_sapiens/NCBI/GRCh38Decoy/Sequence/WholeGenomeFasta/genome.fa"
-            //fasta                = "https://ftp.ensembl.org/pub/release-111/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
-            gtf                  = "https://ftp.ensembl.org/pub/release-111/gtf/homo_sapiens/Homo_sapiens.GRCh38.111.gtf.gz"
-            //forte will generate refflat from gtf
-            refflat              = null
-            starfusion_url       = "https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/__genome_libs_StarFv1.10/GRCh38_gencode_v37_CTAT_lib_Mar012021.plug-n-play.tar.gz"
-            cdna                 = "https://ftp.ensembl.org/pub/release-111/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz"
-            metafusion_blocklist = "https://raw.githubusercontent.com/anoronh4/forte-references/main/GRCh38/blocklist_breakpoints.hg38.bedpe.gz"
-            transcript_allowlist = "${projectDir}/assets/mane_v1.2_allowlist.txt"
-            clinical_genes = "${projectDir}/assets/clinical_genes.txt"
-            ucsc_Pfam                 = "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/ucscGenePfam.txt.gz"
-            baits {
-                'idt_v2' {
-                    targets = "/research/halec/RNAseq/resources/xgen-exome-hyb-panel-v2-targets-hg38.bed"
-                    baits   = "/research/halec/RNAseq/resources/xgen-exome-hyb-panel-v2-probes-hg38.bed"
-                }
-            }
+            fasta          = "${params.igenomes_base}/Homo_sapiens/NCBI/GRCh38/Sequence/WholeGenomeFasta/genome.fa"
+            gtf            = "${params.igenomes_base}/Homo_sapiens/NCBI/GRCh38/Annotation/Genes/genes.gtf"
+            refflat        = "${params.igenomes_base}/Homo_sapiens/NCBI/GRCh38/Annotation/Genes.gencode/refFlat.txt.gz"
+            starfusion_url = "https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/__genome_libs_StarFv1.10/GRCh38_gencode_v37_CTAT_lib_Mar012021.plug-n-play.tar.gz"
+            cdna           = "https://ftp.ensembl.org/pub/release-86/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz"
         }
         'smallGRCh37' {
             fasta          = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta"
@@ -64,13 +48,15 @@ params {
             cdna           = "http://ftp.ensemblgenomes.org/pub/viruses/fasta/sars_cov_2/cdna/Sars_cov_2.ASM985889v3.cdna.all.fa.gz"
             metafusion_blocklist = "https://raw.githubusercontent.com/anoronh4/forte-references/main/GRCh37_test/blocklist_breakpoints.bedpe"
             ensembl_version = 75
-            transcript_allowlist = "${projectDir}/assets/clinical_allowlist_hg19.txt"
-            clinical_genes = "${projectDir}/assets/clinical_genes.txt"
-            ucsc_Pfam = "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/ucscGenePfam.txt.gz"
+
         }
 /*
+        'hg38' {
             fasta          = "${params.igenomes_base}/Homo_sapiens/UCSC/hg38/Sequence/WholeGenomeFasta/genome.fa"
             gtf            = "${params.igenomes_base}/Homo_sapiens/UCSC/hg38/Annotation/Genes/genes.gtf"
+            refflat        = "${params.igenomes_base}/Homo_sapiens/NCBI/GRCh38/Annotation/Genes.gencode/refFlat.txt.gz"
+            starfusion_url = "https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/__genome_libs_StarFv1.10/GRCh38_gencode_v37_CTAT_lib_Mar012021.plug-n-play.tar.gz"
+        }
         'hg19' {
             fasta          = "${params.igenomes_base}/Homo_sapiens/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa"
             gtf            = "${params.igenomes_base}/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf"

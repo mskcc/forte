@@ -38,6 +38,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 include { INPUT_CHECK     } from '../subworkflows/local/input_check'
 include { MAF_INPUT_CHECK } from '../subworkflows/local/input_check'
 include { BAIT_INPUTS     } from '../subworkflows/local/baits'
+include { rmats_turbo          } from "../subworkflows/local/rmats_turbo"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -124,6 +125,14 @@ workflow FORTE {
         PREPARE_REFERENCES.out.kallisto_index
     )
     ch_versions = ch_versions.mix(QUANTIFICATION.out.ch_versions)
+
+    // RMATS analysis
+    rmats_turbo(
+        ALIGN_READS.out.bam,
+        params.gtfm
+
+    )
+    // ch_versions = ch_versions.mix(rmats_turbo.out.ch_versions)
 
     FUSION(
         PREPROCESS_READS.out.reads_trimmed,
